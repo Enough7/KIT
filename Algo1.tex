@@ -1,0 +1,1621 @@
+\documentclass[a4paper]{scrartcl}
+
+% Für mathematische Symbole
+\usepackage{mathtools}
+\usepackage{amsfonts}
+
+\usepackage{import}
+
+\usepackage{polyglossia}
+\setdefaultlanguage[ 
+	spelling = new, 
+	babelshorthands = true ]
+{german}
+
+% Für Pseudo-Code
+\usepackage[ruled,vlined]{algorithm2e}
+
+% Durchstreichen
+\usepackage[normalem]{ulem}
+
+%Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks   = true, %Colours links instead of ugly boxes
+	urlcolor     = blue, %Colour for external hyperlinks
+	linkcolor    = blue, %Colour of internal links
+	citecolor   = red %Colour of citations
+}
+
+%Glossar
+\usepackage[xindy]{glossaries}
+\subimport{../../../../KIT/LaTex/Glossary/}{MathematikGlossary}
+\subimport{../../../../KIT/LaTex/Glossary/}{TechnischeInformatikGlossary}
+
+%Aritmethikoperationen
+\usepackage{basicarith}
+
+\setmainfont{Roboto}
+\setsansfont{Roboto}
+\setmonofont{Roboto}
+
+% Aside Kommentar
+\usepackage{marginnote}
+\reversemarginpar
+
+% Package für bessere Liste
+\usepackage{scrextend}
+
+% Coole Listen [Seperator-zeichen]
+\usepackage[ampersand]{easylist}
+
+% \emph{} - ändern
+\DeclareTextFontCommand{\emph}{\bfseries}
+
+%Für Farben
+\usepackage[dvipsnames]{xcolor}
+\definecolor{TextMarkerGelb}{RGB}{255, 255, 120}
+\usepackage{soul}
+\sethlcolor{TextMarkerGelb}
+
+% Paragraph-Einstellung
+\usepackage[explicit]{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}[block]
+{\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1}}
+\titleformat{name=\paragraph,numberless}[block]
+{\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1.}}
+
+%opening
+\title{Mitschrift Algorithmen 1}
+\author{Paul Züchner}
+
+
+\begin{document}
+\maketitle
+
+% Inhaltsverzeichnis
+\tableofcontents
+
+% eine Seite mit wichtigen Begriffen
+\newpage
+\section{Glossar}
+\begin{description}  
+	\item[Algorithmus] 
+		Griechische Verballhornung für Rechenvorschrift. Genauer: Eine genau definierte Handlungsvorschrift zur Lösung eines Problems oder einer bestimmten Art von Problemen in \textbf{endlich} vielen Schritten.
+	
+	\item[Algorhithmik] 
+		Theoretische -> Praktische Informatik, stark vereinfacht. Stellt effiziente Verfahren. Logik stellt korrekte Verfahren. 
+	
+	\item[Datenstruktur] 
+		Algorithmen bearbeiten \textbf{Daten}, haben diese Daten eine interessante Struktur, nenne wir sie \textbf{Datenstruktur}. Durch die Datenstruktur haben Algorithmen gezielten Zugriff auf Daten und können so effektiv arbeiten.
+	
+	\item[Entwurfstechniken] 
+		Divide and conquer
+	
+	\item[Analysetechniken] 
+		Leistungsgarantien, objektiver Algorithmenvergleich
+	
+	\item[O-Kalkül] 
+		//TODO Abschätzung nach oben.
+\end{description}
+
+\section{Amuse Geule}
+	\subsection{Algorithmen}
+	\subsection{Datenstrukturen}
+	
+	\subsection{Volladdition}
+		\emph{Voll}addition weil Carry-Bit/Übertrag mit beachtet wird. Zwei eventuell sehr lange Zahlen a und b als Ziffernfolge. Es gibt zwei Zahlen a und b zur Basis \emph{B} 
+		 \[ \text{Zahl} \, a = (a_{n-1} \, \dots a_0) \quad a_i \in (0 \, \dots \, B_{asis} - 1) \]
+	 	\[\ (c', \: s ) \coloneqq  a_i + b_j + c\] 
+	 	(carryflag', Ergebnis) \( \coloneqq \) Ziffer a an Stelle i + Ziffer b an Stelle j + c\\
+	 	Beispiel: 
+	 	\[9 + 9 +1 = (1, \: 9) \quad \text{zur Basis 10}\]
+	 		
+	\subsection{Ziffernmultiplikation}
+		Ähnlich wie Volladdition wird hier nur eine Stelle, zweier Zahlen (Ziffernfolgen) jeweils multipliziert:
+		\[  (p', p) \coloneqq a_j * b_j \]
+		Wieder zwei Stellen der Zahlen a und b ergeben higher p' und lower p. Hier ist p' die Zehnerstelle und p ist die Einerstelle.
+		Beispiel:
+		\[ 9 * 9 = (8, 1) \]
+		Wieder zur \emph{Basis 10}.
+		
+		\subsection{Addition}
+			Zwei Zahlen A und B und deren Summe S. Niedrigwertigste Bit ist Index = 0. 
+			Also:\\ 
+			( carryflag, \( Summe_i \) ) Ergibt sich aus, der i-Stelle der Zahl A + der i-Stelle der Zahl B + Carryflag/Übertrag der letzten Addition.
+				
+				\begin{algorithm}
+					\caption{Langzahl Addition}
+					\DontPrintSemicolon
+					 $ c \coloneqq 0 $ : Digit \;
+						\For{$ i \coloneqq 0 \text{ to } n - 1 $}{
+							 $ (c, s_i) \coloneqq a_i + b_i +c $\;
+							 $ s_n  \gets c$ \;
+						}
+				\end{algorithm}
+	
+	\subsection{Number Times Digit}
+		\begin{algorithm}
+			\caption{Langzahl-Multiplikation}
+			\DontPrintSemicolon
+			\SetKwFunction{numberTimes}{numberTimesDigit}
+			\SetKwProg{Fn}{Function}{ }{}
+				\Fn { \numberTimes{a : Array\( _{ [n - 1] }\)  of Digit , b : Digit} } {
+					result \( \gets \) Array\( _{ [n] }\) of Digit \;
+					\( c \gets 0  \) : Digit\;
+					 \( ( h_{old}, l ) \gets a_{[0]} \times b \) \tcp*{(higher, lower)}
+					 \(result_{ [0] } \gets l \)\;
+					
+					\For{$ i \gets 1 $ to $ n - 1 $} {
+						\( (h, l) \gets a_{ [i] } \times b \)\;
+						\( ( c, result_{ [i] }) \gets c + h_{old} +l \) \;
+						\( h_{old} \gets h \)\;
+						\( result[n] \gets c + h_{ old } \)
+					}
+					\Return{ result}
+				}
+		\end{algorithm}
+	\subsection{O-Kalkül}
+		\label{sec:OKalkül}
+		Beim O-Kalkül werden Konstanten (hier: c) und Anfangsstücke vernachlässigt. 
+		\begin{itemize}
+			
+			\item 
+				Operationen zählen \( \to \)  Laufzeit
+			\item 
+				Rechnungen \emph{vereinfachen}
+			\item 
+				Interpretation vereinfachen
+			\item [?]
+				Werfen wir \emph{zuviel} Information weg
+				
+		\end{itemize}
+		
+		Beispiel: hat die Schulmultiplikation ein eigentliche Laufzeit von \(3n^2\) im O-Kalkül jedoch nur \(n^2\).
+			
+			\subsubsection{Vereinfachung: Asymptotik}
+				\begin{labeling}{Oben + Untere Schranke}
+					\item[*]
+					\(  g ( n ) : \textcolor{purple} { \exists } c > 0 : \exists n_0 \in \mathbb{N}_{+}  : \forall n  \geq n_0 \)
+					\item[**]
+					\(g ( n ) :  \textcolor{purple} { \forall } c > 0 : \exists n_0 \in \mathbb{N}_{+}  : \forall n \geq n_0\)
+					\\
+					\item[Obere Schranke] 
+						\( g(n) \in \mathcal{O} ( f ( n ) ) =  \{  * \qquad  : g(n) \textcolor{purple} {\leq} c \times f(n) \} \)
+					\item[Untere Schranke]  
+						\( g(n) \in  \Omega ( f ( n ) ) =  \{ *  \qquad : g(n)\textcolor{green} { \geq} c \times f(n) \} \)
+					\item[Obere + untere Schranke] 
+						 \( g(n) \in  \Theta ( f ( n ) ) \qquad =  \mathcal{O}( f ( n )) \cap \Omega ( f ( n ))  \)\\
+						 \( \implies 0 \leq \qquad  \textcolor{green}{c_1 \times g(n)}\leq f(n) \leq \textcolor{purple}{c_2 \times g(n)} \)
+					\item[Weniger] 
+						\( o ( f ( n ) ) =  \{  ** \qquad : g(n) \textcolor{purple} {\leq} c \times f(n) \} \)
+					\item[Mehr]  
+						\( \omega ( f ( n ) ) =  \{ ** \qquad : g(n) \textcolor{green} {\geq} c \times f(n) \} \)
+				\end{labeling}
+			\paragraph{Man sagt auch:}
+			\begin{easylist}[itemize]
+				& g wächst \~{} so schnell wie f
+					&& höchtens \( \mathcal{O} \)
+					&& mindestens \( \Omega \)
+					&& genauso \( \Theta \)
+			\end{easylist}
+							
+			\subsubsection{O-Kalkül Rechenregeln}
+			
+			\textcolor{red}{ Ungenau: Implizite Mengenklammern.\\ 
+				\( f ( n ) = \xRightarrow{eigentlich}  \{ f ( n ) \subseteq E \} \)	
+			}
+			\begin{align*}
+				\textcolor{blue} { cf ( n ) } & \in \textcolor{blue} { \Theta ( f (n)) }  &\text{ für jedes positive c} \\
+				\textcolor{blue} { \sum_{i = 0}^{ k } a_i n^i } & \in \textcolor{blue} { \mathcal{O} ( n^k ) }  &\text{ Obere Schranke} \\
+				\textcolor{blue} { f( n ) + b ( n ) } & \in \textcolor{blue} { \Omega ( f( n )) } &\text{ Untere Schranke} \\
+				\textcolor{blue} { f ( n ) + g ( n ) } & \in \textcolor{blue} { \mathcal{O} ( f ( n)) } \qquad \text{ falls } g ( n ) = O ( f ( n ))  &\text{ In obere Schranke} \\
+				\mathcal{O} ( f ( n )) \times \mathcal{O} ( g ( n )) &=  \mathcal{O} [ f ( n ) \times g ( n) ] 
+			\end{align*}
+			
+			\subsubsection{Betrachtung über Grenzwerte}
+			Für nicht negative \(f, g : \mathbb{N} \rightarrow \mathbb{R} \) :\\
+			\begin{align*}
+				f(n) \in o(g[n]) \iff& \lim\limits_{n\rightarrow \infty} \frac{f(n)}{g(n)}\\
+				 &= 0\\
+				 \\
+				f(n) \in \omega(g[n]) \iff& \limsup \limits_{n\rightarrow \infty} \frac{f(n)}{g(n)}\\
+				 &= \infty\\
+				 \\
+				f(n) \in \Theta(g[n]) \impliedby & 0 < \lim \limits_{n\rightarrow \infty} \frac{f(n)}{g(n)}\\
+				 &= c < \infty\\
+				 \\
+				f(n) \in \mathcal{O}(g[n]) \iff& 0 < \limsup \limits_{n\rightarrow \infty} \frac{f(n)}{g(n)}\\
+				 &= c < \infty\\
+				 \\
+				f(n) \in \Omega (g[n]) \iff& 0 < \liminf \limits_{n\rightarrow \infty} \frac{f(n)}{g(n)} \leq \infty\\
+			\end{align*}
+			
+			\paragraph{Beispiel:}
+			-- Gilt \(5n \in \mathcal{O} (n^2) \) ?
+			\begin{align*}
+				\frac{f(n)}{g()} =& \frac{5n}{n^2}\\ 
+				=& \frac{5}{n}\\
+				\implies& \lim\limits_{n \rightarrow \infty} \frac{5}{n}\\
+				=& 0\\\hline
+				\\
+				f(n) \in o(g[n]) \iff& \lim\limits_{n \rightarrow \infty} \frac{f(n)}{g(n)}\\
+				f(n) \in \mathcal{O}(g[n]) \iff& \limsup \limits_{n \rightarrow \infty} \frac{f(n)}{g(n)}\\ 
+				& = c <\infty\\
+				f(n) \in \Omega(g[n]) \iff& \liminf \limits_{n \rightarrow \infty} \frac{f(n)}{g(n)}\\
+				&\leq \infty\\
+			\end{align*}
+			
+			\paragraph{Was ist wenn es kein Grenzwert gibt?}
+			\begin{align*}
+				f(x) =& \sin(x) + 2 \in \Theta (1) \\\hline
+				\\
+				f(n) \in \mathcal{O}(g[n]) \iff& 0\\
+				 \leq& \limsup \limits_{n \rightarrow \infty} \frac{f(n)}{g(n)}\\
+				 =& c\\ 
+				 \leq& \infty\\ 
+				 \\
+				 f(n) \in \Omega (g[n]) \iff& 0\\
+				 <& \liminf \limits_{n \rightarrow \infty} \frac{f(n)}{g(n)}\\
+				 \leq& \infty\\ 
+			\end{align*}
+			
+			
+	\subsection{Rekursive Multiplikation}
+		\begin{algorithm}
+			\caption{Rekursive Multiplikation von Langzahlen}
+			\DontPrintSemicolon
+			\SetKw{Assert}{Assert}
+			\SetKwFunction{rec}{recursiveMultiplication}
+			\SetKwProg{Fn}{Function}{}{}
+			
+				\Fn{\rec{a, b} } {
+					\BlankLine
+					\Assert{ Wort a, b haben Länge n}\;
+					\Assert {\(k \coloneqq \frac{n}{2} \)}\;
+					\BlankLine
+					\If{\(n = 1\)} {
+						 \Return { \( a \times b \) }\;
+					}
+					\BlankLine
+					 	\( a_1 \times B^k + a_0 \gets a \) \;
+					 \( b_1 \times B^k + b_0 \gets b  \)		\tcp*{Zahl wird gesplitet, Teiler ohne Rest}
+					\BlankLine
+					 \Return { \rec{$a_1, b_1$} 
+						 $\times B^{2k}$ \;
+						+ [\rec {$ a_0, b_1 $} \;
+						+ \rec{ $a_1, b_0$ }] \;
+						$ \times B^k$ \;
+						+ rec{ $ a_0, b_0 $ }\; 
+				}
+				}
+		\end{algorithm}
+	
+	\subsection{Analyse Rekursiver Algorithmen}
+	\subsection{Karatsuba-Ofman Multiplikation}
+		Beobachtung:
+		\( ( a_1 + a_0 )  ( b_1 + b_0 ) = a_1 b_1 
+		+ a_0 b_0 
+		+
+		\textcolor{purple}{
+			 a_1 b_0 
+			+ a_0 b_1
+		} \)
+		\begin{algorithm}
+			\caption{Karatsuba-Ofman Multiplikation}
+			\DontPrintSemicolon
+			\SetKw{Assert}{Assert}
+			\SetKwFunction{rec}{recursiveMultiplication}
+			\SetKwProg{Fn}{Function}{}{}
+			
+			\BlankLine
+				\Fn { \rec {a, b}} {
+					
+					\Assert{a und b haben Länge n}\;
+					\Assert{ $ k \gets \frac{n}{2} $ }\;
+					\BlankLine
+					\If{$ n = 1 $} {
+						\Return { \( a \times b \) } ;
+					}
+					\BlankLine
+					\( a_1 \times B^k + a_0 \gets a \) \;
+					\( b_1 \times B^k + b_0 \gets b  \)		\tcp*{Zahl wird gesplitet, Teiler ohne Rest}
+					\( c_{11} \gets\) \textcolor{purple}{ \rec{$ a_1, b_1 $} } \;
+					\( c_{00} \gets \) \textcolor{purple}{ \rec{$ a_0, b_0 $} } \;
+					\BlankLine
+					\Return { \( c_{11} \times B^{2k} + \) \;
+						 [ \rec $(a_1 + a_0  ), (b_1 + b_0 )$ \; 
+						 \( - c_{11} - c_{00} \text{]} \times B^k \)\; 
+						\( + c_{00} \) \;
+					}
+				}
+		\end{algorithm}
+	\subsection{Master Theorem (Einfache Form)}
+	Für die \hl{positiven Konstanten} a, b, c, d; sei \( n =b^k \) für ein \( k \in \mathbb{N} \).
+	\begin{align*}
+		r(n) =
+		\begin{dcases*}
+			a & falls \(n = 1\) Basisfall\\
+			c \times n + d \times r (\frac{n}{b}) & falls n > 1 \hl{und teile und herrsche is in use}
+		\end{dcases*}
+	\end{align*}
+	\begin{align*}
+		rekursiveFunktion(n) =
+			\begin{dcases*}
+				a:LaufzeitProgrammteil & falls \(n = 1\)\\ 
+				&sofort "berechenbar"Basisfall,\\
+				&kein rekursiver Aufruf\\
+				\\
+				c:KonstanteDieDasTeilenBrauch \times n \\
+				+ d:OverheadDesTUH  \times r (\frac{n}{b}) &falls  \(n > 1\)\\
+				&\hl{und teile und herrsche is in use}
+			\end{dcases*}
+	\end{align*}
+	
+	Es gilt:
+	\begin{align*}
+	r(n) \in 
+		\begin{dcases*}
+			\text{Theta, mindestens} & Overhead/Aufand :: Faktor wie viel kleiner die Eingabelänge wird\\
+			\Theta(n) & falls \(d < b\)\\
+			\Theta(n \log n) & falls \(d = b\)\\
+			\Theta(n^{\log_b d}) & falls \(d > b\)\\
+		\end{dcases*}
+	\end{align*}
+	
+	\subsection{Master-Theorem (unvereinfacht)}
+	Das Master-Theorem bietet unter bestimmten Bedingungen asymptotische Abschätzungen für Lösungen der Rekursionsgleichung \[ T(n) = a \times T (\frac{n}{b}) + f(n) \], zur Bestimmung der Laufzeitklasse.
+	Hierbei steht \(T(n)\) für die gesuchte Laufzeitfunktion, während a und b Konstanten sind. Ferner bezeichnet \( f(n) \) eine von \(T(n)\) unabhängige und nicht negative Funktion. Damit das Master-Theorem angewendet werden kann, müssen für die beiden Konstanten die Bedingungen \[a \geq 1 \] und \[ b > 1 \] erfüllt sein.\\
+	\\
+	\paragraph{Idee:}
+	\includegraphics{img/Rekursionsbaum_Mastertheorem}
+	//TODO:  Quelle: de.wikiversity.org.wiki.Kurs:Algorithmen.und.Datenstrukturen.Vorlesung.Mastertheorem
+	
+	\paragraph{Interpretation der Rekursion für \( T(n) \):}
+	\begin{labeling}{\(f(n)=\)}
+		\item[\(a =\)] Anzahl der Unterprobleme in der Rekursion
+		\item[\(\frac{n}{b}\)] Größe eines Unterproblems
+		\item[\( T(\frac{n}{b}) \)] Aufwand zum lösen eines Unterproblems der Größe \( \frac{n}{b} \)
+		\item [\(\frac{1}{b} =\)] Teil des Originalproblems, welches wiederum durch alle Unterprobleme repräsentiert wird
+		\item [\(f(n) = \)] Kosten (Aufwand, Nebenkosten), die durch die Division des Problems und die Kombination der Teilösungen enstehen
+	\end{labeling}
+	Das Master-Theorem unterscheidet \emph{drei Fälle}, wobei sich \hl{höchstens} ein Fall auf die gegebene Rekursion anwenden lässt. \\
+	\begin{easylist}[itemize]
+		& Fälle:
+			&& Obere Abschätzung \( \mathcal{O} \)
+			&& Exakte Abschätzung \( \Theta \)
+			&& Untere Abschätzung \( \Omega \)
+	\end{easylist}
+	\BlankLine
+	Passt \emph{keiner der Fälle} so lässt sich das Master-Theorem nicht anwenden und man muss sich \hl{anderer Methoden bedienen}. 
+	
+	\subsubsection{Die drei Fälle}
+	\paragraph{Erster Fall}
+	\begin{align*}
+		&f(n) \in \mathcal{O}(n^{log_b a - \epsilon }) \qquad \text{ für ein } \epsilon >0\\
+		\implies& T(n) \in \Theta(n^{\log_b a})\\
+	\end{align*}
+	\paragraph{Beispiel:}
+	\begin{align*}
+		T(n)  &= 8T(\frac{n}{2}) +1000n^2 \\
+		\\
+		&a =8\\
+		&b = 2\\
+		&f(n) = 1000n^2\\
+		\log _b a=  &\log_2 8 = 3\\
+	\end{align*}
+	
+	\paragraph{Theorem anwenden}
+	\begin{align*}
+		\text{1. Bedingung: } &f(n) \in \mathcal{O}(n^{\log_b a- \epsilon})& \text{Für ein }  \epsilon > 0\\
+		\text{Werte einsetzen: } &\implies 1000n^2 \in \mathcal{O}(n^{3 - \epsilon})\\
+		\text{Wähle \(\epsilon > 0\) : }  & 1000n^2 \in \mathcal{O}(n^2)& \text{ mit } \epsilon = 1\\
+		\\
+		\text{Damit gilt für die Laufzeitfunktion: } &T(n) \in \Theta(n^3)\\ 
+	\end{align*}
+
+	\newpage
+	\paragraph{Zweiter Fall}
+	\begin{align*}
+	&f(n) \in \Theta(n^{log_b a}) \\
+	\implies& T(n) \in \Theta(n^{\log_b a} \log (n))\\
+	\end{align*}
+	
+	\paragraph{Beispiel:}
+	\begin{align*}
+	T(n)  &= 2T(\frac{n}{2}) +10n \\
+	\\
+	&a =2\\
+	&b = 2\\
+	&f(n) = 10n\\
+	&\log_2 2 = 1\\
+	\end{align*}
+	
+	\paragraph{Theorem anwenden}
+	\begin{align*}
+	\text{1. Bedingung: } &f(n) \in \Theta(n^{\log_b a})\\
+	\text{Werte einsetzen: } &\implies 10n \in \Theta(n^1)\\
+	\text{Wähle \(\epsilon > 0\) : }  &10n \in \Theta(n) \\
+	\\
+	\text{Damit gilt für die Laufzeitfunktion: } &T(n) \in \Theta(n \log (n))\\ 
+	\end{align*}
+	
+	\newpage
+	\paragraph{Dritter Fall}
+	\begin{align*}
+	&f(n) \in \Omega(n^{log_b a + \epsilon}) \qquad \text{ für ein } \epsilon >0 \\
+	\implies& T(n) \in \Theta(f(n))\\	
+	\end{align*}
+	
+	Ebenfalls für ein c mit  \(0 < c < 1\) und alle hinreichend großen n gilt die \emph{Regularitätbedingung}:
+	\[af(\frac{n}{b}) \leq cf(n)\]
+	
+	\paragraph{Beispiel:}
+	\begin{align*}
+	T(n)  &= 2T(\frac{n}{2}) + n^2 \\
+	\\
+	&a =2\\
+	&b = 2\\
+	&f(n) = n^2\\
+	&\log_2 2 = 1\\
+	\end{align*}
+	
+	\paragraph{Theorem anwenden}
+	\begin{align*}
+	\text{1. Bedingung: } &f(n) \in \Omega (n^{\log_b a + \epsilon}) \qquad \text{für ein } \epsilon >0\\
+	\text{Werte einsetzen: } &\implies n^2 \in \Omega(n^{1 + \epsilon})\\
+	\text{Wähle \(\epsilon > 0\) : }  &n^2 \in \Omega(n^2)& \text{mit } \epsilon = 1 \\
+	\\
+	\text{2. Bedingung}\\
+	 &&af(\frac{n}{b}) \leq cf(n)\\
+	\text{Setze auch hier obige Werte ein: }& &2(\frac{n}{2}) \leq cn^2\\
+	\iff&& \frac{1}{2}n^2 \leq cn^2\\
+	\text{Wähle } c = \frac{1}{2}: &&\forall n \geq 1 : \frac{1}{2} n^2 \leq \frac{1}{2} n^2\\
+	\\
+	\text{Damit gilt für die Laufzeitfunktion: } &T(n) \in \Theta(n^2)\\ 
+	\end{align*}
+	
+\section[Der Werkzeugkasten für den Werkzeugkasten]{Einführung}
+	 \subsection{Random Access Machine}
+	 	Algorithmen sind abhängig von der Hardware.
+	 	Bestandteile: 
+	 	\begin{description}
+	 		\item[Speicher]
+	 			Beliebig-großer Speicher.\\
+	 				\( R_i \coloneqq S(R_{j}) \) lädt Inhalt von Speicherzelle  \(S(R_j) \) in Register \(R_i\).\\
+	 			\( S(R_j) \coloneqq R_i \)) speichert Register \( R_i \) in Speicherzelle \( S( R_j ) \).
+	 		\item[Register]
+	 			Interpretation: Als Zahlen oder Adressen des Hauptspeichers. Register beinhaltet konstante Speichergröße und Wörter konstanter Länge. Wörter sollten klein wie auch in der Realität sein aber auch groß genug um den kompletten Speicher zu adressieren.
+	 		\item[Rechnen]
+	 			\( R_i \coloneqq R_j \odot R_l \) Registerarithmetik: \( \odot \) ist Platzhalter für eine Vielzahl von Operationen, z.B. Vergleich, Arithmetik, Logik. CPU/ALU - führt Elementar-Operationen aus, nutzt dafür das Register.
+	 		\item[Program Control]
+	 			JZ ( j, R\( _i \))  Setze an Stelle j fort falls \( R_i = 0 \).
+	 			\reversemarginpar \marginnote{JZ \( \gets \) Jump Zero}
+	 			
+	 	\end{description}
+ 	
+ 	\subsubsection{Komplexitätstheorie}
+ 		Wortlänge der Register --- "Kleine" ganze Zahlen?
+ 		\begin{description}
+ 			\item[Konstant viele Bits?] 
+ 				Endlich viel Speicher adressierbar \( \implies \) endlicher Automat.\\
+ 				Theoretisch, unbefriedigend.
+ 			\item[Beliebiege Genauigkeit?] 
+ 				Viel zu optimistisch. Okay für Berechenbarkeit. 
+ 			\item[Genug um den Speicher zu adressieren?] 
+ 				Bester Kompromiss
+ 		\end{description}
+ 		\subsection{Agorithmenanalyse im RAM-Modell}
+ 			Abhängig von Zeit- und Platzkomplexität. Man nimmt an, ein Takt pro Befehl. Und ignoriert Cache , Pipeline, Parallelismus usw.
+ 			\reversemarginpar \marginnote{ Wegen \( O  \) -Notation erlaubt.}
+ 			Speicherplatzbedarf ist etwas unklar, welche RAM benutze ich? Eine Turingmaschine mit langem Band --- Speicherplatzbedarf ist der komplette Weg bis zur adressierten Adresse. Was wäre die letzte belegte Speicherzelle? Wie ist die Speicherverwaltung implementiert?
+ 			
+ 			\subsubsection{Mehr Maschinenmodell}
+ 				\begin{description}
+ 					\item[Algorithm Engineering] 
+ 						Man versucht die Komplexität über praktische Algorithmen nicht anhand des Maschinenmodells der Turingmaschine zu bestimmen, sondern in möglichst realistischen Maschinenmodellen.
+ 					\item[Cache] 
+ 						Schneller Zwischenspeicher.
+ 						\subitem begrenzte Größe \( \implies \) (kürzlich/häufig) zugegriffene Daten sind eher im Cache
+ 						\subitem blockweiser Zugriff \( \implies \) Zugriffe auf aufeinander folgende Speicherbereiche sind schnell 
+ 						\reversemarginpar \marginnote{konsekutive \( \gets \) aufeinander folgende}
+ 					\item[Parallelverarbeitung] 
+ 						Mehrere Prozessoren \( \implies \) unabhängige Aufgaben identifizieren.
+ 					\item[Netzwerk] 
+ 						Wirkt beeinflussend könnte z.B. langsam sein.
+ 				\end{description}
+ 			
+ 		\subsection{Pseudocode}
+ 			\begin{description}
+ 				\item[Just in time] 
+ 					Wir liefern immer Dinge wenn wir sie gerade brauchen?
+ 			\end{description}
+ 		
+ 		\subsection{Design by Contract --- Schleifeninvarianten}
+ 			\begin{labeling}{Datenstrukturinvariante}
+ 				\item[assert] 
+ 					Aussage über Zustand der Programmausführung.
+ 					
+ 				\item[Vorbedingung] 
+ 					Bedingung für korrektes Funktionieren einer Prozedur.
+ 					\marginnote{z.B. Funktionen | aka. Require}
+ 					
+ 				\item[Nachbedingung] 
+ 					Leistungsgarantie einer Prozedur, falls Vorbedingung erfüllt.
+ 					
+ 				\item[Invariante]
+ 					Aussage, die an "vielen" Stellen im Programm gilt.
+ 					 
+ 				\item[Schleifeninvariante] 
+ 					gilt ( vor / nach ) jeder Ausführung des Schleifenkörpers
+ 					
+ 				\item[Datenstrukturinvariante] 
+ 					gilt ( vor / nach ) jedem Aufruf einer Operation auf abstraktem Datentyp
+ 					
+ 			\end{labeling}
+ 			Invariante als zentrales Werkzeug für Algorithmenentwurf und Korrektheitsbeweis.	
+ 		
+ 		\subsubsection{Beispiel}
+ 		
+ 				\begin{algorithm}
+ 				\caption{Ohne Assertions}
+ 				\DontPrintSemicolon
+ 				\SetKwFunction{FPower}{Power}
+ 				\SetKwProg{Fn}{Function}{ }{}
+ 				
+ 				\Fn {\FPower{a : $ \mathbb{ R },  n_0 : \mathbb{ N }   $   } : $ \mathbb{ R } $ }{ 		\tcp*{\(a^{n_0}\) }
+ 					\( p \gets a \) : \( \mathbb{R} \) 		\tcp*{Power}
+ 					\(r \gets 1\) : \( \mathbb{R} \) \tcp*{Hilfsvariable}
+ 					\( n \gets n_0 \) : \( \mathbb{ N } \) \tcp*{weitere Hilfsvariable}
+ 					\BlankLine
+ 					\While{ \( n > 0 \)}{
+ 						\If{n is odd}{
+ 							\(n--\) \;
+ 							\( r \gets r \times p  \) \;
+ 						}
+ 						\Else{ 
+ 							\( ( n, p ) \gets (\frac{n}{2}, p \times p )  \)
+ 						}
+ 					}
+ 					\KwRet{r}
+ 				}
+ 			\end{algorithm}
+ 			
+ 			\begin{algorithm}
+ 				\caption{Mit Assertions}
+ 				\DontPrintSemicolon
+ 				\SetKw{Assert}{Assert}
+ 				\SetKwFunction{FPower}{Power}
+ 				\SetKwProg{Fn}{Function}{}{}
+ 				
+ 				\Fn {\FPower{a : $ \mathbb{ R },  n_0 : \mathbb{ N }   $   } : $ \mathbb{ R } $ }{ 		\tcp*{\(a^{n_0}\) }
+ 					\textcolor{purple}{\Assert {\( \neg ( a = 0 \wedge n_0 = 0 ) \)} 	\tcp*{Vorbedingungen}
+ 					\Assert  {\( n_0 \geq 0 \)} \; 	 }
+ 					\BlankLine
+ 					\( p \gets a \) : \( \mathbb{R} \)		\tcp*{\( p^n r = a^{n_0} \)}
+ 					\(r \gets 1\) : \( \mathbb{R} \) \;
+ 					\( n \gets n_0 \) : \( \mathbb{ N } \) \;
+ 					\BlankLine
+ 					\While{ \( n > 0 \)}{
+ 						\textcolor{purple}{\Assert \( p^n r = a ^{n_0} \) 		\tcp*{Schleifeninvariante} }
+ 						\BlankLine
+ 						\If{n is odd}{
+ 							\(n--\) \;
+ 							\( r \gets r \times p  \) \;
+ 						}
+ 						\Else{ 
+ 							\( ( n, p ) \gets (\frac{n}{2}, p \times p )  \)
+ 						}
+ 					}
+ 					\textcolor{purple}{\Assert \( r = a^{n_0} \) \tcp*{(*) \( \wedge n = 0 \to \) Nachbedingung }}
+ 					\KwRet{r}
+ 				}
+ 			\end{algorithm}	
+ 		
+ 			
+ 		\subsection{Programmanalyse}
+ 			-Fundamentalistisch RAM-Befehle zählen. \\
+ 			-Pseudocode-Befehle \( \implies \) Maschinenbefehle\\
+ 			-Hintergedanke: \( O \)-Notation vereinfacht die direkte Analyse des Pseudocodes.
+ 				\begin{labeling}{Programme + Condition}
+ 					\item[Zweier Programme]
+ 						\( \textcolor{Green}{ T ( I, I' ) } = \textcolor{Blue}{ T( I ) + T ( I' ) } \) \reversemarginpar	\marginnote{Instruction}
+ 					\item[Programme + Condition]
+ 						\(  \textcolor{Green}{  T (  \text{if }  C  \text{ else } I') } \in \textcolor{Blue}{ O [ T ( C ) + max( T( I ), T ( I' ) ) ] } \)
+ 					\item[do-for Schleife]
+ 						\( \textcolor{Green}{ T(  \text{repeat } I \text{ until } C) } \in \textcolor{Blue}{ O ( \sum_0^i T (\text{i-te Iteration} ) ) } \)
+ 				\end{labeling}
+ 			Rekursion \( \implies \) Rekurrenzrelation
+ 		\subsection{Eine Rekurrenz für Teile und Herrsche}
+		\subsection{Master Theorem --- Einfache Form}
+			YouTube anschauen
+		
+	
+\section[Mütter und Väter aller Datenstrukturen]{Folgen, Felder, Listen}
+	
+	\subsection{P und NP}
+	\begin{easylist}[itemize]
+		& Es gibt einigermaßen gute Gründe, "effizent" mit "polynomiell" gleichzusetzen (daher Laufzeit \( n^{O(1)} \) ).
+		& Es gibt viele algorithmische Probleme (NP-vollständig/-schwer). Bei denen es sehr überaschend wäre, wenn sie in Polynomialzeit lösbar qären.
+	\end{easylist}
+
+	\subsection{Folgen}
+		Folgen sind sehr wichtig für die Informatik. Es gibt viele Begriffe für Folgen:
+		\begin{table}[h]
+			\begin{tabular}{| c | c |}
+				\hline
+				Folge & sequence \\ \hline
+				Feld & array \\ \hline
+				Schlange & queue \\ \hline
+				Liste & list \\ \hline 
+				Datei & file \\ \hline
+				Stapel & stack \\ \hline
+				Zeichenkette & String \\ \hline
+				Log & log \\ \hline
+			\end{tabular}
+		\end{table}
+	
+	In der Algorithmik unterscheidet man zwischen:
+		\begin{easylist}[itemize]
+			& abstrakter Begriff \marginnote{Mathe}
+			& Funktionalität \marginnote{Softwaretechnik} 
+				&& Stack \dots 
+			& Repräsentation und Implementierung \marginnote{Algorithmik}
+		\end{easylist}
+	
+	\subsection{Form follows function}
+		\subsubsection{Folgen-Datentypen}	
+			\begin{labeling}{CArray}
+				\item[List] Liste
+				\item[SList] Einfach verkette Liste
+				\item [UArray] unbounded Array
+				\item[CArray]  Circle Array
+			\end{labeling}
+	
+	\subsubsection{Operationen eines Folgen-Datentyp}
+		\begin{labeling}{}
+			\item[ \( \text{[} \cdot \text{]}  \) ] q
+			\item[\( |\cdot| \)] q
+			\item[first] get first element 
+			\item[last] get last element 
+			\item[insert] insert element 
+			\item[remove] remove element from Datatype 
+			\item[pushBack] add Element als letztes Element
+			\item[pushFront] get und remove erstes Element (Müsste es hier nicht "add Element als erstes Element" heißen?)
+			\item[popBack] get und remove letztes  Element
+			\item[popFront] get und remove erstes Element
+			\item[concat]  Konkatiniere
+			\item[splice] q
+			\item[findNext] q
+		\end{labeling}
+	
+	\begin{easylist}[itemize]
+		& Es gibt keine pauschal beste Implementierung für Folgen in der Algorithmik
+		& UArray und CArray sind Cache-efficent bei Operation findNext
+			&& Lokalität
+		& Listen sind verkettet / verpointert
+			&& Elemente können überall im Speicher liegen
+	\end{easylist}
+
+	\subsection{Verkettete Listen}
+		Kreisliste\\
+		Handel = Pointer\\
+		\begin{algorithm}[h]
+			\DontPrintSemicolon
+			\SetKw{Class}{Class}
+			\SetKw{Assert}{assert}
+			\SetKw{this}{this}
+			
+			\Class{Handel}{} \( \gets \) Pointer to Item\;
+			\BlankLine
+			\Class{Item}: Element\; 
+				e \( \coloneqq  \) Element\;
+				next \( \coloneqq \) Handle\;
+				prev \( \coloneqq \) Handle\;
+				\BlankLine
+				\Assert{next \( \rightarrow \) prev \(=\) prev \( \rightarrow \) next = \this}
+				
+		\end{algorithm}
+	
+		\paragraph{Problem}
+			Vorgänger des ersten Listenelements?\\
+			Nachfolger des letzten Listenelements?\\
+		
+		\paragraph{Dummy Header}
+			Repräsentiert die leere Menge\\
+			Dummy Header prev \( \rightarrow \) lastElement\\
+			Dummy Header next \( \rightarrow \) SecondElement\\
+			\begin{description}
+				\item[+] Invariante immer erfüllt
+				\item[+] Vermeidung vieler Sonderfälle
+				\item[-] Speicherplatz, jedoch irrelevant bei langen Listen
+			\end{description}
+			
+			Diese Lösung ist: 
+			\begin{easylist}[itemize]
+				& einfach
+				& lesbar
+				& schnell
+				& testbar
+				& elegant
+			\end{easylist}
+		\subsubsection{Listenklasse}
+			21:03 abschreiben
+			\begin{algorithm}
+				\DontPrintSemicolon
+			\end{algorithm}
+		\paragraph{Procedure splice()}
+			22:00 abschreiben\\
+			
+			\begin{algorithm}
+				\DontPrintSemicolon
+			\end{algorithm}
+			
+			Nach Splice liegen die Elemente nicht mehr in der gleichen Reihenfolge im Speicher wie durch die Liste repräsentiert\\
+			Aufwand ist nicht propotional zur Länge.\\
+			
+			\paragraph{Beispiel zu Splice}
+				26:16 abschreiben\\
+				\begin{algorithm}[h]
+					\caption{Moving elements around within a sequence}
+					\DontPrintSemicolon
+					\SetKwProg{Function}{Function}{}{}
+					\SetKwProg{Procedure}{Procedure}{}{}
+					\SetKw{splice}{splice}
+					\SetKw{moveAfter}{moveAfter}
+					
+					
+					\tcc{\( \langle \dots abc \dots a'c' \dots \rangle \rightarrow \langle \dots ac \dots a'bc' \dots \rangle \)}
+					\Procedure{moveAfter(b,a' : Handle)} {
+						splice(b, b, a')\;
+					}
+					\BlankLine
+					\tcc{\( \langle x\dots abc \dots \rangle \rightarrow \langle bx\dots ac\dots \rangle \)}
+					\Procedure{ moveToFront(b : Handle)}{
+						moveAfter(b, head)\;
+					}
+					\BlankLine
+					\tcc{\( \langle \dots abc \dots z \rangle \rightarrow \langle \dots ac \dots zb \rangle \)}
+					\Procedure{ moveToBack(b : Handle) }{
+						moveAfter(b, last)\;
+					}
+				\end{algorithm}
+			\paragraph{Doch nicht so einfach: Speicherverwaltung!}
+				\begin{easylist}[itemize]
+					& Wir müssen auch den Speicher wieder freigeben, wenn mir Listenelemente löschen!
+						&& Speicherverwaltung der Programmiersprache
+							&&& Potentiell sehr langsam
+					& Konzept: Wiederverwendung
+						&& Klasse freeList enthält ungenutzte Items
+						&& checkFreeList() stellt sicher, dass freeList nicht leer ist
+					& Reale Implementierung
+						&& Naiv aber mit guter Speicherverwaltung
+						&& verfeinerte Freelistkonzepte 
+							&&& klassenübergreifend
+							&&& Freigabe
+						&& Anwendungsspezifisch
+							&&& Wenn man z.B. bestimmen kann wie viele Listenelemente man braucht
+				\end{easylist}
+			
+			\begin{algorithm}[h]
+				\DontPrintSemicolon
+				\caption{Items löschen}
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				
+				\tcc{ \( \langle \dots abc \dots \rangle \rightarrow \langle \dots ac \dots \rangle \) }
+				\Procedure{remove(b : Handle)}{
+				moveAfter(b, freeList.head)\;
+				}
+				\BlankLine
+				\tcc{ \( \langle abc \dots \rangle \rightarrow \langle bc \dots \rangle \) }
+				\Procedure{popFront()}{
+					remove(first)\;
+				}
+				\BlankLine
+				\tcc{ \( \langle \dots abc \rangle \rightarrow \langle \dots ab \rangle \) }
+				\Procedure{popBack()}{
+					remove(last)\;
+				}
+			\end{algorithm}
+		
+			\begin{algorithm}[h]
+				\DontPrintSemicolon
+				\caption{Items einfügen}
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				
+				\tcc{\( \langle \dots ab \dots \rangle \rightarrow \langle \dots aeb \dots \rangle \)}
+				\Function{insertAfter(x : Element, a : Handle ) : Handle}{
+					checkFreeList()\;
+					\( a' \gets  \) freeList \( \rightarrow \)first \;
+					moveAfter(a', a)\;
+					 \( a' \rightarrow e \gets x \)\;
+					 \Return{ a'}
+				}
+				\BlankLine
+				\Function{insertbefore(x : Element, b : Handle) : Handle}{
+					\Return{insertAfter(e, b \( \rightarrow \)prev)}
+				}
+				\BlankLine
+				\Procedure{pushFront( x : Element )}{
+					insertAfter(x, head)\;
+				}
+				\BlankLine
+				\Procedure{pushBack(x : Element )}{
+					insertAfter(x, last)\;
+				}
+			\end{algorithm}
+				
+			\begin{algorithm}[h]
+				\caption{Ganze (Teil-)Listen Manipulieren}
+				\DontPrintSemicolon
+				\SetKwProg{Procedure}{Procedure}{}{}
+				\SetKw{this}{this}
+				
+				\tcc{\( ( \langle a \dots b \rangle , \langle c \dots d \rangle ) \rightarrow ( \langle a \dots bc \dots d \rangle , \langle \rangle ) \)}
+				\Procedure{concat(L': List)} {
+					splice(L'\( \rightarrow \)first, L' \(  \rightarrow \)last, last)
+				}
+				\BlankLine
+				\tcc{\( \langle a \dots b \rangle \rightarrow \langle \rangle \)}
+				\Procedure{makeEmpty()}{
+					freeList\( \rightarrow \)(\this)
+				}
+			\end{algorithm}
+			Das geht in konstanter Zeit unabhängg von der Listenlänge.\\
+			
+			\begin{algorithm}[h]
+				\caption{Suchen}
+				\DontPrintSemicolon
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				
+				\Function{findeNext(x: Element, from: Handle ): Handle}{
+					h\( \rightarrow \)e \( \gets \) x \tcc*{Sentinel}
+					\While{from\( \rightarrow \)e \( \neq \) x}{
+						from \( \gets \) from\( \rightarrow \)next\;
+						\Return{from}
+					}
+				}
+			\end{algorithm}
+			
+		\subsubsection{Funktionalität vs. Effizienz}
+			Zusätzliche variable \emph{size}.\\
+			Size gibt die Anzahl der Listelemente an\\
+			\paragraph{Problem:}
+				- inter-list \emph{splice} geht nicht mehr in konstanter Zeit\\
+			\paragraph{"Und die Moral von der Geschicht:}
+				- Es gibt nicht die Listenimplementierung!\\
+		\subsubsection{Einfach verkettete Listen}
+			\begin{easylist}[itemize]
+				& weniger Speicherplatz
+				& Platz ist oft auch Zeit
+					&& Auslagern?
+				& eingeschränkter
+					&& Kein remove() z.B.
+				& merkwürdige Benutzerschnittstelle, z.B. removeAfter()
+				& \emph{splice()} würde hier nicht mehr funktionieren
+			\end{easylist}
+		
+		\paragraph{Invariante?}
+			Betrachte den Graphen \( G = (Item, E) \) mit \\
+			\begin{align*}
+				E&=\{(u, v) : \\
+					& u \in Item,\\
+					& v = u \rightarrow next\\
+				\}&
+			\end{align*}
+			
+			\begin{easylist}[itemize]
+				& u\( \rightarrow  \)next zeigt immer auf ein Item
+				& \( \forall u \in \text{Item : indegree}_G(u) = 1\)
+					&& Begrifferläuterung:
+						&&& u = Item
+						&&& v = nextItem von this
+						&&& indegree(u)  = jedes u zeigt nur auf ein v
+						&&& indegree = 1 sind immer Kreise
+					&& Ist wohldefiniert.
+					&& Nicht unbedingt leicht zu testen
+			\end{easylist}
+			\emph{Folge:} Items bilden Kollektion von Kreisen\\
+			
+			\begin{algorithm}[h]
+				\caption{splice}
+				\DontPrintSemicolon
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				
+				\tcc{\( ( \langle \dots a' a \dots b b' \rangle , \langle \dots t t' \rangle ) \rightarrow ( \langle \dots a' b' \dots \rangle , \langle \dots t a \dots b t' \dots \rangle ) \)}
+				\BlankLine
+				\Procedure{splice(a', b, t : SHandle)}{
+							\( a' \rightarrow next \gets b \rightarrow next \) \tcc*{Hilfsvariablen sind notwendig.}
+							\( t \rightarrow next \gets a' \rightarrow next \) \;
+							\( b\rightarrow next \gets t \rightarrow next \) \;
+				}
+			\end{algorithm}
+		
+			\paragraph{pushBack()}
+				Man könnte dem Header einen Zeiger auf Last hizufügen,\\
+				so könnte man \emph{pushBack()} effizienter implementieren.\\
+				
+			\subsubsection{Zusammenfassung / Verallgemeinerungen}
+				\begin{easylist}
+					& \emph{Zeiger} zwischen \emph{Items} ermöglichen flexible und \emph{dynamische} Datenstrukturen
+						&& Später werden auch Bäume und Prioritätslisten kommen
+					& Einfache \emph{Datenstrukturinvarianten} sind Schlüssel zu einfachen, effizienten Datenstrukturen
+					& \emph{Dummy-Elemente}, \emph{Wäschter}, usw. erlauben Einsparungen von Sonderfällen
+					& \emph{Einsparungen von Sonderfällen} machen Programme:
+						&& einfacher
+						&& lesbarer 
+						&& testbarer 
+						&& schneller
+				\end{easylist}
+			
+	\subsection{Arrays}
+		\begin{algorithm}[h]
+			\caption{Beschreibung: Array-Formel}
+			\DontPrintSemicolon
+			\SetKwArray{A}{A}
+			
+			\A{i} \( = a_i; \text{falls } A = \langle a_0, \dots , a_{n-1} \rangle \)
+		\end{algorithm}
+	
+		\subsubsection{Arten von Arrays}
+			\begin{description}
+				\item[Beschränkte Arrays]
+					Eingebaute Datenstruktur: Ein Stück Hauptspeicher + Adressrechnung. Größe muss von Anfang an bekannt sein.
+				\item[Unbeschränkte Arrays] 
+					Größe muss nicht von Anfang an bekannt sein.
+			\end{description}
+		
+			\begin{align*}
+				&\langle e_0, \dots , e_n \rangle \rightarrow \text{pushBack(e) } \implies \langle e_0, \dots , e_n, e \rangle \\
+				&\langle e_0, \dots , e_n  \rangle \rightarrow \text{popBack() } \implies \langle e_0, \dots , en{n-1} \rangle \\
+				&\text{size( \( \langle e_0, \dots , e_{n-1} \rangle \) )} = n \\
+			\end{align*}
+		
+		\subsubsection{Unbeschränkte Felder}
+			\begin{easylist}[itemize]
+				& Anwendungen
+					&& Stacks
+					&& Queues
+					&& Prioritätslisten
+			\end{easylist}
+		
+		\paragraph{Grundidee}
+			Beschränkte Felder sind einfach nur ein Stück Hauptspeicher\\
+			\begin{description}
+				\item[pushBack] Element anhängen; \\
+					size++;\\
+					Kein Platz? \( \implies  \) umkopieren und größer neu anlegen
+				\item[popBack] Element am Ende entfernen;\\
+					size--;\\
+					Zu viel Platz? \\
+					umkopieren und kleiner neu anlegen
+			\end{description}
+	
+		\paragraph{Immer passender Platzverbrauch?}
+			\emph{n} pushBack-Operationen brauchen Zeit\\
+			\[ O( \sum_{i=1}^{n} i) = O(n^2) \]
+			Geht es schneller?
+		\paragraph{Teilweise ungenutztem Speicher}
+			\begin{algorithm}[h]
+				\caption{Unbounded Array Speicherverwaltung}
+				\DontPrintSemicolon
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				\SetKw{Assert}{Assert}
+				\SetKwProg{Class}{Class}{}{}
+				\SetKwArray{Array}{Array}
+				\SetKwArray{b}{b}
+				\SetKw{Operator}{Operator}
+				
+				\Class{UArray of Element}{
+					w \( \gets \) 1 :  \(  \mathbb{N}\) \tcc*{allocated size}
+					n \( \gets \) 0 : \(  \mathbb{N}\) \tcc*{current size}
+					\BlankLine
+					\Assert{ \(n \leq w < \alpha n \vee ( n = 0 \wedge w \leq 2 ) \)  }\;
+					b : \Array{\( 0 \text{ bis } (w -1)  \)} of Element\;
+					\Operator{\( [i : \mathbb{N}] \) : Element}\;
+					\Assert{ \( 0 \leq i < n \) }\;
+					\Return{ \b{i} }\;
+					\Function{size() : \(\mathbb{N}\)}{
+						\Return{n}	 
+				}}
+			\end{algorithm}
+		
+			\begin{algorithm}[h]
+				\caption{Unbounded Array vergrößern}
+				\DontPrintSemicolon
+				\SetKwProg{Procedure}{Procedure}{}{}
+				\SetKwArray{b}{b}
+				\SetKwArray{ba}{b'}
+				\SetKwArray{Array}{Array}
+				\SetKw{allocate}{allocate}
+				\SetKw{dispose}{dispose}
+				
+				\Procedure{pushBack(e : Element)}{
+					\If{n = w}{
+						reallocate(2n)\;
+					}
+					\b{n} \(\gets\) e\;
+					n++\;
+				}
+				\BlankLine
+				\Procedure{reallocate(w'\(  : \mathbb{N} \))}{
+					w \( \gets \) w'\;
+					b' \( \gets \) \allocate{\Array{0 bis (w' - 1)} of Element} \tcp*{new empty Array b'}
+					( \ba{0} bis \ba{n-1}) \gets (\b{0} bis \b{n-1}) \tcp*{Fill empty Array}
+					\dispose{b} \tcp*{Delete old Array b}
+					b \( \gets \) b' \tcp*{Pointer assignment}
+				}
+			\end{algorithm}
+			
+			\begin{algorithm}
+				\caption{Unbounded Array verkleinern}
+				\DontPrintSemicolon
+				\SetKwProg{Procedure}{Procedure}{}{}
+				\SetKw{Assert}{Assert}
+				
+				\Procedure{popBack()}{
+					\Assert{\( n > 0 \)}\;
+					n\(--\) \;
+					\If{\( 4n \leq w \wedge n > 0 \)}{
+						reallocate(2n) \tcp*{Verkleinere um die Hälfte}
+					}
+				}
+			\end{algorithm}
+			Was geht schief, wenn man auf passende Größe kürzt?\\
+			-Beim nächsten Mal push muss das Array vergrößert werden, schlechte Laufzeit und keine Amortation.\\
+			
+			\subsection{Amortisierte Komplexität}
+				Sei \emph{u} ein anfangs leeres, unbeschränktes Feld.\\
+				Jede Operationenfolge \emph{\( \sigma = \langle \sigma_1 \text{ bis } \sigma_m \rangle \)} von \emph{pushBack} oder \emph{popBack} Operationen auf u\\
+				wird in Zeit \emph{\( O(m) \)} ausgeführt.\\
+				\paragraph{Sprechweise:}
+					pushBack und popBack haben \emph{amortisiert}, konstante Ausführungszeit.\\
+					\[ O( \frac{c \times m}{m}) ) = O(1) \]
+					\[ c \times m = \text{Gesamtzeit} \qquad m = \text{Anzahl an Operationen} \]\\
+				
+		\subsubsection{Beweis Konto-Methode}
+			\begin{table}
+				\begin{tabular}{ c | l | c}
+					Operation & Kosten & Typ \\ \hline
+					pushBack & 2 Token & einzahlen \\
+					popBack & 1 Token & einzahlen \\
+					reallocate(2n) & n Token & abheben\\
+				\end{tabular}
+				\caption{Konto-Konvention}
+			\end{table}
+		
+			Zu zeigen: \\
+			-Konto wird nicht negativ.\\
+			\\
+			Erster Aufruf von reallocate ist kein Problem \( n=2, \geq 2\text{tes pushBack} \) \\
+			Kann nie ins negative laufen, auch weil:\\
+			\begin{align*}
+				\text{einzahlen: } reallocate(2n) \geq n \times pushBack_{2Token} \geq reallocate(4n)\\
+				\text{abheben: } reallocate(2n) \geq \frac{n}{2} \times popBack \geq reallocate(n)\\
+			\end{align*}
+			Amortisierte Analyse gibt konstante Laufzeit/ Aufwand \\
+		\subsection{Amortisierte Analyse}
+			\begin{easylist}[itemize]
+				& \emph{\( \theta \) }
+					&& Menge von Operationen, z.B pushBack oder popBack
+				& \emph{s} 
+					&& \emph{Zustand} der Datenstruktur
+				& \emph{\( A_{Op}(s) \)}
+					&& \emph{amorSctisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
+				& \emph{\( T_{Op}(s) \)}
+					&& \emph{tatsächliche Kosten} von Operation \( Op \in \theta \) in Zustand s
+			\end{easylist}
+		
+			\emph{Berechnung:}\\
+			 \[ s_0 \overset{Op1}{\rightarrow} s_1 \overset{Op_2}{\rightarrow} s_2 \overset{Op_3}{\rightarrow} \dots \overset{Op_n}{\rightarrow} s_n  \]
+			Die angenommenen amortisierten Kosten sind korrekt, wenn: \\
+			\[ \sum_{1\leq i \leq n} T_{Op_i} (S_{i-1}) \leq c + \sum_{1\leq i \leq n} A_{Op_i} (s{i-1}) \]
+			-Die tatsächlichen Gesamtkosten \( \leq \) den amortisierten Gesamtkosten \emph{+ Konstante c}\\
+			
+			\paragraph{Zusammenfassung}
+			\begin{easylist}[itemize]
+				& \emph{Amortisierte Laufzeiten}
+					&& sind leichter zu garantieren als tatsächliche.
+				& Für die \emph{Gesamtlaufzeit} ist dies trivial.
+				& \emph{Deamortisierung} oft möglich, aber oft
+					&& kompliziert
+					&& und teuer
+						&&& Anwendungen: \emph{Echtzeitsysteme} und \emph{Parallelverarbeitung}
+			\end{easylist}
+		
+		\subsection{Weitere Präsentationen von Folgen}
+		\paragraph{Stapel und Schlangen}
+		\begin{easylist}[itemize]
+			& Einfache Schnittstellen
+			& vielseitig einsetzbar
+			& Implementierung
+				&& austauschbar
+				&& effizient
+			& weniger Fehleranfällig
+		\end{easylist}
+	
+		\paragraph{Stack}
+		\begin{easylist}[itemize]
+			& Last in first out (LIFO)
+			& Operationen
+				&& Push
+				&& Pop
+			& Hat nur ein offenes Ende
+		\end{easylist}
+	
+		\paragraph{FIFO-queue}
+		\begin{easylist}[itemize]
+			& First in First out
+				&& Wie eine echte "Schlange"
+			& Operationen
+				&& enqueue
+				&& dequeue
+		\end{easylist}
+	
+		\paragraph{deque}
+		\begin{easylist}[itemize]
+			& Zwei Enden
+				&& FIFO
+			& Operationen
+				&& pushFront
+				&& popFront
+				&& pushBack
+				&& popBack
+			& Eher selten genutzt
+		\end{easylist}
+		
+		Code den ich nicht schreiben muss kann nicht buggen.
+		
+	\subsubsection{Implementierungsvarianten}
+	\subsubsection{Stack}
+		Operationen push und pop des Stacks sind implementierbar entsprechen pushFront/Back und popFront/Back:\\
+		\begin{labeling}{UArray}
+			\item[List] Funktioniert, aber doppelte Verkettung ist overkill
+			\item[SList] Funktioniert, aber Ende-Zeiger und Dummy sind unnötig
+			\item[UArray] Funktioniert, aber nur amortisierte konstante Laufzeit pro Operation
+		\end{labeling}	
+		In der Vorlesung Algorithm Engineering wird der Proshit gespreaded.\\
+		
+		\paragraph{Anwendung}
+			\begin{easylist}[itemize]
+				& Rekursion
+					& Stackpointer ++, Datum ablegen usw.
+				& Klammerstrukturen
+					&& Parsen
+				& Daten irgendwie ablegen und wieder herausholen
+			\end{easylist}
+		
+	\subsubsection{Warteschlangen FIFO}
+		\emph{en-/dequeue} entsprechen pushFront, popBack\\
+		oder pushBack, popFront für Folgen\\
+		
+		\begin{labeling}{UArray}
+			\item[List] Funktioniert, aber doppelte Verkettung ist overkill
+			\item[SList] Funktioniert, aber Ende-Zeiger wichtig, Dummy ist unnötig
+			\item[Array, UArray] "Scheinbar"(?) nicht effizient möglich
+			\item[CArray] "zyklisches" Array funktioniert
+		\end{labeling}	
+		
+	\subsubsection{Bounded-FIFO}
+		\begin{algorithm}[h]
+			\caption{Bounded-Fifo implementiert mit einem Cycled Array}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKw{Assert}{Assert}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKwArray{Array}{Array}
+			\SetKwArray{b}{b}
+			
+			\Class{BoundedFIFO(n : \( \mathbb{N} \))}{
+				b : \Array{0 bis n} of Element \tcp*{CArray}
+				h \( \gets 0 : \mathbb{N} \) \tcp*{head}
+				t \( \gets 0 : \mathbb{N} \) \tcp*{tail}
+				\BlankLine
+				\Function{isEmpty : \( \{ 0, 1 \} \)} {
+						\Return{h = t}\;
+				} 
+				\Function{first : Element }{
+					\Assert{\( \neg \)isEmpty}\;
+						\Return{\b{h}}\;
+				}
+				\BlankLine
+				\Function{size : \( \mathbb{N} \)}{
+					\Return(\( t - h + n + 1 \))\;
+				}
+				\BlankLine
+				\Procedure{pushBack(x : Element)}{
+					\Assert{\(size < n\)}\;
+					\b{t} \( \gets \) x\;
+					t \( \gets (t + 1) \mod (n + 1) \)\;
+				}
+				\BlankLine
+				\Procedure{popFront}{
+					\Assert{\( \neg  \) isEmpty}\;
+					h \( \gets (h + 1) \mod (n + 1) \) \;
+				}
+			}
+		\end{algorithm}
+	
+	\paragraph{Anwendung}
+		\begin{easylist}[itemize]
+			& Datenpuffer
+				&& Netzwerke
+				&& Pipeline- Verarbeitung
+			& Job-Queues
+				&& FIFO \( implies \) Fairness
+			& Breitensuche in Graphen
+		\end{easylist}
+		
+	\subsubsection{Deque - Double-Ended Queues}
+		\begin{easylist}[itemize]
+			& Aussprache "dek"
+		\end{easylist}
+	
+		\begin{labeling}{Array, UArray}
+			\item[List] Funktioniert
+			\item[SList] Nein (würde nur für push/popFront und pushBack funktionieren)
+			\item[Array, UArray] Nein
+			\item[CArray] Funktioniert
+		\end{labeling}
+	
+	\paragraph{Anwendung}
+		Relativ selten. Oft werden nur 3 der vier Operationen benötigt.\\
+		\begin{easylist}[itemize]
+			& Work Stealing Load Balancing
+			& Undo/Redo Operationspuffer
+		\end{easylist}
+	
+\subsection{Vergleich Listen vs. Felder}
+		\paragraph{Vorteile von Listen}
+			\begin{easylist}[itemize]
+				& flexibel
+				& \emph{remove}, \emph{splice}, usw.
+				& Kein Verschnitt
+			\end{easylist}
+		
+		\paragraph{Vorteile von Feldern}
+			\begin{easylist}[itemize]
+				& beliebiger Zugriff
+				& einfach
+				& Kein Overhead für Zeiger
+				& \emph{Cache}-effizientes scanning
+			\end{easylist}
+		
+\subsection{Ausblick: Weitere Repräsentationen von Folgen}
+	\begin{description}
+		\item[Hashtabellen] schnelles Einfügen, Löschen, Suchen 
+		\item[Prioritätslisten] schnelles Einfügen, Minimum Entfernen
+		\item[Suchbäume] sortierte Folgen - einfügen, löschen, suchen, Bereichanfragen,...
+	\end{description}
+
+	\subsection{Hash-Tabellen}
+		"to hash" - völlig durcheinander bringen
+		
+		\paragraph{Definitionen:}
+			Speichere Menge \( M \subseteq Element \)\\
+			key(e) ist eindeutig für \( e \in M \).\\
+			\\
+		\paragraph{Unterstütze Wörterbuch-Operationen in Zeit \( O(1) \)}
+			\begin{align*}
+				&M \rightarrow \text{insert} (e : \text{Element}) \coloneqq & M \gets M \cup \{e\}\\
+				&M \rightarrow \text{remove}  (k : \text{Key}) \coloneqq &M \gets M \setminus \{e\},\\
+				&															& key(e)= k\\
+				&M \rightarrow \text{find} (k : \text{Key}) \coloneqq &\text{return } e \in M \text{ with } key(e) = k;\\
+				&																									&\perp \text{ falls nichts gefunden wurde }\\
+			\end{align*}
+			Es gibt noch ein anderes Interface:\\
+			\emph{map/partielle} Funktion Key \( \rightarrow \) Element\\
+			\(M[k] = M\rightarrow find(k)\)
+			
+		\subsubsection{Konventionen für Elemente}
+			Viele \emph{Datenstrukturen} repräsentieren \emph{Mengen} (engl. collection classes)\\
+			Die Mengen\emph{elemente e} haben \emph{Schlüssel} key(e).\\
+			Elementvergleich hier gleichbedeutend mit Schlüsselvergleich.\\
+			\emph{\( e = e' \)} \( \implies \) \emph{key(e) = key(e')}\\
+			Analog für \( e< e' \text{ und } e > e' \).
+		
+		\subsubsection{Anwendungen}
+			\begin{easylist}[itemize]
+				& Auslieferungsregale der UB Karlsruhe
+				& Entfernen exakter Duplikate
+				& Schach
+					&& Oder andere kombinatorische Suchprogramme
+				& Symboltabellen bei Compilern
+				& Assoziative Felder bei Script-Sprachen wie Perl oder Python
+				& Datenbank-Gleichheits-Join
+					&& Wenn eine Tabelle in den Speicher passt
+				& Routenplaner
+					&& Teilmengen von Knoten 
+						&&& z.B. Suchraum
+			\end{easylist}
+		
+		\subsubsection{Motivation}	
+		
+
+			
+			\paragraph{Amortisierung von Insert}
+				\begin{easylist}
+					& \ul{nach Merge :}
+						&& \( \sqrt{n-1} \) Positionen in der Hotlist frei
+					& \hl{$\sqrt{n}$} insert-Operationen bis zum nächsten Merge
+					& Merge kostet \hl{$c \times n$}
+					& \ul{Also:}
+						&& insert-Operation spart \hl{$c\sqrt{n}$}
+						&& die letzte Operation vor  Merge kostet \hl{$c \times n$} 
+				\end{easylist}
+			
+			\paragraph{delete(Key k)}
+				Wenn bisher weniger als \( O(\sqrt{n}) \) Löschoperationen:\\
+				\( \implies  \) jedes Element bekommt "valid"-Bit\\
+				\\
+				\ul{Ablauf:}\\
+				\( \rightarrow \) \hl{lookup:} suche k \\
+				\( \rightarrow \) setze "valid"-Bit auf 0\\
+				\\
+				\ul{Laufzeit:}\\
+				$O($\text{\hl{$\sqrt{n} + \log n$ }}$) = O(\sqrt{n}) $\\
+				\\
+				\ul{Löschen zwischen zwei Mergs}\\ 
+				Vorgehen ähnlich zu insert\\
+				\( \implies \) Reorganisation nach \( O(\sqrt{n}) \)-Löschoperationen\\
+				\\
+				\ul{Laufzeit:}\\
+				Wie bei \emph{insert}\\
+				
+			\paragraph{Warum überhaupt löschen?}
+				\begin{easylist}
+					& n ist hier, die \hl{maximale Anzahl von Elementen} in der Hotlist
+						&& \ul{nicht} Anzahl der Operationen
+						&& \ul{nicht} Anzahl der "gesehenen" Elemente
+					& Ohne löschen \(\implies \)Datenstruktur wäschst unbegrenzt!
+						&& Laufzeiten würden nicht mehr stimmen, weil n (siehe Punkt 1)
+				\end{easylist}
+			
+			\subsubsection{Zusammenfassung}
+				\ul{Skip List}\\
+				\begin{easylist}
+					& Randomisierte Datenstruktur 
+					& Erwarteter Aufwand \( O(\log n) \)
+					& \hl{Aggregat-Methode}
+				\end{easylist}
+			
+				\ul{Hotlist}
+				\begin{easylist}
+					& Mischung aus Array und Liste
+					& amortisiert ind \( O(\sqrt{n}) \)
+						&& Einfügen
+						&& Löschen
+						&& Suchen
+					& \hl{Token-Methode}
+				\end{easylist}
+				
+			
+\section{Übung 1 2017}
+			\subsection{Listen mit Überholspur}
+			\begin{easylist}[itemize]
+				& Mehrere Levels von verketteten Listen
+				&& Unterstes Level: Normale Liste
+				&& Höhere Level: Elemente überspringen
+				& Elemente haben eine Höhe
+				& Sinnvoll vor allem für sortierte Listen
+			\end{easylist}
+			
+			Wie hoch ist die optimale Höhe?\\
+			
+			\begin{align*}
+			\text{height}(k) = max \{&\\
+			& h | \exists a \in \mathbb{Z} \\
+			&: a \times 2^h = k \\
+			\}&
+			\end{align*}
+			
+			Bei jedem Schritt wird der Duchraum halbiert.\\
+			\paragraph{Laufzeiten}
+			Suche: \( O(\log n) \)\\
+			Iterieren: \(O(n)\)\\
+			Einfügen, Löschen?
+			
+			\paragraph{Dynamische vs. statische Datenstrukturen}
+			\emph{Dynamische Datenstrukturen} erlauben Anfragen,\\
+			sind wandelbar/anpassungsfähig, während\\
+			\emph{Statische Datenstrukturen} meist nur einmal erstellt werden\\
+			und nicht anpassungsfähig sind,\\
+			man stellt keine Suchanfragen sondern merkt sich den Ort wo ein Datum platziert wurde.\\
+			
+			\subsection{Skip Lists \( \implies \) Dynamische Datenstruktur?}
+			\begin{easylist}[itemize]
+				& Randomisiert
+				& Höhe h mit Wahrscheinlichkeit \( p^h \)
+				& \( p = \frac{1}{2} \) ?
+				& Bei linearen Operationen: 
+				&& aufräumen
+			\end{easylist}
+			
+			Wie lange dauert das Aufräumen?\\
+			\begin{easylist}[itemize]
+				& Primitive Listen-Operationen: \( O(1)\)
+				& Jedes Element muss in max. log n Listen eingefügt (oder entfernt) werden
+				&& \( O(n \log n) \)
+			\end{easylist}
+			
+			\paragraph{Erwartete Komplexität}
+			Speicherplatz: \( 0(n) \)\\
+			Suchen: \(O(log n) \)\\
+			Einfügen, Löschen: \( O(\log n) \)\\
+			\\
+			\emph{Achtung: Kein Worst-Case!}
+			
+			\subsection{Amortisierte Analyse}
+			\paragraph{Die Idee}
+			\begin{easylist}[itemize]
+				& Viele schnelle Operationen, wenig langsame
+				& Umverteilung der Laufzeit
+				&& Spitzen abschneiden und auf die vorher gehenden Operationen addieren
+			\end{easylist}
+			
+			\paragraph{Beispiel: Das Ziel}
+			\begin{easylist}[itemize]
+				& Skip List mit Worst-Case-Garantien
+				& \emph{Annahme}: Bei n Elementen nur \(\log \) n Anfragen
+				& Wir wollen: Einfügen, Anfragen in \( O(\log ^2 n) \) (amortisiert!)\\
+			\end{easylist}
+			
+			\paragraph{Beispiel: Idee}
+			\begin{easylist}[itemize]
+				& Beim Einfügen keine Mühe geben
+				& Vor jeder Anfrage aufräumen
+			\end{easylist}
+			\[ n \times (c_1 \times \log n) + \log n \times (c_2 \times n \log n) \] \\
+			\[ \text{Einfügen: }(c_1 \times \log n) \quad \text{Aufräumen: } (c_2 \times n \log n) \]
+			
+			\paragraph{Rechen-Beispiel}
+			\begin{align}
+			\sum_{1 \leq i \leq n}T_{Op_i} &= n \times c_1 + \log n \times c_2 \times n \times \log n\\
+			&\leq c_1 \times n \times \log^2 n + c_2 \times n \times \log^2 n\\
+			&= (c_1 + c_2) \times n \times \log^2 n
+			\end{align}
+			2.\( \leq \) Nach oben abschätzen\\
+			3. Vereinfachen
+			
+			\begin{align}
+				\sum_{1\leq i \leq n} A_{Op_i} &= n \times \log^2 n + \log n \times log^2 n\\
+				c_3 \times (\sum_{1\leq i \leq n} A_{Op_i}) &= c_3 ( \times n \times \log^2 n + \log n \times log^2 n)\\
+				& \geq c_3 \times n \times \log^2 n\\
+			\end{align}
+			
+				2. Mal \(c_3\)\\
+				3. Nach unten abschätzen
+				Wenn amortisiert \( \geq \) tatsächlichen Kosten, dann sind die amortisierten Kosten korrekt.(?)
+			
+			\subsection{Hotlist}
+			\begin{easylist}
+				& insert(Key k, Data d)
+				& lookup(Key k) : Data
+				& delete(Key k)
+			\end{easylist}
+			
+			Ziel: Jede Operation in amortisiert \(O(\sqrt{n}) \) Zeit
+			
+			\paragraph{Beschreibung}
+			Array und Hotlist\\
+			\\
+			\uline{Operation lookup}\\
+			Vorgehen:\\
+			-durchsuche geordnetes Array per binären Suche\\
+			-durchsuche "Hotlist komplett"\\
+			\\
+			\ul{Laufzeit:}\\
+			\(O(\log n + \sqrt{n}) = O(\sqrt{n})\)\\
+			\(O(\text{binäreSucheArray}(\log n ) + \text{durchsucheHotlistKomplett}(\sqrt{n}) ) = O(\sqrt{n})\)\\
+			\\
+			\ul{Operation insert}\\
+			Es gibt zwei Fälle:\\
+			\begin{description}
+				\item[1.Fall] Hotlist ist nicht voll \\ \( \implies \) nehme nächste freie Position in Hotlist \\ \( \implies \) Laufzeit \(O(1)\)
+				\item[2.Fall] Hotlist ist voll \\ \( \implies \) sortiere Hotlist \\ \( \rightarrow \) merge: führe sortierte Listen zusammen\\ Key K welcher eingefügt werden soll ist erstes Element in der Hotlist\\ \( \implies\) Laufzeit : \\ \(O[\sqrt{n} \log (\sqrt{n}) + n + \sqrt{n}] = O(n) ) \)\\
+				\(O[\text{sortiere}(\sqrt{n} \log (\sqrt{n}) )+ \text{merg}(n + \sqrt{n})] = O(n) ) \)\\
+			\end{description}
+		
+		\subsection{Nachteil von Verkettete Listen}
+			\begin{easylist}
+			& Speicherplatz-Allokation dauert lange
+			& Kann verstreut im Speicher liegen
+			& Nicht Cache-effizent
+		\end{easylist}
+	
+		\subsection{Liste als drei Arrays}
+			\begin{easylist}
+				& \ul{Jeweils ein Array für:}
+					&& key
+					&& next
+					&& prev
+				& Arrays ermöglichen Lokalität
+				& \ul{Falls das Array voll ist:}
+					&& Werden neue Arrays angelegt
+					&& Footer zeigt auf neue Arrays
+			\end{easylist}
+		
+		\paragraph{Man kann auch alles in ein Array kloppen}
+			[0]Key, [1] Prev, [2] Next, [3] Key
+		
+		\subsection{Variablenwechsel}
+			\begin{align*}
+				T(n) = T(\sqrt{n}) +1\\
+				\text{für } n = 2^{2^i} \\
+				T(4) = 1\\
+			\end{align*}
+		
+		\paragraph{Wie löst man solche Rekurennzen?}
+			\[T(n) = T(\sqrt{n}) +1\]
+			\( \implies \)\hl{Setze:} \quad \(m = \log n \) \quad also: \(n = 2^m \) \marginnote{Substitution}\\
+			\\
+			\( \implies \) Liefert:
+			\[ T(2^m) = T(2^{\frac{m}{2}}) +1 \]
+			\(\implies \)\ul{Trick} setze: \quad \( S(m) \gets T(2^m) \)\\
+			\[ S(m) = S(\frac{m}{2}) +1 \]
+			Masttheorem \( \implies \) \[ S(m) \in O(\log m) \]
+			Rückwärts \( \implies \)
+			
+			\begin{align*}
+				T(n) &= T(2^m)\\
+				&= S(m) \\
+				&\in O(\log m)\\
+				&= O(\log \log n)\\
+			\end{align*}
+	
+	\section{Übung 1 2018}
+		\subsection{Effizenz von Algorithmen}
+		
+			\subsubsection{Asymptotische Laufzeit}
+			\begin{easylist}
+				& Bestimmung \~{} Fall/Case 
+					&& günstigsten
+					&& mittleren/average
+					&& schlechtesten/worst
+			\end{easylist}
+			//TODO: insert 13:45
+		
+			\subsubsection{O-Notation aka. Landau-Notation}
+			Siehe Abschnitt \ref{sec:OKalkül}\\
+			Wir intressieren und nicht für Initialisierung oder Overhead.\\
+			Asymptotisch -> Im Unendlichen\\
+			Basis des Logarithmus -> egal\\
+		\subsection{Korrektheit von Algorithmen}
+			\subsubsection{Invarianten}
+			\paragraph{Schleifeninvarianten}
+			
+			\begin{labeling}{1. Induktionsanfang:}
+				\item[1. Induktionsanfang:] Invariante gilt vor erster Iteration
+				\item[2. Induktionschritt:] Invariante gilt vor \hl{i-ten} Iteration\\
+				 \( \implies \) Invariante gilt vor \hl{i + 1} Iteration
+			\end{labeling}
+			Abbruchbedingung erfüllt \emph{und} Invariante gilt\\
+			\( \implies \) richtiges Ergebnis \emph{und} Nachbedingung erfüllt.
+			
+		\subsection{}
+		\subsection{}
+		\subsection{}
+	
+		
+\section[Chaos als Ordnungsprinzip]{Hashing}
+\section[Effizienz durch Ordnung]{Sortieren}
+\section[Immer die Übersicht behalten]{Prioritätslisten}
+\section[Die eierlegende Wollmilchsau]{Sortierte Liste}
+\section[Beziehungen im Griff haben]{Graphrepräsentation}
+\section[Globalen Dingen auf der Spur]{Graphtraversierung}
+\section[Schnellstens zum Ziel]{Kürzeste Wege}
+\section[Immer gut verbunden]{Minimale Spannbäume}
+\section[Noch mehr Entwurfsmethoden]{Optimierung}
+\section{Nützlich für die Prüfung}
+	\begin{easylist}
+		& Logarhytmus Umformungsregeln für \(\mathcal{O}\)-Kalkül
+	\end{easylist}
+
+\end{document}
