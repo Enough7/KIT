@@ -96,7 +96,7 @@
 	\item[Analysetechniken] 
 		Leistungsgarantien, objektiver Algorithmenvergleich
 	
-	\item[O-Kalkühl] 
+	\item[O-Kalkül] 
 		//TODO Abschätzung nach oben.
 \end{description}
 
@@ -105,7 +105,7 @@
 	\subsection{Datenstrukturen}
 	
 	\subsection{Volladdition}
-		\emph{Voll}addition weil mit Carry-Bit/Übertrag mit beachtet wird. Zwei eventuell sehr lange Zahlen a und b als Ziffernfolge. Es gibt zwei Zahlen a und b. Zur Basis \emph{B} 
+		\emph{Voll}addition weil Carry-Bit/Übertrag mit beachtet wird. Zwei eventuell sehr lange Zahlen a und b als Ziffernfolge. Es gibt zwei Zahlen a und b zur Basis \emph{B} 
 		 \[ \text{Zahl} \, a = (a_{n-1} \, \dots a_0) \quad a_i \in (0 \, \dots \, B_{asis} - 1) \]
 	 	\[\ (c', \: s ) \coloneqq  a_i + b_j + c\] 
 	 	(carryflag', Ergebnis) \( \coloneqq \) Ziffer a an Stelle i + Ziffer b an Stelle j + c\\
@@ -513,12 +513,12 @@
  			
  			\subsubsection{Mehr Maschinenmodell}
  				\begin{description}
- 					\item[Algorithmn Engeneering] 
+ 					\item[Algorithm Engineering] 
  						Man versucht die Komplexität über praktische Algorithmen nicht anhand des Maschinenmodells der Turingmaschine zu bestimmen, sondern in möglichst realistischen Maschinenmodellen.
  					\item[Cache] 
  						Schneller Zwischenspeicher.
  						\subitem begrenzte Größe \( \implies \) (kürzlich/häufig) zugegriffene Daten sind eher im Cache
- 						\subitem blockweiser Zugriff \( \implies \) Zugriff auf aufeinander folgende Speicherbereiche sind schnell 
+ 						\subitem blockweiser Zugriff \( \implies \) Zugriffe auf aufeinander folgende Speicherbereiche sind schnell 
  						\reversemarginpar \marginnote{konsekutive \( \gets \) aufeinander folgende}
  					\item[Parallelverarbeitung] 
  						Mehrere Prozessoren \( \implies \) unabhängige Aufgaben identifizieren.
@@ -554,7 +554,7 @@
  					gilt ( vor / nach ) jedem Aufruf einer Operation auf abstraktem Datentyp
  					
  			\end{labeling}
- 			Invariante als zentrales Werkzeug für Algorithmenentwurf und Korektheitsbeweis.	
+ 			Invariante als zentrales Werkzeug für Algorithmenentwurf und Korrektheitsbeweis.	
  		
  		\subsubsection{Beispiel}
  		
@@ -598,7 +598,7 @@
  					\( n \gets n_0 \) : \( \mathbb{ N } \) \;
  					\BlankLine
  					\While{ \( n > 0 \)}{
- 						\textcolor{purple}{\Assert \( n^n r = a ^{n_0} \) 		\tcp*{Schleifeninvariante} }
+ 						\textcolor{purple}{\Assert \( p^n r = a ^{n_0} \) 		\tcp*{Schleifeninvariante} }
  						\BlankLine
  						\If{n is odd}{
  							\(n--\) \;
@@ -617,7 +617,7 @@
  		\subsection{Programmanalyse}
  			-Fundamentalistisch RAM-Befehle zählen. \\
  			-Pseudocode-Befehle \( \implies \) Maschinenbefehle\\
- 			-Hintergedanke: \( O \)-Notation vereinfachtdie direkte Analyse des Pseudocodes.
+ 			-Hintergedanke: \( O \)-Notation vereinfacht die direkte Analyse des Pseudocodes.
  				\begin{labeling}{Programme + Condition}
  					\item[Zweier Programme]
  						\( \textcolor{Green}{ T ( I, I' ) } = \textcolor{Blue}{ T( I ) + T ( I' ) } \) \reversemarginpar	\marginnote{Instruction}
@@ -680,9 +680,9 @@
 			\item[first] get first element 
 			\item[last] get last element 
 			\item[insert] insert element 
-			\item[remove] element from Datatype 
+			\item[remove] remove element from Datatype 
 			\item[pushBack] add Element als letztes Element
-			\item[pushFront] get und remove erstes Element
+			\item[pushFront] get und remove erstes Element (Müsste es hier nicht "add Element als erstes Element" heißen?)
 			\item[popBack] get und remove letztes  Element
 			\item[popFront] get und remove erstes Element
 			\item[concat]  Konkatiniere
@@ -692,7 +692,7 @@
 	
 	\begin{easylist}[itemize]
 		& Es gibt keine pauschal beste Implementierung für Folgen in der Algorithmik
-		& UArrayn und CArray sind Cache-efficent bei Operation findNext
+		& UArray und CArray sind Cache-efficent bei Operation findNext
 			&& Lokalität
 		& Listen sind verkettet / verpointert
 			&& Elemente können überall im Speicher liegen
@@ -752,8 +752,8 @@
 				\DontPrintSemicolon
 			\end{algorithm}
 			
-			Nach Splice liegen die Elemente nicht mehr in der gleichen Reihenfolge im Speicher als wie durch die Liste repräsentiert\\
-			Aufwand ist nicht propotional zur länge.\\
+			Nach Splice liegen die Elemente nicht mehr in der gleichen Reihenfolge im Speicher wie durch die Liste repräsentiert\\
+			Aufwand ist nicht propotional zur Länge.\\
 			
 			\paragraph{Beispiel zu Splice}
 				26:16 abschreiben\\
@@ -784,7 +784,7 @@
 			\paragraph{Doch nicht so einfach: Speicherverwaltung!}
 				\begin{easylist}[itemize]
 					& Wir müssen auch den Speicher wieder freigeben, wenn mir Listenelemente löschen!
-						&& Speicher verwaltung der Programmiersprache
+						&& Speicherverwaltung der Programmiersprache
 							&&& Potentiell sehr langsam
 					& Konzept: Wiederverwendung
 						&& Klasse freeList enthält ungenutzte Items
@@ -895,7 +895,7 @@
 					&& Auslagern?
 				& eingeschränkter
 					&& Kein remove() z.B.
-				& merkwürdige Benutzerschnitstelle, z.B. removeAfter()
+				& merkwürdige Benutzerschnittstelle, z.B. removeAfter()
 				& \emph{splice()} würde hier nicht mehr funktionieren
 			\end{easylist}
 		
@@ -1068,7 +1068,7 @@
 				}
 			\end{algorithm}
 			Was geht schief, wenn man auf passende Größe kürzt?\\
-			-Beim nächsten Mal push muss das Array vergrößert werden, schlechte Laufzeit und keine Amotation.\\
+			-Beim nächsten Mal push muss das Array vergrößert werden, schlechte Laufzeit und keine Amortation.\\
 			
 			\subsection{Amortisierte Komplexität}
 				Sei \emph{u} ein anfangs leeres, unbeschränktes Feld.\\
@@ -1094,20 +1094,20 @@
 			-Konto wird nicht negativ.\\
 			\\
 			Erster Aufruf von reallocate ist kein Problem \( n=2, \geq 2\text{tes pushBack} \) \\
-			Kann nie ist negative laufen, auch weil:\\
+			Kann nie ins negative laufen, auch weil:\\
 			\begin{align*}
 				\text{einzahlen: } reallocate(2n) \geq n \times pushBack_{2Token} \geq reallocate(4n)\\
 				\text{abheben: } reallocate(2n) \geq \frac{n}{2} \times popBack \geq reallocate(n)\\
 			\end{align*}
-			Amotisierte Analyse gibt konstante Laufzeit/ Aufwand \\
-		\subsection{Amotisierte Analyse}
+			Amortisierte Analyse gibt konstante Laufzeit/ Aufwand \\
+		\subsection{Amortisierte Analyse}
 			\begin{easylist}[itemize]
 				& \emph{\( \theta \) }
 					&& Menge von Operationen, z.B pushBack oder popBack
 				& \emph{s} 
 					&& \emph{Zustand} der Datenstruktur
 				& \emph{\( A_{Op}(s) \)}
-					&& \emph{amotisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
+					&& \emph{amorSctisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
 				& \emph{\( T_{Op}(s) \)}
 					&& \emph{tatsächliche Kosten} von Operation \( Op \in \theta \) in Zustand s
 			\end{easylist}
@@ -1132,7 +1132,7 @@
 		\subsection{Weitere Präsentationen von Folgen}
 		\paragraph{Stapel und Schlangen}
 		\begin{easylist}[itemize]
-			& Einfache Schnitstellen
+			& Einfache Schnittstellen
 			& vielseitig einsetzbar
 			& Implementierung
 				&& austauschbar
@@ -1142,7 +1142,7 @@
 	
 		\paragraph{Stack}
 		\begin{easylist}[itemize]
-			& Last in first out
+			& Last in first out (LIFO)
 			& Operationen
 				&& Push
 				&& Pop
@@ -1246,7 +1246,7 @@
 	\paragraph{Anwendung}
 		\begin{easylist}[itemize]
 			& Datenpuffer
-				&& Netwerke
+				&& Netzwerke
 				&& Pipeline- Verarbeitung
 			& Job-Queues
 				&& FIFO \( implies \) Fairness
@@ -1260,7 +1260,7 @@
 	
 		\begin{labeling}{Array, UArray}
 			\item[List] Funktioniert
-			\item[SList] Nein (aber würde nur für push/popFront und pushBack funktionieren)
+			\item[SList] Nein (würde nur für push/popFront und pushBack funktionieren)
 			\item[Array, UArray] Nein
 			\item[CArray] Funktioniert
 		\end{labeling}
