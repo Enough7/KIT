@@ -1,0 +1,1180 @@
+\documentclass[a4paper]{scrartcl}
+
+% Für mathematische Symbole
+\usepackage{mathtools}
+\usepackage{amsfonts}
+
+\usepackage{import}
+
+\usepackage{polyglossia}
+\setdefaultlanguage[ 
+	spelling = new, 
+	babelshorthands = true ]
+{german}
+
+% Für Pseudo-Code
+\usepackage[ruled,vlined]{algorithm2e}
+
+%Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks   = true, %Colours links instead of ugly boxes
+	urlcolor     = blue, %Colour for external hyperlinks
+	linkcolor    = blue, %Colour of internal links
+	citecolor   = red %Colour of citations
+}
+
+% Glossar
+% nomain - wenn importiert
+% automake - für autocompile
+\usepackage[xindy, automake]{glossaries}
+\subimport{../../../../KIT/LaTex/Glossary/}{MathematikGlossary}
+\subimport{../../../../KIT/LaTex/Glossary/}{TheoretischeInformatikGlossary}
+\subimport{../../../../KIT/LaTex/Glossary/}{TechnischeInformatikGlossary}
+
+%Aritmethikoperationen
+%\usepackage{basicarith}
+
+%Für Farben
+\usepackage[dvipsnames]{xcolor}
+\definecolor{TextMarkerGelb}{RGB}{255, 255, 120}
+\usepackage{soul}
+\sethlcolor{TextMarkerGelb}
+
+% Fonts
+\usepackage{fontspec}
+\usepackage{unicode-math}
+
+\setmainfont{Roboto}
+\setsansfont{Roboto}
+\setmonofont{Roboto}
+
+% Math-Font
+\setmathfont{Roboto} % for math symbols, can be any other OpenType math font
+
+% Aside Kommentar
+\usepackage{marginnote}
+
+% Package für bessere Liste
+\usepackage{scrextend}
+
+% Mehrere Zeilen in einer Table für einen Eintrag nutzen
+\usepackage{multirow}
+
+% Durchstreichen
+\usepackage[normalem]{ulem}
+
+% Coole Listen [Seperator-zeichen]
+\usepackage[ampersand]{easylist}
+
+%\DeclareMathSizes{10}{18}{12}{8}   % For size 10 text
+%\DeclareMathSizes{11}{19}{13}{9}   % For size 11 text
+%\DeclareMathSizes{12}{20}{14}{10}  % For size 12 text
+
+% Paragraph-Einstellung
+\usepackage[explicit]{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}[block]
+{\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1}}
+\titleformat{name=\paragraph,numberless}[block]
+{\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1.}}
+
+% \emph{} - ändern
+\DeclareTextFontCommand{\emph}{\bfseries}
+
+\makeglossaries
+
+%opening
+\title{Mitschrift Digitaltechnik und Entwurfsverfahren}
+
+\author{Paul Züchner}
+
+
+\begin{document}
+	
+	\maketitle
+	\tableofcontents
+	\newpage
+	\printglossaries
+	\section{Einführung}
+	
+	Digitaltechnik bildet die Grundlage für ein modernes Leben\\
+	
+	Vom Problem zur Hardware\\
+	
+	\subsection{Aufteilung technische Informatik}
+			\begin{table}[h]
+				\centering
+				\begin{tabular}{ | c | r |}
+					\hline
+					\multirow{2}{*}{\textbf{Rechnerorganisation} } & Assemblerebene \\ \cline{2-2}
+						& Maschinensprachebene \\ \cline{2-2}
+						& Mikrobefehlsebene\\ \hline 
+					\textbf{Digitaltechnik} & Ausführende Schaltungen \\ \hline
+				\end{tabular}
+				\caption{Aufteilung | Soft}
+			\end{table}
+		
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{ | c | r |}
+				\hline
+				\multirow{4}{*}{ \textbf{Rechnerorganisation} } & Problemstellung \\ \cline{2-2}
+					& Algorithmen \\ \cline{2-2}
+					& Hochsprachen \\ \cline{2-2}
+					& Maschinensprache \\ \hline
+				\multirow{3}{*}{\textbf{Digitaltechnik} } & Funktionsgruppen \( \implies \) Alu \\ \cline{2-2}
+					& Gatter \( \implies \) logische Elementaroperationen  \\ \cline{2-2}
+					& Elektronische Bauteile \\ \cline{2-2}
+					\hline
+			\end{tabular}
+			\caption{Vom Problem zur Hardware  | Hard \newline \sout{Vom Problem zum Programm}}
+		\end{table}
+	
+	\subsection{Datenverarbeitender Systeme}
+		\subsubsection{Aufbau}
+			\begin{figure}[h]
+				\begin{description}
+					\item [Elektronische Komponenten]
+					Besitzt eine Vielzahl elektronischer Komponenten. Die Komponenten sind untereinander verbunden und bilden eine Struktur in sich.
+					\item [Struktur] 
+					Diese Gesamtheit liefert hoffentlich das \emph{gewünschte Verhalten}.
+				\end{description}
+			\caption{Aufbau}
+			\end{figure}
+	\subsubsection{Aufgaben}
+		\begin{figure}[h]
+			\begin{description}
+				\item[Entwurf]
+					Aus einzelnen Komponenten wird eine komplexe Struktur entworfen, welche das \emph{gewünschte Verhalten}, möglichst preisgünstig, zu bietet.
+				\item[Analyse]
+					Vorhersage und des \emph{Verhaltens} einer Struktur aus bekannten Komponenten.
+			\end{description}
+		\caption{Aufgaben}
+		\end{figure}
+	
+	\subsubsection{Abstraktionsebenen}		
+		\begin{figure}[h]
+			\begin{enumerate}
+				\item \emph{Verhalten} 
+				\item \emph{Struktur}
+				\item Strukturen
+				\item \emph{Funktionen}
+			\end{enumerate}
+			\caption{Um die Komplexität beherrschen zu können, ist es notwendig, Abstraktionsebenen in den Entwurf einzufügen. Diese Hierarchisierung erleichtert den Entwurf als auch die Analyse.}
+		\end{figure}
+	
+	\subsection{Entwurf}
+		top down
+		bottom up
+		jojo
+		
+	\subsection{Lernziele}
+	
+		\begin{figure}[h]
+			\begin{easylist}[itemize]
+				& Verständnis verschiedener Darstellungsformen von Zahlen / Alphabeten in Rechnern.
+				& Formale Schaltungsbeschreibung.
+				& Kenntnisse
+					&& der relevanten Speichertechnologien
+					&& der technischen Realisierungsformen von komplexen Schaltungen.
+					
+				& Schaltungen
+					&& Entwickeln
+					&& Analysieren
+					&& Verstehen
+			\end{easylist}
+		\end{figure}
+
+	\subsection{Vorlesungsinhalte}
+		\begin{figure}[h]
+			\begin{easylist}{itemize}
+				& Grundlagen der Informationsdarstellung
+				& Schaltnetze
+					&& Formale Grundlagen logischer Beschreibungen
+						&&& Boolesche Algebra
+						&&& Schaltalgebra
+					&& Realisierung von Schaltnetzen
+						&&& Layout
+						&&& Schalter
+						&&& Gatterebene
+					&& Entwurf von Schaltnetzen
+						&&& Die Beschreibung "klassischer" Verfahren zur Logikminimierung
+					&& Laufzeiteffekte bei Schaltnetzen
+					
+				& Schaltwerke
+					&& Formale Grundalgen
+						&&& Schaltwerke als Implementierung von endlichen Automaten
+					&& Entwurf synchronen \& asynchronen Schaltwerken
+					&& Spezielle  Schaltwerksbausteine
+						&&& Register
+							&&&& Schieberegister
+						&&& Zähler
+						&&& Programierbare Bausteine
+				
+				& Rechnerarithmetik
+					&& Verschiedene Verfahren \& Implementierungsmöglichkeiten
+							&&& \glspl{Grundrechenart} / \gls{Arithmetik}
+					&& Aufbau einer arithmetisch-logischen Einheit
+			\end{easylist}
+		\end{figure}
+	
+	\section{Grundlagen der Informationsdarstellung}
+	
+		\subsection{Zahlensysteme}
+			\begin{figure}[h]
+				\begin{easylist}{itemize}
+					& Mensch
+						&& Dezimal
+					& Maschine
+						&& Dual
+						&& Oktal
+						&& Hexadezimal
+						
+				\end{easylist}
+				\caption{Zahlensysteme}
+			\end{figure}
+		
+		\subsection{Zahlendarstellung}
+			\subsubsection{Stellenwertsystem}
+				Darstellung der Zahlen erfolgt in Form einer \emph{Kette} von Ziffern \( Z_i \) \reversemarginpar \marginnote{String}
+				\[ \textcolor{Blue}{Z_n; \dots ; Z_0 } \textcolor{Red}{ ; Z_{-m} } \]
+				Jeder Position i der \emph{Kette} ist ein Stellenwert zugeordnet die i-te Potenz der Basis des Zahlensystems
+				\[ \textcolor{Blue}{  b^n, \dots , b^1 , 1, } \textcolor{Red}{ b^{-1}, \dots, b^{-m}  } \]
+				Der Dezimalwert X der Zahl, gegeben durch die Ziffern Z, ergibt sich dann als Summe der Werte aller Einzelstellen \(z_i \times b^i \)
+				\[ X_b = \textcolor{Blue}{ z_n \times b^n + \dots + z_0 } \textcolor{Red}{ + \dots + z_{-m} n^{-m} }= \sum_{i= -m}^{n} z_ib^i \]
+			
+			\subsubsection{Darstellung im Rechner}
+				Einzelne binär Ziffern wie 0 und 1 heißen Bit, kleinste mögliche Informationseinheit.
+				
+				\begin{figure}[h]
+				Probleme bei der Darstellung von Zahlen
+					\begin{easylist}[itemize]
+						& Endlicher Speicher
+							&& Nur Zahlen mit endlicher Genauigkeit darstellbar
+						& Über- / Unterläufe
+						& Positive und negative Zahlen müssen unterscheidbar sein
+						& Darstellung von Gleitkommazahlen
+					\end{easylist}
+				\end{figure}
+			
+			\subsection{Umwandlung}
+				\subsubsection{Dezimalsystem \(\implies\) Basis b)}
+					\begin{itemize}
+						\item[Gegeben:] 
+							Zeichenkette im Dezimalsystem.
+						\item[Ziel:] 
+							Bestimmung der Anzahl an Zeichen (p / q) und deren eigentlichen Werte y zur Basis b. 
+					\end{itemize}
+				\begin{align*}
+					X_{10} &=  \text{ \hl{$ z_n 10^n + \dots + z_0 \times 10^0 + \dots + z_{-m} 10^{-m} $} } \\
+								&= \text{ \hl{$ y_p b^p + \dots + y_0 \times 10^0 + \dots + y_{-q} b^{-q}  $} }\\
+								&= \text{ \hl{$ X_b $} }
+				\end{align*}
+			
+		\subsubsection{Division \( \neq_{100\%} \) Umkehrung der Multiplikation }
+			\begin{align*}
+			Z &\gets Dividend \\ 
+			D &\gets Divisor \\
+			Q &\gets Quotient \\
+			R &\gets Rest \\
+			\\
+			Z &= D \times Q + R\\
+			\frac{Z}{D} &= Q + \frac{R}{D}\\
+			\\
+			0 &\leq R < |D|\\
+			\\
+			\hline
+			\\
+			\frac{4}{\text{ \hl{$ - 3 $}}} &\implies Q = -1; \quad R =  1; \\ 
+			\frac{\text{ \hl{$ - 4 $}}}{3} &\implies Q = -1; \quad R = -1; \\
+			\\
+			\hline
+			\\
+			\frac{4}{\text{ \hl{$ - 3 $}}} &= - 1 + \frac{1}{\text{ \hl{$ - 3 $}}} \\
+			\frac{\text{ \hl{$ - 4 $}}}{3} &= - 1 + \frac{\text{ \hl{$ - 1 $}}}{3}
+			\end{align*}		
+			
+	\subsubsection{Euklidischer Algorithmus}
+		\begin{algorithm}[h]
+			\DontPrintSemicolon
+					
+			\nl \( i \gets p \) \;
+			\( D_i \gets X_{10} \) \;
+			\( b^i \leq D_i < b^{i+1} \) \tcp*{Berechne p}
+			\BlankLine
+			\nl \( y_i \gets \frac{D_i}{b^i} \) \tcp*{ Berechne  }
+			\( R_i \gets D_i \mod b^i \) \;
+			\BlankLine
+			\nl \Repeat{$ R_i = 0 \text{ oder } b^i \text{gering genug }$}{ 
+				\( _i \gets p - 1 \) \;
+				\( D_i \gets R_{i+1} \) \;
+				\( y_i \gets \frac{D_i}{b^i} \) \tcp*{ \( b^i = \text{Umrechnungfehler} \) }
+				\( R_i \gets D_i \mod b^i \) \;
+			}
+		\end{algorithm}
+					 
+		\begin{algorithm}[h]
+			\caption{Beispiel: Euklidischer Algorithmus}
+			\DontPrintSemicolon
+					 		
+			 		\( Z \gets 13_{10} \) \tcp*{Dezimal\( _{10} \) ins Dualsystem\( _{2} \)}
+			 		\( b \gets 2 \) \;
+					\BlankLine
+					 		
+					 \( p \gets \) HöchstePotenzKleiner(13, Basis b) \tcp*{\( 2^? \leq 13 < 2^?\) \\ \( \text{\hl{$2^3$}} \leq 13 < 2^4 \)}
+					 \BlankLine
+					 \begin{align*}
+					 	13 &\div 2^3 &= \text{\hl{$ 1 $} Rest } 5 \\
+					 	5 &\div 2^2 &= \text{\hl{$ 1 $} Rest } 1 \\
+					 	1 &\div 2^1 &= \text{\hl{$ 0 $} Rest } 1 \\
+				 		1 &\div 2^0 &= \text{\hl{$ 1 $} Rest } 0 \\
+			 			&& Z \gets \text{\hl{$ 1101$}}_2 
+			 		\end{align*}
+					\end{algorithm}
+				 	
+				 	\begin{algorithm}[h]
+				 		\caption{Beispiel: Euklidischer Algorithmus Hexadezimal}
+				 		\DontPrintSemicolon
+				 		
+				 	
+				 	\( 16^3 \leq 15741,233 < 16^4 \)
+				 	
+				 	\( Z \gets 13_{10} \) \tcp{\(15741,233_{10}\) ins Hexadezimalsystem\( _{16} \)}
+				 	\( b \gets 16 \) \;
+				 	\BlankLine
+				 	
+				 	\( p \gets \) HöchstePotenzKleiner(15741,233, Basis b) 
+				 	\tcp*{\( 16^? \leq 15741,233 < 16^?\) \\ \( \text{\hl{$16^3$}} \leq 15741,233 < 16^4 \)}
+				 	\BlankLine
+				 	\begin{align*}
+				 	&15741,233 &\div 16^3 &= &\text{\hl{$ 3 $} Rest } 5 \\
+				 	&3453,233 &\div 16^2 &= &\text{\hl{$ D $} Rest } 1 \\
+				 	&125,233 &\div 16^1 &= &\text{\hl{$ 7 $} Rest }  \\
+				 	&13,233 &\div 16^0 &= &\text{\hl{$ D $} Rest }  \\
+				 	&0,233 &\div 16^{-1} &= &\text{\hl{$ 3 $} Rest }  \\
+				 	&0,0455 &\div 16^{-2} &= &\text{\hl{$ B $} Rest }  \\
+				 	&0,00256 &\div 16^{-3} &= &\text{\hl{$ A $} Rest }  \\
+				 	&0,000088593 &\div 16^{-4} &= &\text{\hl{$ 5 $} Rest }  \\
+				 	&&&&Z \gets \text{\hl{$ 3D7D,3BA5 $}}_{16} 
+				 	\end{align*}
+				 	\end{algorithm}
+			 	
+				\subsubsection{Abwandlung Horner-Schemas}
+					 Idee: Ganzzahligen und gebrochenen Anteil getrennt betrachten. \\
+					 \marginnote{nach und nach}
+					 Ziffern werden \emph{sukzessive}, beginnend mit der höchstwertigen Ziffer, berechnet:
+					 \begin{align*}
+						 G_b &= \sum_{1=0}^{n} z_i b^i 
+						 \marginnote{\(G =\) Ganzzahl}\\
+						 &=  ( [ \dots ([( z_n b + z_{n-1} ) b + z_{n-2} ] b + z_{n-3} ) b \dots ] b + z_1) b + z_0 \\
+						 \\
+						 15741_{10} &= ( [ ( 1 \times 10 + 5 ) \times 10 + 7 ] \times 10 + 4 ) \times 10 + 1 
+						 	\text{ \marginnote{Beispiel:} }\\
+						 &= ( [ ( 15 ) \times 10 + 7 ] \times 10 + 4 ) \times 10 + 1 \\
+						 &= ( [  150 + 7 ] \times 10 + 4 ) \times 10 + 1 \\
+						 &= ( [  157 ] \times 10 + 4 ) \times 10 + 1 \\
+						 &= ( 1570 + 4 ) \times 10 + 1 \\
+						 &= ( 1574 ) \times 10 + 1 \\
+						 &= ( 15740 + 1 \\
+						 &= 15741 \\
+					 \end{align*}
+					 
+					 \paragraph{Konvertierung}
+						 Die Ziffern \( y_p \text{bis } y_0 \) erhält man dadurch, \\
+						 dass man die Zahl \( X_{10} \) durch Basis b dividiert und \\
+						 denn Rest getrennt notiert.
+						 \par
+						 Usw. bis der Quotient verschwindet(?),\\
+						 Die jeweiligen ganzzahligen Reste ergeben die Zahl \(G_b\) \\
+						 von der niederwertigsten zur hochwertigsten Stelle. \\
+						 
+					\paragraph{Anwenndung des Horner-Schemas}
+						\(\text{Interpretation von } X_b = \sum_{i = 0}^{b} Z_i b^i \text{ als Polynom} \) \\
+						\begin{align*}
+							X_b &= Z_3 x^3 + 2_2 x^2 + Z_1 x^1 + Z_0 x^0  \marginnote{b = x} \\
+							&= [( Z_3 x + Z_2) x + Z_1] x + Z_0\\
+							\\
+							\hline
+							\marginnote{Sukzessive Division} \\
+							&[( Z_3 x + z_2 ) x + z_1] x +Z_0 &\div x &= (Z_3 X + Z_2) x + Z_1 &Rest Z_0 \\
+							&( Z_3 x + z_2 ) x + z_ x  &\div x &= Z_3 X + Z_2 &Rest Z_1 \\
+							&Z_3 x + z_2 &\div x &= Z_3 &Rest Z_2 \\
+							&Z_3 &\div  x &= 0 &Rest Z_3 \\
+							\\
+							&X_b = Z_3 Z_2 Z_1 Z_0 \\
+						\end{align*}
+						 
+					\paragraph{Beispiel: Hörner-Schemas}
+						\( 28,25_{10} \) konvertieren zu Basis 7
+						
+						\begin{align*}
+							\marginnote{I:}
+							&28 \div 7 = 4 &\text{Rest } 0 & \implies Z_0 \\
+							&4 \div 7 = 0 &\text{Rest } 4 & \implies Z_1 &\implies 21_{10} = 40_7 \\
+							\\
+							\marginnote{II:}
+							&0,25 \times 7 = 1,75 &= 1 + 0,75 \\
+							&0,75 \times 7 = 5,25 &= 5 + 0,25 &\implies G_b,25_{10} = G_b,\overline{15}_7 \\
+							\\
+							\marginnote{Unnötig wegen Periode}
+							&0,25 \times 7 = 1,75 &= 1 + 0,75 \\
+							&0,75 \times 7 = 5,25 &= 5 + 0,25 \\
+							\\
+							&\implies 28,25_{10} &=	40,\overline{15}_7\\
+						\end{align*}
+						
+					\paragraph{Umwandlung des Nachkomma-Teils}
+						TODO: Umsortieren\\
+						Auch der gebrochene Teil
+						\[ N_B = \sum_{i=-m}^{-1} Z_i b^i \]
+						einer Zahl lässt sich entsprechend schreiben:
+						\[N_B = [ ( \dots [ ( Z_{-m} b^{-1} + Z_{-m+1} ) b^{-1} + z_{ -m + 2 } ] b^{-1} + \dots + z_{-2} ) b^{-1} + z_1 ] b^{-1} \]
+					\paragraph{Verfahren:}
+					 	Sukzessive Multiplikation des Nachkommateils der Dezimalzahl \\
+					 	mit der Basis b des Zielsystems.\\
+					 	\implies Die \(y_{-i} \) Nachkomma-Ziffern, \\
+					 	in der Reihenfolge der höchstwertigen zur niedrigstwertigen Nachkommaziffer.\\
+					 	
+		\subsection{Spezialfall Zielbasis ist ein Mehrfaches von der Ursprungsbasis}
+			Potenz herausfinden, muss vielfaches ergeben.
+			Vom Komma ausgehend, Päckchen bilden, Länge der Potenz des Vielfachen.\\
+			Nullen auffüllen falls an den rändern nich aufgeht \\
+			\( 2^4 = 16 \) Vier Ziffern zusammenfassen \\
+			\( 2^3 = 8 \)	Drei Ziffern zusammenfassen \\
+			\paragraph{Beispiel: Dual in Hexadezimal}
+			\[
+				0110100,110101_2
+				\begin{aligned}
+					011&0100&,1101&01 \\	
+					\implies (0 011)&(0100)&,(1101)&(01 00) \marginnote{Nullen auffüllem} \\
+					\implies (3)&(4)&,(D)&(4)
+				\end{aligned}
+				34,D4_{16}
+			\]
+					 	
+			\subsection{Negative Zahlen}
+				Verschiedene Möglichkeiten: \\
+				\subsubsection{Betrag und Vorzeichen}
+					Eine stelle wird als Vorzeichenbit genutzt: MSB\\
+					\begin{align*}
+						&00010010 = 18\\
+						&10010010 = -18\\
+					\end{align*}
+					
+					
+					\paragraph{Beispiel:}
+					Vorzeichenlose Zahl \( 18_{10} =10010_2 \) \\
+					Vorzeichen-Betrags-Darstellung: \\
+					\begin{align*}
+						18_{10} = 010010_{6Bits} = 0001 0010_{8 Bits} \\
+						-18_{10} = 110010_{6Bits} = 1001 0010_{8Bits} \\
+						\\
+						18_{10} = 0000 0000 0001 0010_{16 Bits}\\
+						-18_{10} = 1000 0000 0001 0010_{16Bits}\\	
+					\end{align*}
+										
+					\paragraph{Vorteil:}
+					\begin{description}
+						\item[+] Symetrischer Zahlenbereich
+					\end{description}
+					
+					\paragraph{Nachteil:}
+						\begin{description}
+							\item[--] 
+								Zweimal die Null: 0000 und 1000
+							\item[--] 
+								Addition \& Subtraktion muss gesondert beachtet werden.
+						\end{description}
+					
+				\subsubsection{Beispiel: Problem bei der Addition}
+					\[
+						\begin{aligned}
+							2& \\
+							-4& \\
+							= -2& \\
+							\\
+							0010& \\
+							1100&\\
+							=1110& \\
+							= -6 \neq 2&\\
+						\end{aligned}
+					\]
+					\paragraph{Schlecht in die Realität umsetzbar}
+					Schaltung müsste also erst herausfinden welcher Betrag ist größer, \\
+					dann das Vorzeichen berechnen und\marginnote{+ 1 Vergleich} \\
+					dann Beträge verrechnen\\
+					\( \implies \)viel zu kompliziert um Software- als auch Hardware-technisch umsetzbar.\\
+					
+				\subsubsection{Einerkomplement aka. Stellenkomplement}
+					\[
+					Z_{EK} = (2^n -1) - Z_{(iffer)}\\
+					\]
+					\[
+					Z = -(2n -1) + z_{n-1} \times 2^{n-1} + \dots +z_0
+					\]
+					\textbf{Positive Zahlen} \( \gets \) normale positive Dualzahlen \marginnote{MSB nicht gesetzt 0} \\
+					
+					\textbf{Null} \( \gets \) 0000 und 1111\\
+					\\
+					\textbf{Negative Zahlen} \( \gets \) negation der positiven Dualzahlen \marginnote{MSB gesetzt 1} \\
+					
+					
+					\paragraph{Vorteile:}
+						\begin{description}
+							\item[+] Symetrischer Zahlenbereich
+							\item[+] Erste Stelle bei der Addition und Subtraktion muss nicht gesondert bedtrachtet werden.
+						\end{description}
+					
+					\paragraph{Nachteile:}
+						\begin{description}
+							\item[--] 
+								Zweimal die Null: 0000 und 1111
+							\item[--]
+								 Wenn die Operation die Null überschreitet, können falsche Ergebnis entstehen, wenn letzte Übertrag nicht beachtet wird.
+						\end{description}
+					
+					\subsubsection{Beispiel: Einerkompliment Transformation}
+	
+						\begin{align*}
+							Z_{(iffer)} &= Z_{n-1} \dots Z_0 \marginnote{n Stellen} \\
+							Z_{EK} &= Z_{n-1} \dots Z_0 \\
+							\\
+							Z_{EK} &= (2^n) - Z \marginnote{negieren/Minus}\\
+							\\
+						\end{align*}
+					
+					\paragraph{\(7_{10}\) ins Einerkompliment transformieren}
+						\begin{align*}
+							Z_{10} &= 7_{10}  \\
+							&= 0_3 1_2 1_1 1_0 &n=4 \marginnote{n \gets Anzahl der Stellen}\\
+							\\
+							Z_{EK} &= (2^4 -1)-7 \\
+							&= 15-7 \\
+							&= 8_{10} \\
+							&= 1000_2\\
+						\end{align*}
+	
+						\begin{align*}
+							&2^4 &1_4 0_3 0_2 0_1 0_0 = 10000\\
+							&-1 &-00001\\
+							\hline 
+							&=15 &=01111\\
+							&-7 &0111\\
+							\hline
+							&=8 &1000
+						\end{align*}
+					
+					\subsubsection{Zweierkompliment}
+					
+						Man addiert nach der Stellenkomplemten noch eine \( 1 \)\\
+						\[ Z_{ZK} = 2^n - Z \]
+						Bitfolgen \( z_{n-1} \dots z_0 \) haben den Dezimalwert:\\
+						\[ Z = - 2^n + z_{n-1} \times 2^{n-1} + \dots + z_0 \]
+						
+						\textbf{Positive Zahlen} \(\gets\) positive Dualzahlen\\
+						\textbf{Null} \(\gets\) 0000
+						\textbf{Negative Zahlen} \(\gets\) positive Dualzahl negation; + 1;\\
+						
+						\paragraph{Vorteil:}
+							\begin{description}
+								\item[+] Nur eine Null.
+							\end{description}
+						\paragraph{Nachteil:}
+							\begin{description}
+								\item[--] Asymetrischer Zahlenbereich
+							\end{description}
+						
+						\paragraph{Eigenschaften}
+							\begin{easylist}[itemize]
+								& Kann als Kreis dargestellt werden.
+								& Negative Zahlen werden um eins verschoben.
+								& Erste Stelle gibt Vorzeichen an
+							\end{easylist}
+								
+					\subsubsection{Beispiel: Zweierkompliment Transformation}
+						Dezimalzahl \\ 
+						\( \implies \) Dualzahl \\
+						\( \implies \) Einerkomplement \\
+						\( \overset{+ 1}{\implies} \) Zweierkomplement\\
+						
+						\paragraph{7 ins Zweierkomplement transformieren}
+						Zur Erinnerung: \\
+						\begin{align*}
+							Z &= Z_{n-1} \dots Z_0 \\
+							Z_{ZK} &= \overline{Z}_{n-1} \dots \overline{Z}_0 +1 \marginnote{\(\overline{Negation}\)}\\
+						\end{align*}
+						
+						
+							\begin{align*}
+								7&_{10} \\
+								0111&_{2} \\
+								1000&_{EK}\\
+										1&\\
+								\hline
+								1001&_{ZK} \\
+							\end{align*}
+						\paragraph{\(1001_{ZK} \) ins Dezimalsystem transformieren}
+							\begin{align*}
+								1001 &\implies n=4 \\
+								\\
+								Z &= - 2^4 + 1 \times 2^3 + 0 \times 2^2 + 0 \times 2^1 + 1 \times 2^0\\
+								&= -16 + 8 +1\\
+								&= -7 \\
+							\end{align*}
+							
+						\paragraph{Weitere Beispiele}
+							\ul{Gesucht:} Darstellung von \(-5\) im Zweierkomplement\\
+							Es sei \( n = 4 \)\\
+							\begin{align*}
+								n&=4\\
+								&\implies N= 2^4\\
+								&= 16 \text{ Zahlen}\\
+								\\
+								-5& \doteq (16 - 5)_{10} \\
+								&= 11_{10} \\
+								&\doteq 1011_2\\ 
+							\end{align*}
+							\ul{Gesucht:} Darstellung von -14 im ZK
+							\begin{align*}
+								n&=4\\
+								&\implies N= 2^4\\
+								&= 16 \text{ Zahlen}\\
+								\\
+								-14 &\doteq (16 -14)_{10}\\
+								&= 1_{10} \\
+								&= 0010\\
+								&\text{FALSCH!}
+							\end{align*}
+							
+						\paragraph{Warum ist das so?}
+							Man muss beachten wie groß das Ziel n wird.\\
+							\begin{align*}
+								(0)1110& \\
+								(1)0001&\\
+								1&\\
+								\hline
+								(1)0010
+							\end{align*}
+					\((Zahl) \coloneqq \) Übertrag wurde vergessen und deswegen ist das Ergebnis falsch.\\
+					\subsubsection{Wie groß ist unser n?}
+						\paragraph{Wichtig:}
+							Immer nachdenken, wie viele Bits (n) für eine korrekte Darstellung notwendig sind!\\
+							\paragraph{-14 im Zweierkomplement}
+							\begin{align*}
+								n &= 5\\
+								\implies N &= 2^5\\
+								&= 32\\
+								\\
+								-14 &\doteq 32 - 14 \\
+								&= 18_{10} \\
+								& \doteq 10010_2\\
+							\end{align*}
+							
+						\paragraph{-77 transformiert in Zweierkomplement}
+							\begin{align*}
+								77_{10} &= 0100 \quad 1101_2 \\
+								\\
+								-77 &= (1)100 \quad 1101_2 \marginnote{-77}\\
+								\hline
+								&= 1011 \quad 0010_2 \marginnote{EK}\\
+								&= 1011 \quad 0011_2 \marginnote{+1, ZK}\\
+							\end{align*}
+					
+					\subsubsection{Offset-Dual-Darstellung/ Exzess-Darstellung}
+						\paragraph{Eigenschaften}
+							\begin{easylist}[itemize]
+								& Hauptsächlich Exponenten-Darstellung von Gleitkommazahlen
+								& Eine Zahl wird als Charakteristik dargestellt
+								& Der Zahlenbereich wird durch einen konstanten Offset so nach oben verschoben, dass die kleinste Zahl die Darstellung \(0 \dots 0\) erhält.
+								& Bei n Stellen ist Offset \(2^{n-1}\)
+								& Zahlenbereich asymetrisch
+							\end{easylist}
+						
+						\paragraph{Am Beispiel von \(2^3\)}
+							\textbf{Positive Zahlen} \( \gets \) MSB 1 \\
+							\textbf{Null} \( \gets \) "Mitte" 100\\
+							\textbf{Negative Zahlen} \( \gets \) 101 bis 111\\ 
+						
+						\paragraph{Vorteil:}
+							\begin{description}
+								\item[+] Es existiert nur eine Null
+							\end{description}
+						\paragraph{Nachteil:}
+						\begin{description}
+							\item[--] asymetrischer Zahlenbereich
+						\end{description}
+				
+			\subsubsection{Festkommazahlen}
+				\paragraph{Unterschied zwischen Papier und Rechner}
+				
+				\begin{table}[h]
+					\centering
+					\begin{tabular}{ | l | c | c |}
+						\hline
+						  & Papier & Computer \\ \hline
+						Ziffern & \(0\dots 9 \) & 0,1 \\ \hline
+						Vorzeichen & \( +- \) & \\ \hline
+						Komma & , &  \\ \hline
+					\end{tabular}
+				\caption{Zahlendarstellung Papier vs. Rechner}
+				\end{table}
+			\( \implies  \) Konvention über Vorzeichen und Komma wird benötigt.\\
+			Vorzeichen: sehe vorherigen Abschnitt. \\
+			
+			\paragraph{Komma-Darstellung}
+			\begin{easylist}[enumerate]
+				& Festkomma
+					&& Komma sitzt an einer festen Stelle
+						&&& Integer
+					&& Maßstab wird verwendet
+						&&& \( 2,9 \times 1.000 \)
+				& Gleitkomma
+					&&
+			\end{easylist}
+		
+			\paragraph{n Vor- und m Nachkommastellen}
+				\begin{align*}
+					Inhalt...
+				\end{align*}
+				\paragraph{Größtmögliche Zahl}
+				\begin{align*}
+					Z_2 &= 0^n 1^{n-1} \dots  1^0, 1^{-1}, \dots 1^{-m}\\
+					Z_{10} &= 2^{n-1} \dots 2^1 \times 2^0, 2^{-1} \dots 2^{-m}\\
+					2Z &= 2^n + 2^{n-1} + \dots \quad +2^{-m+1}\\
+					\hline
+					Z &= 2Z - Z\\
+					&= 2^n -6^{-m}\\
+				\end{align*}
+				\paragraph{Kleinstmögliche Zahl}
+				\begin{align*}
+					Z&= 0\dots 0,0 \dots 01\\
+					&= 2^{-m}
+				\end{align*}
+				
+			\paragraph{Vorteile}
+				\begin{description}
+					\item[+] 
+				\end{description}
+			
+			\paragraph{Nachteile}
+				\begin{description}
+					\item[--] Keine ganz großen bzw. ganz kleinen Zahlen darstellbar
+					\item[--] Keine Abgeschlossenheit
+					\item[--] Assoziativgesetz und Distributivgesetz gelten nicht
+				\end{description}
+			
+		\subsubsection{Gleitkommazahlen}
+			\paragraph{Vorteile}
+			\begin{description}
+				\item[+] Zur Darstellung von Zahlen, die Betragsmäßig sehr groß oder sehr klein sind, verwendet man die 			Gleitkomma-Darstellung
+			\end{description}
+			
+			\paragraph{Nachteile}
+			\begin{description}
+				\item[--] a
+			\end{description}
+			
+			\paragraph{Eigenschaften}
+				\begin{easylist}[itemize]
+					& Sie entspricht einer halblogarithmischen Form
+						&& \( X = \pm Mantisse \times b^{Exponnent} \)
+					& Die Basis b ist für eine bestimmte Gleitkomma-Darstellung fest und braucht damit nicht mehr explizit repräsentiert werden.
+					& Wird meist im Betrag-Vorzeichen-Form dargestellt
+				\end{easylist}
+			\paragraph{Normalisierung}
+				Implizierte 1 wird weggelassen + 1 bit mehr Genauigkeit\\
+			\paragraph{Warum Normalisierung}
+				Im Rechner nur endliche Anzahl an stellen\\
+				Möglichst viele signifikante Stellen\\
+			\paragraph{Normalisierung im Dezimalsystem}
+				\begin{align*}
+					1160 km &= 1160 \times 10^3 m\\
+					&= 11,60 \times 10^5 \\
+					&= 1,160 \times 10^6 m  \\ 
+				\end{align*}
+				\marginline{Normalisiert}
+				
+			\paragraph{Beispiel: Drei verschiedene 32 - Bit- Zahlenformate mit Basis b=2}
+				7135 Hexadezimal\\
+				und normalisiert\\
+				Komma um 13 Stellen nach links verschoben\\
+				\( \times 2^{-13}\) \\
+				Minute 1:09:00\\
+				Implizierte 1 kann weggelassen werden\\
+				
+			\paragraph{Darstellbarer Zahlenbereich}
+				Format a\\
+				Format b\\
+				Format c: implizierte Darstellung, null kann nicht mehr dargestellt werden.\\
+				Größte darstellbare Zahl\\
+				Kleinste darstellbare Zahl \\
+				
+				
+			
+		
+		
+			\subsubsection{Zahlen \& und Zeichendarstellung }
+			\subsection{Fehlerkorrigierende Codes}
+				\subsubsection{Fehlererkennung}
+					\paragraph{Quersumme: Einfaches Schema}
+					\begin{easylist}
+						& Jedes Datenwort erhält ein zusätzliches Bit
+						& Un-/gerade Parität
+						& Zusätzlicher Speicheraufwand ermöglicht einfache Fehlerprüfung
+					\end{easylist}
+					 
+					 \[ x_0 \oplus (x_1 \oplus \dots \oplus x_8) = 0_{9.Bit} \] \marginnote{Gerade Parität}
+					 \ul{Gleichung wird falsch wenn:}
+					 \begin{easylist}
+					 	& einzelnes Bit oder
+					 	& eine ungerade Zahl von Bits fehlerhaft geworden sind
+					 \end{easylist}
+					 \BlankLine
+					 \hl{Verfälschung einer geraden Zahl von Binärstellen ist nicht erkennbar,\\
+					 Kode kann keine Fehler erkennen\\}
+				 	 \BlankLine
+				 	 \ul{Auch möglich:}
+				 	 \begin{easylist}  
+				 	 	& odd parity 
+				 	 		&Man kann ein Paritätsbit anfügen, das zu einer geraden Anzahl von Einsen führt und die ungerade Anzahl überprüfen 
+				 	 \end{easylist}
+					 
+					 \paragraph{Redundante Kodierung: 7-Bit-Kodierung mit gerader Parität }
+					 \[ x_0 = x_1 \oplus \dots \oplus x_7 \]
+					 \ul{Fehlererkennung: }\\
+					 \\
+					 8-Bit-Kodierung mit gerader Parität\\
+					 \[ x_0 \oplus (x_1 \oplus \dots \oplus x_7) = 0_{8.Bit}\]
+					
+					
+				\subsubsection{Fehlerkorrektur}
+					\ul{Gewünscht wird }\\
+					\begin{easylist}
+						& Position des Fehler herausfinden können
+							&& Mehr als ein Prüfbit notwendig
+						& Fehlerhafte Kodewörter sind nur bis zu bestimmten Grenzen korrigierbar
+						& Die Korrekturbits sind eindeutig kodiert
+							&& ob und ggf. welche Bits im gesamten Kodewort (Daten- und Korrekturbits) fehlerhaft sind
+					\end{easylist}
+					\paragraph{Anzahl der benötigten Prüfbits}
+						\begin{easylist}
+							& Anzahl der Bits eines zu übertragenden Codewort
+								&& n Bits
+							& Einer der n Bits kann falsch sein
+								&& \(\implies \)  
+									\begin{align*}
+										&n \text{ Fehlerfälle}\\
+										&+ 1 \text{ Fehlerfreien Fall}
+									\end{align*}
+							& -Kodierung der (n+1) Fälle durch k Prüfbits
+								&& \[ 2^k \geq n + 1 \]
+							& k Prüfbits sind Teil vom Codewort \\
+								\(\implies n = m + k \)\\
+								\hl{$\implies 2^k \geq m + k +1$} \\
+						\end{easylist}
+					\paragraph{Aufbauprinzipien}
+						\begin{description}
+							\item[Hier:] Einfaches Realisierungsschema
+							\item[Vorteil:] Beliebige Erweiterbarkeit auf größere Datenwortlängen
+							\item[Der Ansatz:] Verwende k verschiedene Prüfgleichungen für die Quersummen \( QS_0 \text{ bis } QS_{k-1} \)
+						\end{description}
+					
+					\paragraph{Einfaches Aufbauprinzip}
+					\ul{Beispiel: 7-Bit Codewort}  \\
+					 \begin{align*}
+					 	 &\overset{7}{x} \overset{6}{x} \overset{5}{x} \overset{4}{x} \overset{3}{x} \overset{2}{x} \overset{1}{x}\\
+					 	&m = 4 &| \text{Anzahl der Datenbit}\\
+					 	&k \gets k_3 k_2 k_1 = 3 &| \text{Anzahl der Korrekturbits} \\
+					 	\\
+					 	&4 + 3 = 7 \quad (;\\
+					 \end{align*}
+					 -- \emph{Sogennannte Syndrome} aus \( k_3 k_2 k_1 \) sollen die Position des fehlerhaften Bits im Codewort kodieren\\ 
+					
+					\begin{table}[h]
+						\centering
+						\begin{tabular}{c | c c c }
+							Fehlerposition	&\(k_3\) &\(k_2\) & \(k_1\) \\ \hline
+							1& 0 & 0 &1\\
+							2 &0&1&0\\
+							3 &0&1&1\\
+							4 &1&0&0\\
+							5 &1&0&1\\
+							6 &1&1&0\\
+							7 &1&1&1\\
+							\hl{Kein Fehler}&0&0&0
+						\end{tabular}
+						\caption{Fehlererkennung mittels Syndrome}
+					\end{table}
+					
+					\paragraph{Ansatz}
+						Die i-te Quersumme ergänzt alle Positionen im Kodewort,\\
+						die die Potenz \(\text{Basis}^i = 2^i  \) in ihrer Ziffernwertigkeit enthalten auf gerade Parität.\\
+						\begin{align*}
+							k_1 = QS_0 &\text{über alle ungeraden Stellen } 1,3,5 \\
+							k_2 = QS_1 &\text{über die Stellen } 2,3,6,7, 10 \\
+							k_3 = QS_2 &\text{über die Stellen } 4, 5, 6, 7, 12,  \\
+							k_4 = QS_3 &\text{über die Stellen } 8, 9, 10, 11, 12 \\
+						\end{align*}
+						
+						\begin{table}[h]
+							\centering
+							\begin{tabular}{c c c c}
+								\(k_3\) &\(k_2\) & \(k_1\)& \( k_0 \)\\
+								0&0&0&1\\
+								0&0&1&0\\
+								0&0&1&1\\
+								0&1&0&0\\
+								0&1&0&1\\
+								0&1&1&0\\
+								0&1&1&1\\
+								1&0&0&0\\
+								1&0&0&1\\
+								1&0&1&0\\
+								1&0&1&1\\
+								1&1&0&0\\
+								1&1&0&1\\
+								1&1&1&0\\
+								1&1&1&1\\
+							\end{tabular}
+						\end{table}
+					
+					--Es werden gerade Quersummen verwendet\\
+					--Datenwörter werden zum Einfügen der Prüfbits gespreizt\\
+					indem die Kodewortposition \( 2^i \) für die i-te Quersummenprüfstelle \( k_{i+1} \) freigehalten wird \\
+					( \( m_i  \) bezeichnet die Datenbits)\\
+					
+					Annahme wir haben nur ein Bit-Fehler\\
+					Durch erneutes Bilden der Quersummen kann ob und an welcher Position sich der Fehler befindet ermittelt werden \\
+					Die Quersummen \( Syndrom k_u \dots k_2 k_1 \) werden dann, als Dualzahl interpretiert, die fehlerhafte Position im Kodewort angibt.\\
+					Liegt kein Fehler vor,
+					dann sind alle Prüfgleichungen erfüllt.\\
+					
+					\paragraph{Hammingkode mit 4 Datenbits und 3 Prüfbits, also 7-Bit-Kodewörter}
+					\emph{Datenwort:} 1101
+					\begin{align*}
+						&\implies xxxxxxx&\\
+						&\implies 1_{m_4} 1_{m_3} 0_{m_2} k_3^{2^2} 1_{m_1}  k_2^{2^1} k_1^{2^0}&\\
+					\end{align*}
+					
+					\ul{Bestimmung der Prüfbits}\\
+					\begin{align*}
+						k_1 = m_1 \oplus m_2 \oplus m_4 = 1 \oplus 0 \oplus 1 &= 0\\
+						k_2 = m_1 \oplus m_3 \oplus m_4 = 1 \oplus 0 \oplus 1 &= 1\\
+						k_3 = m_2 \oplus m_3 \oplus m_4 = 1 \oplus 0 \oplus 1 &= 0\\ \hline
+						&\implies \text{Kodewort } 110 k_3 11 k_2 k_1\\
+						&\implies \text{Kodewort } 1100110\\
+					\end{align*}
+					
+					--\hl{Prüfbits können auch verfälscht sein.} \\
+					
+					Generatormatrix? \\
+					\begin{table}
+						\centering
+						\begin{tabular}{| c | c | c | c | c | c | c | c |}
+							\hline
+							7&6&5&4&3&2&1\\
+							\(m_4\)&\(m_3\)&\(m_2\)&\(k_3\)&\(m_1\)&\(k_2\)&\(k_1\)\\ \hline
+							X&&X&&X&&X&\(k_1\)\\
+							X&X&&&X&X&&\(k_2\)\\
+							X&X&X&X&&&&\(k_3\)\\ \hline
+						\end{tabular}
+						\caption{StellenwertigkeitsBereich}
+					\end{table}
+					\paragraph{Generatormatrix <- Datenwort \& Codewort}
+					\[
+						\begin{bmatrix}
+							1&0&0&0\\
+							0&1&0&0\\
+							0&0&1&0\\
+							1&1&1&0\\
+							0&0&0&1\\
+							1&1&0&1\\
+							1&0&1&1\\
+						\end{bmatrix}
+						\begin{bmatrix}
+							m4\\
+							m3\\
+							m2\\
+							m1\\
+						\end{bmatrix}
+						=
+						\begin{bmatrix}
+							m_4\\
+							m_3\\
+							m_2\\
+							k_3\\
+							m_1\\
+							k_2\\
+							k_1\\
+						\end{bmatrix}
+					\]
+					
+					\[ \text{\underline{Genrator Matrix} }\times \text{\underline{Datenwort}} = \text{\underline{Kodewort}} \]
+					\paragraph{Generatormatrix <- Codewort \& Syndrom}
+					\[
+						\begin{bmatrix}
+							1&1&1&1&0&0&0\\
+							1&1&0&0&1&1&0\\
+							1&0&1&0&1&0&1\\
+						\end{bmatrix}
+						\begin{bmatrix}
+							m_4\\
+							m_3\\
+							m_2\\
+							k_3\\
+							m_1\\
+							k_2\\
+							k_1\\
+						\end{bmatrix}
+						=
+						\begin{bmatrix}
+							k_3\\
+							k_2\\
+							k_1\\
+						\end{bmatrix}
+					\]
+					
+				\paragraph{Generatormatrix <- Codewort \& Datenwort}
+					\[
+						\underline{\text{Datenwort}} = 
+						\begin{bmatrix}
+							m_4\\
+							m_3\\
+							m_2\\
+							m_1\\
+						\end{bmatrix}
+						=
+						\begin{bmatrix}
+							1\\
+							1\\
+							0\\
+							1\\
+						\end{bmatrix}
+					\]
+					\[
+						\underline{\text{Codewort}} = \underline{\text{Generatormatrix}} \times \underline{\text{Datenwort}}=
+						\begin{bmatrix}
+							m_4\\
+							m_3\\
+							m_2\\
+							k_3\\
+							m_1\\
+							k_2\\
+							k_1\\
+						\end{bmatrix}
+						=
+						\begin{bmatrix}
+							1\\
+							1\\
+							0\\
+							0\\
+							1\\
+							1\\
+							0\\
+						\end{bmatrix}
+					\]
+					\[
+						\begin{bmatrix}
+							k_3\\
+							k_2\\
+							k_1\\
+						\end{bmatrix}
+						= \underline{H} \times \underline{CW} = 
+						\begin{bmatrix}
+							0\\
+							0\\
+							0\\
+						\end{bmatrix}
+					\]
+					
+				\paragraph{Finde den Fehler!}
+					-- Fehlerhaftes Codewort:
+					\[
+						 \overline{\underline{CW}} = \underline{CW} + \underbrace{\underline{e_i}}_{i-ter Einheitesvektor} 
+					\]
+					\[
+						\underline{H} \times \overline{\underline{CW}} = \underline{H} \times ( \underline{CW} + \underline{e_i} ) = \underbrace{\underline{H} \times \overline{\underline{CW}}}_{=\underline{0}} + \underbrace{\underline{H} \times \underline{e_i}}_{\text{i-te Spalte der H-Matrix}}
+					\]
+					\[
+						\begin{bmatrix}
+							k_3\\
+							k_2\\
+							k_1\\
+						\end{bmatrix}
+						\begin{bmatrix}
+							1&1&1&1&0&0&0\\
+							1&1&0&0&1&1&0\\
+							1&0&1&0&1&0&1\\
+						\end{bmatrix}
+						\times
+						\begin{bmatrix}
+							1\\
+							1\\
+							0\\
+							0\\
+							0|Fehler\\
+							1\\
+							0\\
+						\end{bmatrix}
+						=
+						\begin{bmatrix}
+							0\\
+							1\\
+							1\\
+						\end{bmatrix}
+					\]
+					
+				\subsubsection{Hammingkode ?Vorher einfügen?}
+				\begin{easylist}
+					& gilt genau dann, wenn garantiert werden kann, dass tatsächlich nur 1-Bitfehler auftreten
+					& kann mehrfache Bitfehler erkennen
+						&& Aber nur 1-Bitfehler korrigieren.
+					& \hl{Voraussetzung: Nur 1 - 2-Bitfehler treten auf!}
+					& Im Fall von 2-Bitfehlern
+						&& Können erkannt werden
+						&& Aber nicht von 1-Bitfehlern unterschieden werden
+				\end{easylist}
+				\BlankLine
+				
+				\paragraph{Beispiel:}
+				Bei dem Syndrom \(k_4 k_3 k_2 k_1 =\) 0101 \\
+				-- Kann sowohl \hl{ein 1-Bitfehler an der 5. Position}\\
+				-- Als auch ein \hl{2-Bitfehler} an \hl{zwei unbekannten Positionen} vorliegen.\\
+				
+				\paragraph{2-Bitfehler}
+				\begin{easylist}
+					& Um ein 1-Bitfehler von 2-Bitfehlern unterscheiden zu können, \\
+					fügt man ein weiteres Paritätsbit hinzu.
+					& 1-Bitfehler
+						&& Erkennbar durch das Paritätsbit
+						&& Korrigierbar durch den Hammingkode -> Aufspreitzung
+					& 2-Bitfehler
+						&& Nicht erkennbar durch das Paritätsbit
+						&& Nicht korrigierbar aber erkennbar durch den Hammingkode -> Aufspreitzung
+					& (n>2)-Bitfehler
+						&& Andere Verfahren
+				\end{easylist}
+				
+				\begin{align*}
+					\text{Fall 1: }& \text{Keinen Fehler}\\
+					& \overset{m_5}{0} \overset{k_4}{0} \overset{m_4}{1} \overset{m_3}{1} \overset{k_3}{0} \overset{m_2}{1}  \overset{m_1}{1} \overset{k_2}{0} \overset{k_1}{0} \overset{Pa}{0} & k_4 k_3 k_2 k_1 = 0000\\
+					\\
+					\text{Fall 2: }& \text{1-Bit-Fehler}\\
+					&\overset{m_5}{0} \overset{k_4}{0} \overset{m_4}{1} \overset{m_3}{(0)} \overset{k_3}{0} \overset{m_2}{1}  \overset{m_1}{1} \overset{k_2}{0} \overset{k_1}{0} \overset{Pa}{0} & k_4 k_3 k_2 k_1 = 0110\\
+					\\
+					\text{Fall 3: }& \text{2-Bitfehler}\\
+					&\overset{m_5}{0} \overset{k_4}{0} \overset{m_4}{1} \overset{m_3}{(0)} \overset{k_3}{0} \overset{m_2}{1}  \overset{m_1}{(0)} \overset{k_2}{0} \overset{k_1}{0} \overset{Pa}{0} & k_4 k_3 k_2 k_1 = 0101\\
+				\end{align*}
+				
+				\begin{easylist}
+					& An Standard-Codewörter lässt dich ein weiteres Quersummenbit anfügen,so dass Zweibitfehler im Codewort erkennbar werden.
+					& 32-Bit Wortlänge werden durch 7 Prüfbits zur Einzelfehlerkorrektur und Doppelfehlererkennung ergänzt.
+					& 64 Bit lange Datenwörter erfordern 8 Korrekturbits
+					& Die Algebra endlicher Körper bietet über Generator- und Nullmatrix Verfahren, die zu jedem Datenwort ein Codewort erzeugen.
+				\end{easylist}
+	\section{Schaltnetze}
+	\section{Schaltwerke}
+	\section{Rechnerarithmetik}
+	
+\end{document}
