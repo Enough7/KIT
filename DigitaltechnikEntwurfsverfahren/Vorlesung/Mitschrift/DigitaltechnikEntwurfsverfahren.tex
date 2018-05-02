@@ -187,8 +187,7 @@
 		\end{figure}
 
 	\subsection{Vorlesungsinhalte}
-		\begin{figure}[h]
-			\begin{easylist}{itemize}
+			\begin{easylist}[itemize]
 				& Grundlagen der Informationsdarstellung
 				& Schaltnetze
 					&& Formale Grundlagen logischer Beschreibungen
@@ -217,7 +216,6 @@
 							&&& \glspl{Grundrechenart} / \gls{Arithmetik}
 					&& Aufbau einer arithmetisch-logischen Einheit
 			\end{easylist}
-		\end{figure}
 	
 	\section{Grundlagen der Informationsdarstellung}
 	
@@ -1173,6 +1171,163 @@
 					& 64 Bit lange Datenwörter erfordern 8 Korrekturbits
 					& Die Algebra endlicher Körper bietet über Generator- und Nullmatrix Verfahren, die zu jedem Datenwort ein Codewort erzeugen.
 				\end{easylist}
+			
+			\subsection{1. Übung 2017}
+			
+				\subsubsection{Zahlendarstellungen}
+				\begin{align*}
+					&(11111)_{2} = 31_{10} \\
+					&(11111)_{VZ,5} = -15_{10}\\
+					&(11111)_{1K,5} = \pm 0_{10} \\
+					&(11111)_{2K,5} = -1_{10} \\
+					&(11111)_{2K,6} = 31_{10} \\
+					&(11111)_{10} =  11.111_{10} \\
+					&(11111)_{16} = 0x 01 11 11 = 69.905_{10}\\
+				\end{align*}
+				
+				 \( \#_{VZ,5} \gets \) Vorzeichen-Betragdarstellung mit 5 Stellen\\
+				 \( \#_{1K,6}\gets \) Einerkomplement mit 6 Stellen\\
+				 
+				 \subsubsection{Zahlen in das Zweierkomplement transformieren}
+				 \begin{align*}
+				 	&\text{Gesucht: Darstellung von -14 im ZweierKomplement }
+				 	\\ \hline \\
+				 	&n \gets 4\\
+				 	&N\coloneqq \text{ Kombinationen}\\
+				 	&N = 2^4 = 16 \\
+				 	\\
+				 	&-14 : N-z\\ 
+				 	&= 16-14=2\\ 
+				 	& \implies \text{\st{$0010$}}_{ZK,4}\\
+				 	\\
+				 	&\text{Warum falsch?}\\
+				 	& \implies \text{Erste Zahl = 0}\\
+				 	& \implies \text{ positiv }\\
+				 	\\
+				 	& N= 2^4 = 32 \\
+				 	& \implies [-8;7]\\
+				 	\\ \hline \\
+				 	&n \gets 5\\
+				 	&N = 2^5 = 32\\
+				 	& \implies [-16;15]\\
+				 	\\
+				 	&-14 : N - z\\
+				 	& = 32-14 \\
+				 	&= 18 10010_{ZK,5}\\
+				 \end{align*}
+				
+				\subsubsection{Addition Zweierkomplement}
+				Zahlenkreis\\
+				\paragraph{Es werden drei Fälle unterscheiden:}
+				\begin{easylist}
+					& Beide Summanden haben ein positives Vorzeichen
+						&& \( \implies \) das Ergebnis muss positiv sein
+							&&& Wenn Vorzeichenbit \ul{1} statt 0, also \ul{negative} wurde der Zahlenbereich überschritten \hl{(Überlauf)}
+					& Beide Summanden haben ein negatives Vorzeichen
+						&& \( \implies \) Das Ergebnis muss negativ sein
+							&&& Wenn Vorzeichenbit \ul{0} statt 1, also \ul{positiv} wurde der Zahlenbereich überschritten (Überlauf)
+					& Gilt für negativ negativ \& positiv positiv
+						&& Die beiden vordersten \hl{Überträge/Carrybits} müssen den gleichen Wert haben
+					& Summanden haben unterschiedliche Vorzeichen
+						&& Das Ergebnis ist auf jeden Fall korrekt
+						&& Das Vorzeichen hängt davon ab, ob Subtrahend oder Minuend betragsmäßig größer sind
+						&& Der Übertrag aus der vordersten Stelle ist zu streichen
+				\end{easylist}
+				
+				TODO: Beipiele hinzufügen 05\\
+				
+				\subsubsection{Überlauferkennung}
+				\paragraph{Allgemeine Überlauferkennung bei dualer Addition:}
+				\begin{labeling}{Korrekte Addition}
+					\item[\textcolor{Green}{Korrekte Addition:}] Beide Überträge sind gleich
+					\item[\textcolor{red}{Überlauf:}] -sind ungleich
+				\end{labeling}
+				\paragraph{Wie wird sowas realisiert?}
+				--Durch ein Antivalenzgatter.\\
+				\\
+				Antivalenz (aka. Kontravalenz, ausschließendes/exklusive Oder, XOR) ist das Gegenteil von Äquivalenz.
+				
+				\begin{table}[h]
+					\centering
+				\begin{tabular}{c|c}
+					&\\ \hline
+					00&0\\
+					01&1\\
+					10&1\\
+					11&0\\
+				\end{tabular}
+				\caption{XOR}
+				\end{table}
+			
+			\subsubsection{IEEE-P 754- Dloating-Point-Standard}
+			\begin{table}[h]
+				\centering
+				\begin{tabular}{|c|c|c|}
+					\hline
+					 \(\overset{31}{\text{Vz}} \)& \(\overset{30}{\text{Ch}}\text{arakterist} \overset{23}{\text{ik}}\) & \(\overset{22}{\text{Ma}} \text{ntiss} \overset{0}{\text{e}}\) \\ \hline
+				\end{tabular}
+				\caption{32- Bit Maschinenformate des IEEE-Standards}
+			\end{table}
+		
+		\begin{align*}
+		\text{Vz } &\gets 1 \text{ Bit} \\
+		\text{Charakteristik } &\gets 8 \text{ Bit}\\
+		\text{Mantisse } &\gets  23 \text{ Bit}\\
+		\end{align*}
+						
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{|c|c|c|}
+				\hline
+				\(\overset{63}{\text{Vz}} \)& \(\overset{62}{\text{Ch}}\text{arakterist} \overset{52}{\text{ik}}\) & \(\overset{51}{\text{Ma}} \text{ntiss} \overset{0}{\text{e}}\) \\ \hline
+			\end{tabular}
+			\caption{64- Bit Maschinenformate des IEEE-Standards}
+		\end{table}
+	
+	\begin{align*}
+	\text{Vz } &\gets 1 \text{ Bit} \\
+	\text{Charakteristik } &\gets 11 \text{ Bit}\\
+	\text{Mantisse } &\gets  52 \text{ Bit}\\
+	\end{align*}
+	
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hline
+			0&\((-1^{Vz})0\) & \( \text{ Mantisse} \times 2^{-126}\) \\ 
+			\\
+			 \hl{Ab hier, bis 254}& \multicolumn{2}{c|}{\hl{Normalisierter Zahlenbereich}}\\
+			1& \((-1^{Vz})1' \) & \( \text{ Mantisse} \times 2^{-126} \)\\
+			\dots & \((-1^{Vz})1'\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-126}\)\\
+			254& \((-1^{Vz})1'\) & \( \text{ Mantisse} \times 2^{127}\)\\ \hline
+			255&\multicolumn{2}{c|}{Mantisse \( = 0  \implies (-1)^{Vz} \infty \text{ overflow} \) }\\
+			255&\multicolumn{2}{c|}{Mantisse \( \neq 0  \implies NaN \)} \\
+			\hline
+		\end{tabular}
+		\caption{Gleitkommazahlen-Darstellung des 32-Bit-IEEE-Formats}
+	\end{table}
+	 ' \( \coloneqq \) implizierte 1\\
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\begin{tabular}{|c|c|c|}
+	 		\hline
+	 		Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hline
+	 		0&\((-1^{Vz})0\) & \( \text{ Mantisse} \times 2^{-1022}\) \\ 
+	 		\\
+	 		\hl{Ab hier, bis 2046}& \multicolumn{2}{c|}{\hl{Normalisierter Zahlenbereich}}\\
+	 		1& \((-1^{Vz})1' \) & \( \text{ Mantisse} \times 2^{-1022} \)\\
+	 		\dots & \((-1^{Vz})1'\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-1023}\)\\
+	 		2046& \((-1^{Vz})1'\) & \( \text{ Mantisse} \times 2^{1023}\)
+	 		\\ \hline\\
+	 		2047&\multicolumn{2}{c|}{Mantisse \( = 0  \implies (-1)^{Vz} \infty \text{ overflow} \) }\\
+	 		2047&\multicolumn{2}{c|}{Mantisse \( \neq 0  \implies NaN \)} \\
+	 		\hline
+	 	\end{tabular}
+	 	\caption{Gleitkommazahlen-Darstellung des 64-Bit-IEEE-Formats}
+	 \end{table}
+							
 	\section{Schaltnetze}
 	\section{Schaltwerke}
 	\section{Rechnerarithmetik}
