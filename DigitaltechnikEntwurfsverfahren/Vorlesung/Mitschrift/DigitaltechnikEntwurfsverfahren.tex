@@ -1338,7 +1338,7 @@
 			Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hhline{===}
 			0&\((-1)^S\text{ 0}\) & \( \text{ Mantisse} \times 2^{-126}\)  \\ 
 			\rowcolor{green!50} 1& \((-1)^S \text{ 1'} \) & \( \text{ Mantisse} \times 2^{-126} \)\\ 
-			\rowcolor{green!50} \dots & \((-1)^S \text{ 1'}\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-126}\)\\
+			\rowcolor{green!50} \dots & \((-1)^S \text{ 1'}\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-127}\)\\
 			\rowcolor{green!50} 254& \((-1)^S\text{ 1'}\) & \( \text{ Mantisse} \times 2^{127}\)\\ \hline
 			255& \(   (-1)^S \infty \text{ overflow} \) & \(\impliedby\) Mantisse \(= 0\)\\
 			255& NaN  & \(\impliedby\) Mantisse \(\neq 0\)\\
@@ -1381,7 +1381,20 @@
 		\text{\textcolor{Green}{$$0$$}}\text{\textcolor{blue}{$$000\; 0001\; 0$$}}  \text{\textcolor{red}{$$000\; 0000 \dots 0010$$}} & = (1,0 \dots 10)_2 \times 2^{-125} &=  (1+2^{-22}) \times 2^{-125} \\
 		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0001\; 0$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0011$$}} & = (1,0 \dots 11)_2 \times 2^{-125} &= (1+2^{-22} + 2^{-23} ) \times 2^{-125} \\ 
 	\end{align*}
-			
+	\paragraph{Sonderfälle}
+			Nan:\\
+			\colorbox{green!30}{$0$} \colorbox{blue!30}{$1111\;1111$} \colorbox{red!30}{$ \neq 0 $}\\
+			\\
+			\(- \infty\) :\\
+			\colorbox{green!30}{$1$} \colorbox{blue!30}{$1111\;1111$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			\\
+			\(+ \infty\):\\
+			\colorbox{green!30}{$0$} \colorbox{blue!30}{$1111\;1111$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			\\
+			0 :\\
+			\colorbox{green!30}{$0$} \colorbox{blue!30}{$0000\;0000$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			Oder:\\
+			\colorbox{green!30}{$1$} \colorbox{blue!30}{$0000\;0000$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
 	\section{Schaltnetze}
 	\section{Schaltwerke}
 	\section{Rechnerarithmetik}
