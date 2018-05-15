@@ -86,8 +86,6 @@
 %Ermöglicht [H]
 \usepackage{float}
 
-
-
 %opening
 \title{Mitschrift Algorithmen 1}
 \author{Paul Züchner}
@@ -353,69 +351,64 @@
 					}
 				}
 		\end{algorithm}
-	\subsection{Master-Theorem}
-	\href{https://www.youtube.com/watch?v=GEhb2lrcJCk&t=2985s}{Video: Vorlesung }\\
-	Das \~{} bietet eine schnelle Lösung für die Frage, in welcher Laufzeitklasse eine gegebene rekursiv definierte Funktion liegt. Jedoch kann mit dem Master-Theorem nicht jede rekursiv definierte Funktion gelöst werden. \\
+	\subsection{Master Theorem (Einfache Form)}
+	Für die \hl{positiven Konstanten} a, b, c, d; sei \( n =b^k \) für ein \( k \in \mathbb{N} \).
+	\begin{align*}
+		r(n) =
+		\begin{dcases*}
+			a & falls \(n = 1\) Basisfall\\
+			c \times n + d \times r (\frac{n}{b}) & falls n > 1 \hl{und teile und herrsche is in use}
+		\end{dcases*}
+	\end{align*}
+	\begin{align*}
+		rekursiveFunktion(n) =
+			\begin{dcases*}
+				a:LaufzeitProgrammteil & falls \(n = 1\)\\ 
+				&sofort "berechenbar"Basisfall,\\
+				&kein rekursiver Aufruf\\
+				\\
+				c:KonstanteDieDasTeilenBrauch \times n \\
+				+ d:OverheadDesTUH  \times r (\frac{n}{b}) &falls  \(n > 1\)\\
+				&\hl{und teile und herrsche is in use}
+			\end{dcases*}
+	\end{align*}
 	
-	Lässt sich keiner der drei möglichen Fälle des Master-Theorems auf die Funktion T anwenden, so muss man die Komplexitätsklasse der Funktion anderweitig berechnen.
-		\subsubsection{Master Theorem (Einfache Form)}
-		Für die \hl{positiven Konstanten} a, b, c, d; sei \( n =b^k \) für ein \( k \in \mathbb{N} \).
-		\begin{align*}
-			r(n) =
-			\begin{dcases*}
-				a & falls \(n = 1\) Basisfall\\
-				c \times n + d \times r (\frac{n}{b}) & falls n > 1 \hl{und teile und herrsche is in use}
-			\end{dcases*}
-		\end{align*}
-		\begin{align*}
-			rekursiveFunktion(n) =
-				\begin{dcases*}
-					a:LaufzeitProgrammteil & falls \(n = 1\)\\ 
-					&sofort "berechenbar"Basisfall,\\
-					&kein rekursiver Aufruf\\
-					\\
-					c:KonstanteDieDasTeilenBrauch \times n \\
-					+ d:OverheadDesTUH  \times r (\frac{n}{b}) &falls  \(n > 1\)\\
-					&\hl{und teile und herrsche is in use}
-				\end{dcases*}
-		\end{align*}
-		
-		Es gilt:
-		\begin{align*}
-		r(n) \in 
-			\begin{dcases*}
-				\text{Theta, mindestens} & Overhead/Aufand :: Faktor wie viel kleiner die Eingabelänge wird\\
-				\Theta(n) & falls \(d < b\)\\
-				\Theta(n \log n) & falls \(d = b\)\\
-				\Theta(n^{\log_b d}) & falls \(d > b\)\\
-			\end{dcases*}
-		\end{align*}
-		
-		\subsubsection{Master-Theorem (unvereinfacht)}
-		Das Master-Theorem bietet unter bestimmten Bedingungen asymptotische Abschätzungen für Lösungen der Rekursionsgleichung \[ T(n) = a \times T (\frac{n}{b}) + f(n) \], zur Bestimmung der Laufzeitklasse.
-		Hierbei steht \(T(n)\) für die gesuchte Laufzeitfunktion, während a und b Konstanten sind. Ferner bezeichnet \( f(n) \) eine von \(T(n)\) unabhängige und nicht negative Funktion. Damit das Master-Theorem angewendet werden kann, müssen für die beiden Konstanten die Bedingungen \[a \geq 1 \] und \[ b > 1 \] erfüllt sein.\\
-		\\
-		\paragraph{Idee:}
-		\includegraphics{img/Rekursionsbaum_Mastertheorem}
-		//TODO:  Quelle: de.wikiversity.org.wiki.Kurs:Algorithmen.und.Datenstrukturen.Vorlesung.Mastertheorem
-		
-		\paragraph{Interpretation der Rekursion für \( T(n) \):}
-		\begin{labeling}{\(f(n)=\)}
-			\item[\(a =\)] Anzahl der Unterprobleme in der Rekursion
-			\item[\(\frac{n}{b}\)] Größe eines Unterproblems
-			\item[\( T(\frac{n}{b}) \)] Aufwand zum lösen eines Unterproblems der Größe \( \frac{n}{b} \)
-			\item [\(\frac{1}{b} =\)] Teil des Originalproblems, welches wiederum durch alle Unterprobleme repräsentiert wird
-			\item [\(f(n) = \)] Kosten (Aufwand, Nebenkosten), die durch die Division des Problems und die Kombination der Teilösungen enstehen
-		\end{labeling}
-		Das Master-Theorem unterscheidet \emph{drei Fälle}, wobei sich \hl{höchstens} ein Fall auf die gegebene Rekursion anwenden lässt. \\
-		\begin{easylist}[itemize]
-			& Fälle:
-				&& Obere Abschätzung \( \mathcal{O} \)
-				&& Exakte Abschätzung \( \Theta \)
-				&& Untere Abschätzung \( \Omega \)
-		\end{easylist}
-		\BlankLine
-		Passt \emph{keiner der Fälle} so lässt sich das Master-Theorem nicht anwenden und man muss sich \hl{anderer Methoden bedienen}. 
+	Es gilt:
+	\begin{align*}
+	r(n) \in 
+		\begin{dcases*}
+			\text{Theta, mindestens} & Overhead/Aufand :: Faktor wie viel kleiner die Eingabelänge wird\\
+			\Theta(n) & falls \(d < b\)\\
+			\Theta(n \log n) & falls \(d = b\)\\
+			\Theta(n^{\log_b d}) & falls \(d > b\)\\
+		\end{dcases*}
+	\end{align*}
+	
+	\subsection{Master-Theorem (unvereinfacht)}
+	Das Master-Theorem bietet unter bestimmten Bedingungen asymptotische Abschätzungen für Lösungen der Rekursionsgleichung \[ T(n) = a \times T (\frac{n}{b}) + f(n) \], zur Bestimmung der Laufzeitklasse.
+	Hierbei steht \(T(n)\) für die gesuchte Laufzeitfunktion, während a und b Konstanten sind. Ferner bezeichnet \( f(n) \) eine von \(T(n)\) unabhängige und nicht negative Funktion. Damit das Master-Theorem angewendet werden kann, müssen für die beiden Konstanten die Bedingungen \[a \geq 1 \] und \[ b > 1 \] erfüllt sein.\\
+	\\
+	\paragraph{Idee:}
+	\includegraphics{img/Rekursionsbaum_Mastertheorem}
+	//TODO:  Quelle: de.wikiversity.org.wiki.Kurs:Algorithmen.und.Datenstrukturen.Vorlesung.Mastertheorem
+	
+	\paragraph{Interpretation der Rekursion für \( T(n) \):}
+	\begin{labeling}{\(f(n)=\)}
+		\item[\(a =\)] Anzahl der Unterprobleme in der Rekursion
+		\item[\(\frac{n}{b}\)] Größe eines Unterproblems
+		\item[\( T(\frac{n}{b}) \)] Aufwand zum lösen eines Unterproblems der Größe \( \frac{n}{b} \)
+		\item [\(\frac{1}{b} =\)] Teil des Originalproblems, welches wiederum durch alle Unterprobleme repräsentiert wird
+		\item [\(f(n) = \)] Kosten (Aufwand, Nebenkosten), die durch die Division des Problems und die Kombination der Teilösungen enstehen
+	\end{labeling}
+	Das Master-Theorem unterscheidet \emph{drei Fälle}, wobei sich \hl{höchstens} ein Fall auf die gegebene Rekursion anwenden lässt. \\
+	\begin{easylist}[itemize]
+		& Fälle:
+			&& Obere Abschätzung \( \mathcal{O} \)
+			&& Exakte Abschätzung \( \Theta \)
+			&& Untere Abschätzung \( \Omega \)
+	\end{easylist}
+	\BlankLine
+	Passt \emph{keiner der Fälle} so lässt sich das Master-Theorem nicht anwenden und man muss sich \hl{anderer Methoden bedienen}. 
 	
 	\subsubsection{Die drei Fälle}
 	\paragraph{Erster Fall}
