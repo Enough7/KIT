@@ -36,7 +36,7 @@
 %\usepackage{basicarith}
 
 %Für Farben
-\usepackage[dvipsnames,table]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \definecolor{TextMarkerGelb}{RGB}{255, 255, 120}
 \usepackage{soul}
 \sethlcolor{TextMarkerGelb}
@@ -52,9 +52,6 @@
 % Math-Font
 \setmathfont{Roboto} % for math symbols, can be any other OpenType math font
 
-%Ermöglicht [H]
-\usepackage{float}
-
 % Aside Kommentar
 \usepackage{marginnote}
 
@@ -69,9 +66,6 @@
 
 % Coole Listen [Seperator-zeichen]
 \usepackage[ampersand]{easylist}
-
-%Doppel-Linie
-\usepackage{hhline}
 
 %\DeclareMathSizes{10}{18}{12}{8}   % For size 10 text
 %\DeclareMathSizes{11}{19}{13}{9}   % For size 11 text
@@ -109,7 +103,7 @@
 	Vom Problem zur Hardware\\
 	
 	\subsection{Aufteilung technische Informatik}
-			\begin{table}[H]
+			\begin{table}[h]
 				\centering
 				\begin{tabular}{ | c | r |}
 					\hline
@@ -121,7 +115,7 @@
 				\caption{Aufteilung | Soft}
 			\end{table}
 		
-		\begin{table}[H]
+		\begin{table}[h]
 			\centering
 			\begin{tabular}{ | c | r |}
 				\hline
@@ -139,7 +133,7 @@
 	
 	\subsection{Datenverarbeitender Systeme}
 		\subsubsection{Aufbau}
-			\begin{figure}[H]
+			\begin{figure}[h]
 				\begin{description}
 					\item [Elektronische Komponenten]
 					Besitzt eine Vielzahl elektronischer Komponenten. Die Komponenten sind untereinander verbunden und bilden eine Struktur in sich.
@@ -149,7 +143,7 @@
 			\caption{Aufbau}
 			\end{figure}
 	\subsubsection{Aufgaben}
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\begin{description}
 				\item[Entwurf]
 					Aus einzelnen Komponenten wird eine komplexe Struktur entworfen, welche das \emph{gewünschte Verhalten}, möglichst preisgünstig, zu bietet.
@@ -160,7 +154,7 @@
 		\end{figure}
 	
 	\subsubsection{Abstraktionsebenen}		
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\begin{enumerate}
 				\item \emph{Verhalten} 
 				\item \emph{Struktur}
@@ -177,7 +171,7 @@
 		
 	\subsection{Lernziele}
 	
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\begin{easylist}[itemize]
 				& Verständnis verschiedener Darstellungsformen von Zahlen / Alphabeten in Rechnern.
 				& Formale Schaltungsbeschreibung.
@@ -226,7 +220,7 @@
 	\section{Grundlagen der Informationsdarstellung}
 	
 		\subsection{Zahlensysteme}
-			\begin{figure}[H]
+			\begin{figure}[h]
 				\begin{easylist}{itemize}
 					& Mensch
 						&& Dezimal
@@ -251,7 +245,7 @@
 			\subsubsection{Darstellung im Rechner}
 				Einzelne binär Ziffern wie 0 und 1 heißen Bit, kleinste mögliche Informationseinheit.
 				
-				\begin{figure}[H]
+				\begin{figure}[h]
 				Probleme bei der Darstellung von Zahlen
 					\begin{easylist}[itemize]
 						& Endlicher Speicher
@@ -300,7 +294,7 @@
 			\end{align*}		
 			
 	\subsubsection{Euklidischer Algorithmus}
-		\begin{algorithm}[H]
+		\begin{algorithm}[h]
 			\DontPrintSemicolon
 					
 			\nl \( i \gets p \) \;
@@ -318,7 +312,7 @@
 			}
 		\end{algorithm}
 					 
-		\begin{algorithm}[H]
+		\begin{algorithm}[h]
 			\caption{Beispiel: Euklidischer Algorithmus}
 			\DontPrintSemicolon
 					 		
@@ -337,7 +331,7 @@
 			 		\end{align*}
 					\end{algorithm}
 				 	
-				 	\begin{algorithm}[H]
+				 	\begin{algorithm}[h]
 				 		\caption{Beispiel: Euklidischer Algorithmus Hexadezimal}
 				 		\DontPrintSemicolon
 				 		
@@ -712,7 +706,7 @@
 			\subsubsection{Festkommazahlen}
 				\paragraph{Unterschied zwischen Papier und Rechner}
 				
-				\begin{table}[H]
+				\begin{table}[h]
 					\centering
 					\begin{tabular}{ | l | c | c |}
 						\hline
@@ -895,7 +889,7 @@
 					 \end{align*}
 					 -- \emph{Sogennannte Syndrome} aus \( k_3 k_2 k_1 \) sollen die Position des fehlerhaften Bits im Codewort kodieren\\ 
 					
-					\begin{table}[H]
+					\begin{table}[h]
 						\centering
 						\begin{tabular}{c | c c c }
 							Fehlerposition	&\(k_3\) &\(k_2\) & \(k_1\) \\ \hline
@@ -921,7 +915,7 @@
 							k_4 = QS_3 &\text{über die Stellen } 8, 9, 10, 11, 12 \\
 						\end{align*}
 						
-						\begin{table}[H]
+						\begin{table}[h]
 							\centering
 							\begin{tabular}{c c c c}
 								\(k_3\) &\(k_2\) & \(k_1\)& \( k_0 \)\\
@@ -1253,10 +1247,10 @@
 				\\
 				Antivalenz (aka. Kontravalenz, ausschließendes/exklusive Oder, XOR) ist das Gegenteil von Äquivalenz.
 				
-				\begin{table}[H]
+				\begin{table}[h]
 					\centering
 				\begin{tabular}{c|c}
-					a,b&XOR(a, b)\\ \hline
+					&\\ \hline
 					00&0\\
 					01&1\\
 					10&1\\
@@ -1265,136 +1259,75 @@
 				\caption{XOR}
 				\end{table}
 			
-			\subsubsection{IEEE-P 754- Floating-Point-Standard}
-			--IEEE Standard for Binary Floating-Point Arithmetic for microprocessor systems\\
-			
-			\paragraph{Allgemeine Darstellung einer Gleitkommazahl}
-			 \begin{align*}
-			 	&x = s \times m \times b^e\\
-			 	\\
-			 	x \coloneqq& \text{ Gleitkommazahl}\\
-			 	s \coloneqq& \text{ Vorzeichen }\\
-			 		&\text{in der Vorlesung auch }Vz\\
-			 	m \coloneqq& \text{ Mantisse}\\
-			 	b \coloneqq& \text{ Basis (r-Bits) }\\
-			 	&\text{z.B. Dezimal = 10}\\
-			 	e \coloneq& \text{ Exponent}
-			 \end{align*}
-			 
-			 Eine Gleitkommazahl heißt normalisiert, wenn für den Wert der Mantisse gilt: \\
-			 \[ \frac{1}{b} \leq 0,\text{Mantisse} < 1 \]
-			 
-			 \paragraph{Das Vorzeichen}
-			 \~{} \( s_{\text{ign}} = (-1)^{\text{\hl{$S$}}} \) wird in einem Bit \(\text{\hl{$S$}}\) gespeichert, \\
-			 sodass \( S = 0 \) positive Zahlen markiert und\\
-			 \(  S = 1\) negative Zahlen markiert.\\ 
-			 \begin{align*}
-			 	&-1^0 \times \text{Zahlenwert} = \text{\hl{$1$}}\times \text{ Mantisse } \times b^{e + (2^{r-1}-1)} \\
-			 	&-1^1\times \text{Zahlenwert} = \text{\hl{$-1$}} \times \text{ Mantisse } \times b^{e + (2^{r-1}-1)} \\
-			 \end{align*}
-			 \( r \coloneqq \text{ Länge der Exponenten- bzw. Charakteristik-Bits} \)\\
-			 \( e + (2^{r-1}-1) \coloneqq \text{Charakteristik}  \)
-			 \\
-			 -- Der Exponent \(e\) wird als nicht negative Binärzahl, in Form ihrer Charakteristik dargestellt.\\
-			 -- Die Länge der Charakterristik bestimmt die Größe des \hl{Zahlenbereichs}\\
-			 -- Die Länge der Mantisse die Genauigkeit der Darstellung\\
-			  
-			\paragraph{32-Bit Floating-Point}
-			\begin{table}[H]
+			\subsubsection{IEEE-P 754- Dloating-Point-Standard}
+			\begin{table}[h]
 				\centering
 				\begin{tabular}{|c|c|c|}
 					\hline
-					 \(\overset{31}{\text{s}} \)& \(\overset{30}{\text{Ch}}\text{arakterist} \overset{23}{\text{ik}}\) & \(\overset{22}{\text{Ma}} \text{ntiss} \overset{0}{\text{e}}\) \\ \hline
+					 \(\overset{31}{\text{Vz}} \)& \(\overset{30}{\text{Ch}}\text{arakterist} \overset{23}{\text{ik}}\) & \(\overset{22}{\text{Ma}} \text{ntiss} \overset{0}{\text{e}}\) \\ \hline
 				\end{tabular}
-				\caption{32- Bit Maschinenformate des IEEE-Standards(\emph{single} precision)}
+				\caption{32- Bit Maschinenformate des IEEE-Standards}
 			\end{table}
 		
 		\begin{align*}
-		\text{s } &\gets 1 \text{ Bit} \\
+		\text{Vz } &\gets 1 \text{ Bit} \\
 		\text{Charakteristik } &\gets 8 \text{ Bit}\\
 		\text{Mantisse } &\gets  23 \text{ Bit}\\
 		\end{align*}
 						
-		\paragraph{64-Bit Floating-Point}
-		\begin{table}[H]
+		\begin{table}[h]
 			\centering
 			\begin{tabular}{|c|c|c|}
 				\hline
-				\(\overset{63}{\text{s}} \)& \(\overset{62}{\text{Ch}}\text{arakterist} \overset{52}{\text{ik}}\) & \(\overset{51}{\text{Ma}} \text{ntiss} \overset{0}{\text{e}}\) \\ \hline
+				\(\overset{63}{\text{Vz}} \)& \(\overset{62}{\text{Ch}}\text{arakterist} \overset{52}{\text{ik}}\) & \(\overset{51}{\text{Ma}} \text{ntiss} \overset{0}{\text{e}}\) \\ \hline
 			\end{tabular}
-			\caption{64- Bit Maschinenformate des IEEE-Standards (\emph{double} precision)}
+			\caption{64- Bit Maschinenformate des IEEE-Standards}
 		\end{table}
 	
 	\begin{align*}
-	\text{s } &\gets 1 \text{ Bit} \\
+	\text{Vz } &\gets 1 \text{ Bit} \\
 	\text{Charakteristik } &\gets 11 \text{ Bit}\\
 	\text{Mantisse } &\gets  52 \text{ Bit}\\
 	\end{align*}
 	
-	\begin{table}[H]
+	\begin{table}[h]
 		\centering
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|c|c|c|}
 			\hline
-			Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hhline{===}
-			0&\((-1)^S\text{ 0}\) & \( \text{ Mantisse} \times 2^{-126}\)  \\ 
-			\rowcolor{green!50} 1& \((-1)^S \text{ 1'} \) & \( \text{ Mantisse} \times 2^{-126} \)\\ 
-			\rowcolor{green!50} \dots & \((-1)^S \text{ 1'}\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-127}\)\\
-			\rowcolor{green!50} 254& \((-1)^S\text{ 1'}\) & \( \text{ Mantisse} \times 2^{127}\)\\ \hline
-			255& \(   (-1)^S \infty \text{ overflow} \) & \(\impliedby\) Mantisse \(= 0\)\\
-			255& NaN  & \(\impliedby\) Mantisse \(\neq 0\)\\
+			Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hline
+			0&\((-1^{Vz})0\) & \( \text{ Mantisse} \times 2^{-126}\) \\ 
+			\\
+			 \hl{Ab hier, bis 254}& \multicolumn{2}{c|}{\hl{Normalisierter Zahlenbereich}}\\
+			1& \((-1^{Vz})1' \) & \( \text{ Mantisse} \times 2^{-126} \)\\
+			\dots & \((-1^{Vz})1'\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-126}\)\\
+			254& \((-1^{Vz})1'\) & \( \text{ Mantisse} \times 2^{127}\)\\ \hline
+			255&\multicolumn{2}{c|}{Mantisse \( = 0  \implies (-1)^{Vz} \infty \text{ overflow} \) }\\
+			255&\multicolumn{2}{c|}{Mantisse \( \neq 0  \implies NaN \)} \\
 			\hline
 		\end{tabular}
 		\caption{Gleitkommazahlen-Darstellung des 32-Bit-IEEE-Formats}
 	\end{table}
 	 ' \( \coloneqq \) implizierte 1\\
-	 \colorbox{green!50}{normalisierter Bereich} \\
 	 
-	 \begin{table}[H]
+	 \begin{table}[h]
 	 	\centering
-	 	\begin{tabular}{|l|l|l|}
+	 	\begin{tabular}{|c|c|c|}
 	 		\hline
-	 		Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hhline{===}
-	 		0&\((-1)^S \text{ 0}\) & \( \text{ Mantisse} \times 2^{-1022}\) \\
-	 		\rowcolor{green!50} 1& \((-1)^S \text{ 1'} \) & \( \text{ Mantisse} \times 2^{-1022} \)\\ 
-	 		\rowcolor{green!50} \(\dots \)& \((-1)^S \text{ 1'}\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-1023}\)\\ 
-	 		\rowcolor{green!50} 2046& \((-1)^S \text{ 1'}\) & \( \text{ Mantisse} \times 2^{1023}\) \\ \hline
-	 		2047&  \(   (-1)^S \infty \text{ overflow} \) & \(\impliedby\) Mantisse \(= 0\)\\
-	 		2047& NaN  & \(\impliedby\) Mantisse \(\neq 0\)\\
+	 		Charakteristik& \multicolumn{2}{c|}{Zahlenwert} \\ \hline
+	 		0&\((-1^{Vz})0\) & \( \text{ Mantisse} \times 2^{-1022}\) \\ 
+	 		\\
+	 		\hl{Ab hier, bis 2046}& \multicolumn{2}{c|}{\hl{Normalisierter Zahlenbereich}}\\
+	 		1& \((-1^{Vz})1' \) & \( \text{ Mantisse} \times 2^{-1022} \)\\
+	 		\dots & \((-1^{Vz})1'\) &\( \text{ Mantisse} \times 2^{\text{Charakterristik}-1023}\)\\
+	 		2046& \((-1^{Vz})1'\) & \( \text{ Mantisse} \times 2^{1023}\)
+	 		\\ \hline\\
+	 		2047&\multicolumn{2}{c|}{Mantisse \( = 0  \implies (-1)^{Vz} \infty \text{ overflow} \) }\\
+	 		2047&\multicolumn{2}{c|}{Mantisse \( \neq 0  \implies NaN \)} \\
 	 		\hline
 	 	\end{tabular}
 	 	\caption{Gleitkommazahlen-Darstellung des 64-Bit-IEEE-Formats}
 	 \end{table}
- 	
- 	\paragraph{32Bit-Beispiel:}
- 	\paragraph{Charakteristik 1}
- 	\begin{align*}
- 		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0000\; 1$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0000$$}} & = (1,0 \dots 00)_2 \times 2^{-126} &= \text{\hl{minreal}}  \\
- 		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0000\; 1$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0001$$}} & = (1,0 \dots 01)_2 \times 2^{-126} &= (1+2^{-23}) \times 2^{-126}  \\
- 		\text{\textcolor{Green}{$$0$$}}\text{\textcolor{blue}{$$000\; 0000\; 1$$}}  \text{\textcolor{red}{$$000\; 0000 \dots 0010$$}} & = (1,0 \dots 10)_2 \times 2^{-126} &=  (1+2^{-22}) \times 2^{-126} \\
- 		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0000\; 1$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0011$$}} & = (1,0 \dots 11)_2 \times 2^{-126} &= (1+2^{-22} + 2^{-23} ) \times 2^{-126} \\
- 	\end{align*}
- 	
- 	\paragraph{Charakterristik 2}
-	\begin{align*}
-		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0001\; 0$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0000$$}} & = (1,0 \dots 00)_2 \times 2^{-125}  \\
-		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0001\; 0$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0001$$}} & = (1,0 \dots 01)_2 \times 2^{-125} &= (1+2^{-23}) \times 2^{-125}  \\
-		\text{\textcolor{Green}{$$0$$}}\text{\textcolor{blue}{$$000\; 0001\; 0$$}}  \text{\textcolor{red}{$$000\; 0000 \dots 0010$$}} & = (1,0 \dots 10)_2 \times 2^{-125} &=  (1+2^{-22}) \times 2^{-125} \\
-		\text{\textcolor{Green}{$$0$$}} \text{\textcolor{blue}{$$000\; 0001\; 0$$}} \text{\textcolor{red}{$$000\; 0000 \dots 0011$$}} & = (1,0 \dots 11)_2 \times 2^{-125} &= (1+2^{-22} + 2^{-23} ) \times 2^{-125} \\ 
-	\end{align*}
-	\paragraph{Sonderfälle}
-			Nan:\\
-			\colorbox{green!30}{$0$} \colorbox{blue!30}{$1111\;1111$} \colorbox{red!30}{$ \neq 0 $}\\
-			\\
-			\(- \infty\) :\\
-			\colorbox{green!30}{$1$} \colorbox{blue!30}{$1111\;1111$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
-			\\
-			\(+ \infty\):\\
-			\colorbox{green!30}{$0$} \colorbox{blue!30}{$1111\;1111$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
-			\\
-			0 :\\
-			\colorbox{green!30}{$0$} \colorbox{blue!30}{$0000\;0000$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
-			Oder:\\
-			\colorbox{green!30}{$1$} \colorbox{blue!30}{$0000\;0000$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+							
 	\section{Schaltnetze}
 	\section{Schaltwerke}
 	\section{Rechnerarithmetik}
