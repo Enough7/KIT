@@ -35,9 +35,7 @@
 %Aritmethikoperationen
 \usepackage{basicarith}
 
-\setmainfont{Roboto}
-\setsansfont{Roboto}
-\setmonofont{Roboto}
+
 
 % Aside Kommentar
 \usepackage{marginnote}
@@ -66,8 +64,29 @@
 \titleformat{name=\paragraph,numberless}[block]
 {\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1.}}
 
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{Roboto}
+\setsansfont{Roboto}
+\setmonofont{Roboto}
+\setmathfont{Asana Math} % for math symbols, can be any other OpenType math font
+\setmathfont[range=\mathup]  {Roboto}
+\setmathfont[range=\mathbfup]{Roboto}
+\setmathfont[range=\mathbfit]{Roboto}
+\setmathfont[range=\mathit]  {Roboto}
+
+% O-Notation
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\SetMathAlphabet{\mathcal}{bold}{OMS}{cmsy}{b}{n}
+
 %Bibliographie-Verwaltung
 \usepackage{biblatex}
+
+%Ermöglicht [H]
+\usepackage{float}
+
+
 
 %opening
 \title{Mitschrift Algorithmen 1}
@@ -1107,23 +1126,20 @@
 				\text{einzahlen: } reallocate(2n) \geq n \times pushBack_{2Token} \geq reallocate(4n)\\
 				\text{abheben: } reallocate(2n) \geq \frac{n}{2} \times popBack \geq reallocate(n)\\
 			\end{align*}
-			Amotisierte Analyse gibt konstante Laufzeit/ Aufwand \\
+			Amotisierte Analyse gibt konstante Laufzeit / Aufwand \\
+			
 		\subsection{Amotisierte Analyse}
-			\begin{easylist}[itemize]
-				& \emph{\( \theta \) }
-					&& Menge von Operationen, z.B pushBack oder popBack
-				& \emph{s} 
-					&& \emph{Zustand} der Datenstruktur
-				& \emph{\( A_{Op}(s) \)}
-					&& \emph{amotisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
-				& \emph{\( T_{Op}(s) \)}
-					&& \emph{tatsächliche Kosten} von Operation \( Op \in \theta \) in Zustand s
-			\end{easylist}
+			\begin{labeling}{\( A_{Op}(s) \)}
+				 \item[\emph{\( \theta \) }]  Menge von Operationen, z.B pushBack oder popBack
+				 \item[\emph{s}] Zustand der Datenstruktur
+				 \item[\emph{\( A_{Op}(s) \)}] \emph{amortisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
+				 \item[\emph{\( T_{Op}(s) \)}] \emph{tatsächliche Kosten} von Operation \( Op \in \theta \) in Zustand s
+			\end{labeling}
 		
 			\emph{Berechnung:}\\
 			 \[ s_0 \overset{Op1}{\rightarrow} s_1 \overset{Op_2}{\rightarrow} s_2 \overset{Op_3}{\rightarrow} \dots \overset{Op_n}{\rightarrow} s_n  \]
 			Die angenommenen amortisierten Kosten sind korrekt, wenn: \\
-			\[ \sum_{1\leq i \leq n} T_{Op_i} (S_{i-1}) \leq c + \sum_{1\leq i \leq n} A_{Op_i} (s{i-1}) \]
+			\[ \sum_{1\leq i \leq n} T_{Op_i} (s_{i-1}) \leq c + \sum_{1\leq i \leq n} A_{Op_i} (s_{i-1}) \]
 			-Die tatsächlichen Gesamtkosten \( \leq \) den amortisierten Gesamtkosten \emph{+ Konstante c}\\
 			
 			\paragraph{Zusammenfassung}
@@ -1623,7 +1639,697 @@
 	
 		
 \section[Chaos als Ordnungsprinzip]{Hashing}
+	
+	\subsection{Hashtabellen }
+		Speichere Menge \( M \subseteq \) Element\\
+		key(e) ist eindeutig für \(e \in M \)\\
+		Unterstütze Wörterbuch-Operationen in Zeit \( O(1) \)\\
+		\begin{algorithm}[H]
+			\caption{Hash-Funktionen}
+			\DontPrintSemicolon
+			\SetKwProg{M}{M.}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKw{Key}{key}
+			
+			\M{insert (e : Element)} {
+				\( M \gets M \cup \{e \} \) \;			
+			}
+			\BlankLine
+			\M{remove (k : Key)} {
+				\(M \gets M \setminus \{e\} \)\;
+				\Key{(e)} \(= k\) \;
+			}
+			\BlankLine
+			\M{find (k : Key)}{
+				Element e \( \gets \) k = key\((e \in M) \) \;
+				\If{found}{
+					\Return{\( \top \)}\;	
+				}
+				\Else{\Return{\(\bot\)}}
+			}
+		\end{algorithm}
+	
+		Eine Hash-Funktion ist \emph{injektiv}.\\
+		\[ t(h[key(e)])= e \]
+		
+		\paragraph{Beispiel:}
+		Ich habe einen Kundennummer \( key(e) \) welche ich hashe \( h[key(e)] \) \\
+		und bekomme so die Position im Speicher bzw. Index im Array. \( t(h[\dots])\). \\
+		Der Hash gibt also den Ort des Elements.
+		
+		\paragraph{Datenstrukturinvariante}
+		\begin{align*}
+			\forall e \in M &: t(h[key(e)])= e \\
+			&\text{und}\\
+			\forall 0 \leq i < m &: t(i) \in M \cup \{ \bot \}\\
+			&\text{soll gelten}
+		\end{align*}
+		
+	\subsection{Hash-Kollisionen} 
+	Perfekte Hash-Funktionen sind schwer zu finden.\\
+	\emph{Beispiel:} Geburtstagsparadoxon\\
+	Kollisionen fast nicht zu vermeiden.\\
+	Benötigt wird eine Strategie, die bei einer Kollision angewendet wird.\\
+	\paragraph{Kollisionsauflösung}
+	Eine mögliche Strategie wäre, eine Datenstruktur die mehr als ein Element zulässt (z.B. Liste) an der Kollisionsstelle einzufügen.\\
+	
+	\subsection{Hashing mit verketteten Listen}
+	Die Folge (Hash-Tabellen) enthält jetzt an den Tabelleneinträgen einfach-verkette Listen.\\ 
+	
+	\paragraph{Datenstrukturinvariante}
+	\begin{align*}
+	\forall e \in M &: e \in t(h[key(e)]) \\
+	&\text{und}\\
+	\forall 0 \leq i < m &: t(i) \in M \subseteq M\\
+	&\text{soll gelten}
+	\end{align*}
+	
+	\begin{easylist}
+		& insert(e)
+			&& Fügt e am Anfang von \( t(h[key(e)]) \) ein
+		& remove(k)
+			&& Suche  \( \text{Element }e \in t(h[key(e)]): key(e) = k  \) \\
+					Löschen und Return
+		& find(k)
+			&& Suche  \( \text{Element }e \in t(h[key(e)]): key(e) = k  \) \\
+				Return \( \top / \bot \) falls gefunden, nicht gefunden
+	\end{easylist}
+	
+	\paragraph{Hashing mit verketteten Listen: Beispiel}
+	\emph{Hash-Funktion: }Letzter Buchstabe im Wort \( \rightarrow \) Tabelle Alphabetisch\\
+	\emph{Key("Wort")} = "Wort"\\
+	
+	\paragraph{Hashing mit verketteten Listen: Analyse}
+	\begin{labeling}{remove(k):}
+		\item[\emph{insert(e):}] konstante Zeit 
+		\item[\emph{remove(k):}] O(Listenlänge)
+		\item[\emph{find(k):}] O(Listenlänge)
+	\end{labeling}
+	Im schlechtesten Fall würde die Hash-Funktion alles an eine Position packen, \\
+	das wäre genauso wie als würden wir eine Liste verwenden \(O(|M|)\)\\
+	Besser mehr Chaos :)\\
+	 
+	\subsection{Einführung Wahrscheinlichkeitstheorie} 
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			Name & Formel & Beispiel \\
+			\hline
+			Elementarereignisse & \( \Omega \)  & Würfel: 1-6 \\
+			Ereignisse& Teilmenge von \( \Omega \) & \(\text{Würfel } 2,5,6\)  \\
+			Wahrscheinlichkeit \(p_x\) & \( x \in \Omega  \)& \( p_x(\text{Würfel } 2,5,6) = \frac{3}{6} \)   \\
+			WSK. aller Elementarereignisse & \( \sum_{x p_x } = 1\) & Ein Ereignis von 6\\
+			Gleichverteilung& \( p_x = \frac{1}{|\Omega|} \) & Durchschnittliche WSK. je Ereignis  \\
+			\( \mathbb{P} [\mathbb{E}]\)& \( \sum_{x \in \mathbb{E}} p_x \) &\\
+			Zufallsvariable & \(X_0 : \Omega \rightarrow \mathbb{ R } \)&\\
+			0-1-Zuffalsvariable & \( I : \Omega \rightarrow \{ 0 ,1 \} \) &\\
+			Erwartungswert \( \mathbb{ E } [X] \)& \( \sum_{y \in \Omega } p_y X(y) \) &\\
+			Linearität des Erwartungswerts& \(\mathbb{E} [X + Y] = \mathbb{E} [X] + \mathbb{E}[Y]\) &\\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|}
+			\hline
+			Name & Hash-Beispiel\\ 
+			\hline
+			Elementarereignisse & Hash-Funktionen \( \{ 0 \text{ bis } m-1 \}^{\text{Key}} \)  \\
+			Ereignisse & \( E_{42} {h \in \Omega : h(4) = h(2) } \)  \\
+			Wahrscheinlichkeit \(p_x\) & \\
+			Gleichverteilung & \( p_h = m^{- |\text{Key}|} \) \\
+			\( \mathbb{P} [\mathbb{E}]\)& \( \mathbb{P} [E_{42}] = \frac{1}{m} \) \\
+			Zufallsvariable & \( X = | \{ e \in M : h(e) =0 \} | \) \\
+			0-1-Zuffalsvariable & \\
+			Erwartungswert \( \mathbb{ E } [X] \)& \( \mathbb{E} [X] = \frac{|M|}{m} \) \\
+			Linearität des Erwartungswerts& \\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\paragraph{Beispiel: Variante des Geburtstagsparadoxon}
+	Wieviele Gäste muss eine Geburtstagsparty "im Mittel" haben, damit mindestens zwei Gäste den gleichen Geburtstag haben?\\
+	\begin{labeling}{Anzahl der Paare mit gleichem Geburtstag:}
+		\item[\emph{Gäste (Keys):}] 1 bis n
+		\item[\emph{Elementarereignisse:}]  \( h \in \Omega \{0 \text{ bis } 364 \}^{1 \text{ bis } n} \)
+		\item[\emph{Definiere Zufallsvariable/ Indikator-ZV:}]  \( L_{ij} =1 \) genau dann wenn \( h(i) = h(j) \)
+		\item[\emph{Anzahl der Paare mit gleichem Geburtstag:}]  \( X = \sum_{i=1}^{n} \sum_{j=i+1}^{n} l_{ij} \)
+	\end{labeling}
+	\begin{align}
+		E[X] &= E[ \sum_{i=1}^{n} \sum_{j=i+1}^{n} l_{ij} ] \\
+		&= \sum_{i=1}^{n} \sum_{j=i+1}^{n} E[ l_{ij} ] \\
+		&= \sum_{i=1}^{n} \sum_{j=i+1}^{n} \mathbb{P} [l_{ij} = 1]\\
+		&= \frac{n(n-1)}{2} \times \frac{1}{365}\\
+		&\neq 1 \\
+		& \iff n = \frac{1}{2} + \sqrt{\frac{1}{2^2 + 730 }}\\
+		& \approx 27,52
+	\end{align}
+	
+	\paragraph{Aufs Geburtstagsparadoxon wetten}
+	Standardformulierung:\\
+	Ab wann lohnt es sich zu wetten, dass es zwei Gäste mit gleichem Geburtstag gibt?\\
+	Etwas komplizierter.\\
+	\\
+	\emph{Antwort:} \( n \geq 23 \)\\
+	\emph{Verallgemeinerung:} Jahreslänge m = Hash-Tabelle der Größe,\\
+	eine zufällige Hashfunktion \( h: 1..n \rightarrow 0..m -1 \) ist nur dann mit vernüftiger Wahrscheinlichkeit \emph{perfekt} wenn \( m = \Omega (n^2) \).\\
+	Riesige Platzverschwendung.\\
+	 
+	\subsection{Analyse für zufällige Hash-Funktionen}
+	\paragraph{Theorem 1}
+	\( \forall k ; \) die erwartete Anzahl kollidierender Elemente ist \(O (1) \) falls \( |M| \in O(m) \).\\
+	
+	\paragraph{Beweis:}
+	Für festen Key k definiere \emph{Kollisionslänge X}\\
+	\[X \coloneqq |\{ e \in M´: h(e) = h(k) \}| \] mit \[ m´= \{ e \in M : key(e) \neq k \} \]\\
+	Betrachte die 0-1 Zufallsvariable \[ X_e = 1 \] für \[ h(e) = h(k) \text{ wenn } e \in M´\text{ und } X_e = 0 \text{ sonst.} \] 
+	\begin{align*}
+		E[X] &= E[ \sum_{e \in M`} X_e ]\\
+		&= \sum_{e \in M´ } E[X_e] \\
+		&= \sum_{e \in M´} \mathbb{P} [X_e = 1] \\
+		&= \frac{|M'|}{m}
+	\end{align*}
+	Das gilt \emph{unabhängig} von der Eingabe M\\
+	
+	\subsection{Zufällige Hash-Funktionen?}
+	\emph{Möglichkeiten:}\\
+	\begin{easylist}
+		& Einen Tabellen Eintrag pro Schlüssel
+			&& naiv und meist zu teuer
+		& Weniger naive Lösungen?
+			&& Kompliziert
+			&& verbrauchen immer noch viel Platz
+			&& meist unsinnig
+			&& unrealistisch
+	\end{easylist}
+
+	\paragraph{Hashing mit linearer Suche (linear probing)}
+	Weg von verketteten Listen!\\
+	Elemente werden direkt in der Tabelle gespeichert.\\
+	Kollision werden durch Finden anderer Stellen aufgelöst.\\
+	\\
+	\emph{linear probing:} Suche \emph{nächsten freien Platz}\\
+	Am Ende fange vorn an\\
+	Es ist: 
+	\begin{easylist}
+		& einfach
+		& platz-effizient
+		& cache-effizient
+	\end{easylist}
+	
+	\begin{algorithm}[H]
+		\caption{Bounded-Linear Probing}
+		\DontPrintSemicolon
+		\SetKwProg{Function}{Function}{}{}
+		\SetKwProg{Procedure}{Procedure}{}{}
+		\SetKwProg{Class}{Class}{}{}
+		\SetKw{Assert}{assert}
+		\SetKw{Invariant}{invariant}
+		\SetKwArray{Array}{Array}
+		
+		\Class{BoundedLinearProbing(\( m,m´: \mathbb{N}; h: Key \rightarrow 0.. m-1 \))}{
+			\( t \gets [ \bot .. \bot] :  \) \Array{ \( 0.. m + m´- 1 \)} of Element\;
+			\BlankLine
+			\Invariant{\( \forall i : t[i] \neq \bot\)} \;
+			\( \implies \forall j \in \{ h(t[i]) .. i-1 \} : t[j] \neq \bot \) \;
+			\BlankLine
+			\Procedure{insert(e : Element)}{
+				\For{\( (i \gets h(e); t[i] \neq \bot ; i++) \)}{
+					\Assert{\( i < m + m´-1 \)}\;
+					\( t[i] \gets e \) \;
+				}	
+			}
+			\BlankLine
+			\Function{find(k : Key) : Element}{
+				\For{\( (i \gets h(k) ; t[i] \neq \bot ; i++ )\)}{
+					\If{\( t[i] = k \)}{
+						\Return{\( t[i] \)}
+					}
+				}
+				\Return{\( \bot \)}
+			}
+			\BlankLine
+			\Invariant{\( \forall i : t[i] \neq \bot \implies \forall j \in \{ h(t[i]).. i - 1 \} : t[j] \neq \bot  \)}\;
+			\Procedure{remove( k : Key )}{ \tcc{search k}
+				\For{\( (i \gets h(k); k \neq t[i]; i++ )\)}{ 
+					\If{\( t[i] = \bot \)}{ \tcc{nothing to do then}
+						\Return \;
+					}
+				}
+				\tcc{we plan for a hole at i}
+				\For{\( (j \gets i + 1; \; t[j] \neq \bot ; j++ )\)}{
+					\tcc{Establish invariant for \( t[j] \)}
+					\If{\( h ( t[j] ) \neq i \)}{
+						\( t[i] \gets t[j] \)  \tcp*{Overwrite removed element}
+						\( i \gets j \) \tcp*{Move planned hole}
+					}
+				\( t[i] \gets \bot \)  \tcp*{erase freed entry}
+				}
+			}
+			
+		}
+	\end{algorithm}
+
+ 
+	
+	\paragraph{Verketten vs. Lineare Suche}
+	\begin{easylist}
+		& Vollaufen
+			&& Verketten weniger empfindlich.
+			&& Unbeschränktes Hashing mit lineare Suche hat nur amortisiert konstante Einfügezeit 
+		& Cache
+			&& Verketten besser
+			&&& Vor allem für doAll
+		& Platz/Zeit abwegung
+			&& Kompliziert
+			&& Abhängig von:
+				&&& Füllgrad
+				&&& Elementgröße
+				&&& Implementierungsdetails beim Verketten \\ (shared dummy, t speichert Zeiger oder item)
+				&&& Speicherverwaltung beim Verketten, \\ beschränkt oder nicht?
+		& Referentielle Integrität
+			&& Nur beim Verketten
+		& Leistungsgarantien
+			&& Universelles Hashing funktioniert so nur mit Verketten
+	\end{easylist}
+
+	\section{Übung: Hashtabellen 09.05.18}
+		\subsection{Hashtabelle}
+		
+			Universum  \[U\] \\
+			Hashfunktion  \[h : U \rightarrow \{0,.., m - 1 \}\]\\
+			Beispiel:  \[h(k_1) = 2\]
+			\[h(k_2) = h(k_3) = 0\]\\
+		
+		
+		\subsection{Duplikaterkennung}
+		\begin{align*}
+			&\text{Gegeben: }  &\text{Folge } A \coloneqq \langle a_1, a_2 .. a_u \rangle \text{von Zahlen}\\
+			&\text{Frage:} &\text{enhält } A \text{ Duplikate } a_i = a_j \text{ für } i \neq j ?\\ 
+		\end{align*}
+	
+		\paragraph{Ansatz 1: Sortieren}	
+		\begin{align*}
+				 \langle 9, 18, 42, 25, 33, 18, 104 \rangle & \implies \langle 9,18, 18, 25, 33, 42, 104 \rangle \\
+				\text{Laufzeit: }  &\Omega (n \log n) \text{ Sortieren: Worst-Case}
+		\end{align*}
+		
+		\paragraph{Ansatz 2: Hashtabelle}
+		\begin{easylist}
+			& Hashtabelle mit m Slots und verketteten Listen
+			& Ziel: 
+				&& (erwartete) Laufzeit in \( \mathcal{O} (n) \)
+		\end{easylist}
+		
+		\paragraph{Beispiel: Mit Hashtabellen geht es besser}
+		Folge: \( \langle 9, 18, 42, 25, 33, 18, 104 \rangle \) mit \\
+		Hashfunktion \( h : a \rightarrow a \mod 7 \)\\
+		
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				0&1&2&3&4&5&6\\
+				\hline
+				42&&9&&25&33&\\
+				&&&&18&&\\
+				\hline
+			\end{tabular}
+		\end{table}
+	
+		\paragraph{Laufzeitanalyse:}
+		\begin{easylist}[enumerate]
+			& Erzeugen der Hashtabelle
+				&& Alle Slots initialisieren
+			& Finden und einfügen
+				&& insert pro Element \( \mathcal{O}(1) \)
+				&& find pro Element \( \mathcal{O}(Listenlänge) \)
+					&&& für zufällige Hash-Funktionen \( \mathcal{O} (1) \) erwartet
+		\end{easylist}
+		
+		\paragraph{Problem:}
+		--im Worst-Case ist \emph{find} pro Element in \( \Theta (n) \)\\
+		\paragraph{Beispiel:}
+		\[ \forall a \in \langle 17, 110, 38, 24, 31, 17, 94 \rangle : \mod 7 = 3 \]\\
+		-- Es existieren für jede Probleminstanz "schlechte" Hashfunktionen\\
+		\paragraph{Lösung}
+		--wähle Hashfunktionen zufällig \\
+		\emph{Theorem aus der Vorlesung}\\
+		\[ |A| \in \mathcal{O} (m) \implies \text{erwartete Anzahl kollidierender Elemente in } \mathcal{O}(1)\]\\
+		-- Intuition: Wahrscheinlichkeit eine schlechte Hashfunktion zu wählen klein\\
+		-- Benutze Familie von universellen Hash-Funktionen \[ \text{Kollisionswahrscheinlichkeit: } \frac{1}{n} \]
+		 
+		\subsection{Bloom Filter}
+		
+		\paragraph{Problem:}
+		\begin{labeling}{Gegeben:}
+			\item[\emph{Gegeben:}] Menge M von n Elementen der Größe u Bit
+			\item[\emph{Frage:}] Kommt Element in der Menge M vor?
+		\end{labeling}
+		
+		\paragraph{Gewünschte Operationen:}
+		\begin{easylist}[itemize]
+			& \emph{insert}(Key k)
+			& \emph{contains}(Key k) : bool
+				&& false: 
+					&&& k \emph{in der Menge}
+				&& true: 
+					&&& k mit \emph{großer Wahrscheinlichkeit} in der Menge \\ \( \implies \) \emph{false positive möglich}
+		\end{easylist}
+	
+		\paragraph{Beschreibung:}
+		-- Menge M mit n Elementen\\
+		-- k Hashfunktionen \[ h_1,.., h_k : \{ 0, 1 \}^u \rightarrow \{0,.., m - 1\}\]
+		\begin{easylist}
+				&& Bilder der Hashfunktion gleichverteilt
+				&& Hashfunktionen unabhängig voneinander
+			& Array \( A[ h_i(x) ] \) von Bits
+		\end{easylist}
+	
+	\paragraph{insert(x):}
+	-- setze \[A [h_i (x)] = 1 \] für \[ \forall i \in \{1,..,k \} \]
+	
+	\paragraph{contains(x):}
+	--wenn \[ A [h_i (x)] = 1 \] für \[ \forall i \in \{1,..,k\} \implies true \] --sonst \[ \implies false \]
+	
+	\subsubsection{Wahrscheinlichkeit von false positives}
+	Wahrscheinlichkeit für 1 an Stelle i:\\
+	\begin{align*}
+		Pr[A[i] &= 1] & \text{nach n Einfügungen}\\
+		&= 1 - Pr[A[i] = 0] & \text{nach n Einfügungen}\\
+		&= 1 - ( 1 - \frac{1}{m} )^{kn}\\
+		&\approx 1 - e^{\frac{-kn}{m}}\\ 
+	\end{align*}
+	\(\implies\) Wahrscheinlichkeit für \emph{false positive}: \[ f^+ \approx (1 - e ^{\frac{-kn}{m}})^k \]
+	
+	\paragraph{Beispiel:}
+	\begin{align*}
+		&n = 100 000 \text{ Objekte}\\
+		&m = 1 000 000 \text{ Bit} \\
+		&k = 7 \text{ unabhängige Hashfunktionen}\\
+	\end{align*}
+	\begin{easylist}
+		& Wahrscheinlichkeit für false positive \( < 1 \% \) 
+		& Speierplatz \( \approx \frac{m}{n} = 10  \) Bit pro Objekt
+	\end{easylist}
+
+	\begin{labeling}{Nachteile}
+		\item[\emph{Vorteile}] 
+		\item[+]  Wenig Speicherplatzverbrauch
+		\item[+] Schneller als Suche \( ( \mathcal{O}(1) vs. \mathcal{O}  (n)) \)
+		\item[+] Verlässliches Negativergebnis
+		\item[\emph{Nachteile}] 
+		\item[\(-\)] False Positives möglich
+	\end{labeling}
+
+	\section{Hash-Funktionen}
+		\subsection{Analyse für zufällige Hash-Funktionen}
+	 	\paragraph{Theorem1}
+	 	Die erwartete Anzahl kollidierender Elemente ist \[ \forall k : \mathcal{O}(1) \text{ falls } |M| \in \mathcal{O}(m) \]\\
+	 	
+	 	\paragraph{Beweis}
+	 	Für festen Schlüssel k definiere,\\ 
+	 	Kollisionslänge X \[ X \coloneqq | \{ e \in M' : h(e) = h(k) \} | \] mit \[ M' = \{ e \in M : key (e) \neq k \} \]\\
+	 	Betrachte die \[0-1 \text{ ZV}\] 
+	 	\[X_e = 1\] für \[ h(e) = h(k) \] \[e \in M' \] und  \[X_e = 0\]  sonst. 
+	 	
+	 	\begin{align*}
+	 		E[X] &= E[\sum_{e \in M'} X_e] \\
+	 		&= \sum_{e \in M'}E[X_e] \\
+	 		&= \sum_{e \in M'}\mathbb{P} [X_e = 1]\\ 
+	 		&= \frac{|M'|}{m}
+	 	\end{align*}
+	 	Das gilt unabhängig von der Eingabe M.
+	 	
+	 	\subsection{Universelles Hashing}
+	 	\paragraph{Idee}
+	 	Nutze nur bestimmte \emph{"einfache" Hash-Funktionen}\\
+	 	
+	 	\paragraph{Definition 2}
+	 	\[ H \subseteq \{0.. m - 1 \}^{\text{Key}} \] ist universell,
+	 	falls für alle x, y in Key mit \[ x \neq y \]
+	 	und zufälligem \(h \in H \)
+	 	\[ \mathbb{P} [h(x) = h(y)] = 1 \frac{1}{m} \]
+	 	
+	 	\paragraph{Theorem 3}
+	 	Theorem 1 gitl auch für universelle Familien von Hash-Funktionen
+	 	
+	 	\paragraph{Beweis}
+	 	Für \[ \Omega = H \]
+	 	haben wir immer noch 
+	 	\[ \mathbb{P}[X_e = 1] = \frac{1}{m} \]
+	 	Der Rest geht wie vorher.
+	 	
+	 \paragraph{Eine einfache universelle Familie}
+	 m sei eine Primzahl, 
+	 \[ \text{Key } \subseteq \{ 0,..m m - 1 \}^k  \]
+	 
+	 \paragraph{Theorem 4}
+	 Für \[ a = (a_1,..., a_k) \in \{0,..., m-1\}^k  \]
+	 definiere \[h_a(x) = a \times x \mod m \],
+	 \[ H = \{h_a : a \in \{ 0.. m-1 \}^k \} \]\\
+	 \emph{H ist eine universelle Familie von Hash-Funktionen.}
+	 
+	 \paragraph{Beispiel für H}
+	 Für \[ a = (a_1,..., a_k) \in \{0,..., m-1\}^k  \]
+	 definiere \[h_a(x) = a \times x \mod m \],
+	 \begin{align*}
+	 	k &= 3\\
+	 	m &= 11 \\
+	 	\text{wähle } a = (8, 1, 5)\\ \hline
+	 	\\
+	 	h_a ((1, 1, 2)) &= (8, 1, 5) \times (1, 1, 2)\\
+	 	&= 8 \times 1 + 1 \times 1+5 \times 2\\
+	 	&=19\\
+	 	&\equiv 8 \mod 11\\
+	 \end{align*}
+	 
+	 \paragraph{Beweis Theorem}
+	 Betrachte \[ x = (x_1,..., x_k) \] \[ y = (y_1,..., y_k) \]
+	 mit \[ x_j \neq y_j \]
+	 zähle \[a\] mit \[ h_a(x) = h_a(y) \]\\
+	 Für jede Wahl der 
+	 \(a_i : i \neq j : \exists! a_j : h_a(x) = h_a(y) : \)
+	 \begin{align*}
+	 	&\sum_{1 \leq i \leq k} a_i x_i \\
+	 	&\equiv \sum_{1 \leq i \leq k} a_i y_i (\mod m)\\
+	 	& \iff a_j ( xj - y_j)\\
+	 	& \equiv \sum_{i \neq , 1 \leq i \leq k} a_i(y_i . x_i)(\mod m)\\
+	 	& \iff a_j \\
+	 	& \equiv (x_j - y_j)^{-1} \sum_{i \neq j , 1 \leq i \leq k} a_i (y_i - x_i)(\mod m)\\
+	 \end{align*}
+	 
+	 \[m^{k-1} \text{ Möglichkeiten} \] 
+	 die \( a_i  \)  (mit \( i \neq j \)) auszuwählen.\\
+	 \[ m^k \] ist die Gesamtzahl der \(a\), daher, 
+	 \[\mathbb{P}[h_a(x) = h_a (y) ]  \]
+	 \[ = \frac{m^{k - 1}}{m^k} \]
+	 \[ = \frac{1}{m} \]
+
 \section[Effizienz durch Ordnung]{Sortieren}
+	\subsection{Sortieren und Co} 
+	
+	\paragraph{Lochkartensortierer} 
+	Abfolge:\\
+	\begin{easylist}
+		& \emph{1. Durchlauf}
+			&& Alle Karten werden nach der \emph{Einerziffer} sortiert.
+		& \emph{2. }
+			&& Alle Karten werden nach der \emph{Zehnerziffer} sortiert.
+		& \emph{3. }
+			&& Alle Karten werden nach der \emph{Hunderterziffer} sortiert
+		& \emph{4. }
+			&& Die Lochkarten sind nun \emph{absteigend sortiert}
+	\end{easylist}
+	
+	\subsection{Grundproblem Sortieren} 
+	Gegeben: \[ \text{Elementfolge } s = \langle w_1 \dots  e_n \rangle \]
+	Gesucht: \[ s' = \langle e_1' \dots  e_n' \rangle \]
+	mit \[ s' \text{ ist eine Permutation von s} \]
+	\[ e_1 ' \leq \dots \leq e'_n\] für eine Totalordnung "\( \leq \)"
+	
+	\paragraph{Anwendungsbeispiele}
+	\begin{easylist}
+		& Allgemein
+			&& Vorverarbeitung
+		& Suche 
+			&& Telefonbuch \( \iff \) unosrtierte Liste
+		& Gruppieren
+			&& Alternative: Hashing
+	\end{easylist}
+	
+	\paragraph{Beispiel aus Kurs/Buch}
+	
+	\begin{easylist}
+		& Aufbau von Suchbäumen
+		& Kruskals MST-Algorithmus
+		& Rucksackproblem
+		& Scheduling
+			&& Die schwersten Probleme zu erst
+		& Sekundärspeicheralgorithmen
+			&& z.B. Datenbank-\emph{Join}
+	\end{easylist}
+	
+	\emph{Viele verwandte Probleme.}\\
+	Zum Beispiel:
+	\begin{easylist}
+		& \emph{Transpositionen} dünner Matritzen
+		& invertierten Index aufbauen
+		& Konversion zwischen Graphrepräsentationen
+	\end{easylist}
+	
+	\paragraph{Überblick}
+	
+	\begin{easylist}
+		& Einfache Algorithmen 
+		& Kleine Datenmengen
+		& Eine passende untere Schranke
+		& Quiksort
+		& Das Auswahlproblem
+		& Ganzzahlige Schlüssel
+			&& jenseits der unteren Schranke
+	\end{easylist}
+	
+	\subsection{Einfache Sortieralgorithmen mit Sentinels} 
+	\begin{algorithm}
+		\caption{Insertion Sort}
+		\DontPrintSemicolon
+		\SetKwProg{Function}{Function}{}{}
+		\SetKwProg{Procedure}{Procedure}{}{}
+		\SetKwProg{Class}{Class}{}{}
+		\SetKw{Assert}{assert}
+		\SetKw{Invariant}{invariant}
+		\SetKwArray{Array}{Array}
+		
+		\Procedure{insertionSort( a : \Array{\( 1 \dots n \)})}{
+			\BlankLine
+			\For{\(i \gets 2  \text{ to } n \)}{
+				\BlankLine
+				\Invariant{\( a [i] \leq \dots \leq a [i-1] \)}\;
+				\tcc{move \(a [i] \) to the right place}
+				\(e \gets a[i] \)  \tcc*{new minimum}
+				\If{\( e < a[1] \)}{
+					\For{\( j \gets i, \text{ to } 2 \)}{
+						\( a[j] \gets a[j - 1] \) \;
+						\( a[1] \gets e \) \;
+					} 
+				} \Else{ \tcc*{use \(a[1]\) as a sentinel}
+					\For{\( (j \gets i; a[j-1] > e ; j-- )\)}{
+						\( a[j] \gets a[j - 1] \) \;
+						\( a[j] \gets e \) \;
+					}
+				}
+			}	
+		}
+	\end{algorithm}
+	
+	\paragraph{Beispiel}
+	\begin{align*}
+		& \langle 4 \rangle , \langle 7, 1, 1, \rangle\\
+		\implies & \langle 4, 7 \rangle , \langle 1, 1 \rangle \\
+		\implies & \langle 1, 4, 7 \rangle , \langle 1 \rangle \\
+		\implies & \langle 1, 1, 4, 7  \rangle , \langle  \rangle \\
+	\end{align*}
+	
+	\subsubsection{Analyse} 
+	Die i-te Iteration braucht Zeit \( \Theta (i) \).\\
+	\begin{align*}
+		\sum_{i=2}^{n} &= \frac{n(n+1)}{2} -1 \\
+		&= \Theta (n^2)\\
+	\end{align*}
+	
+	Die i-te Iteration braucht Zeit \( \mathcal{O}(1) \) z.B. (beinahe) sortiert).
+	\[ \sum_{i=2}^{n} \mathcal{O}(1) \in \mathcal{O}(n) \]
+	
+	\subsection{Sortieren durch Mischen} 
+	\paragraph{Idee: Teile und Herrsche}
+	
+	\begin{algorithm}
+		\caption{Merge Sort}
+		\DontPrintSemicolon
+		\SetKwProg{Function}{Function}{}{}
+		\SetKwProg{Procedure}{Procedure}{}{}
+		\SetKwProg{Class}{Class}{}{}
+		\SetKw{Assert}{assert}
+		\SetKw{Invariant}{invariant}
+		\SetKwArray{Array}{Array}
+	
+		\Function{mergeSort(\( \langle e_1 \dots e_n \rangle \)) : Sequence of Element}{
+			\BlankLine
+			\If{\((n=1)\)}{ \tcc{best-case}
+				\Return{\( \langle e_1 \rangle \)}
+			} \Else {
+			\Return{ merge( mergeSort(\( e_1 \dots e_{\lfloor \frac{n}{2} \rfloor } \rangle \)), mergeSort(\(e_{\lfloor \frac{n}{2} \rfloor + 1} \dots e_n \rangle \)  ) }
+		}
+		}
+	\end{algorithm}
+	
+	
+	
+	\paragraph{Mischen} 
+	Jeweils \( min(a, b) \) in die Ausgabe schieben.
+	
+	\begin{table}
+		\centering
+		\begin{tabular}{|c c|c c|}
+			\hline
+			a&b&c&operation\\
+			\hline
+			\( \langle 1, 2, 7 \rangle \) & \( \langle 1, 2, 8, 8  \rangle \) &\( \langle   \rangle \) & move a \\
+			\( \langle 2, 7 \rangle \) & \( \langle 1, 2, 8, 8  \rangle \) &\( \langle 1  \rangle \) & move  b \\
+			\( \langle 2, 7 \rangle \) & \( \langle 2, 8, 8  \rangle \) &\( \langle 1, 1  \rangle \) & move a \\
+			\( \langle 7 \rangle \) & \( \langle 2, 8, 8  \rangle \) &\( \langle 1, 1, 2  \rangle \) & move b\\
+			\( \langle 7 \rangle \) & \( \langle  8, 8  \rangle \) &\( \langle 1, 1, 2, 2  \rangle \) & move a \\
+			\( \langle  \rangle \) & \( \langle  8, 8  \rangle \) &\( \langle 1, 1, 2, 2 , 7  \rangle \) & concat b \\
+			\hline
+			\( \langle  \rangle \) & \( \langle  \rangle \) &\( \langle 1, 1, 2, 2 , 7, 8, 8  \rangle \) & \\
+			\hline
+		\end{tabular}
+	\end{table}
+	Zeit \( \mathcal{O}(n) \)
+	
+	\subsubsection{Analyse} 
+	Folie: 14.05.18 \#22
+	\begin{align*}
+	\langle 2, 7, 1, 8&, 2, 8, 1  \rangle \\
+	\langle 2, 7, 1 \rangle & \langle 2, 8, 1  \rangle \\
+	\langle 2 \rangle  \langle 7, 1 \rangle & \langle 8,2  \rangle  \langle 8, 1 \rangle \\
+	\langle 2 \rangle \langle 7  \rangle \langle 1 \rangle  \langle 8 & \rangle \langle 2 \rangle  \langle 8 \rangle \langle 1 \rangle\\
+	\langle 2 \rangle \langle 1, 7 \rangle \langle 2, 8  \rangle & \langle 1, 8  \rangle \\
+	\langle 1, 2, 7  \rangle & \langle 1, 2, 8, 8 \rangle \\
+	\langle 1, 1, 2, 2&, 7, 8, 8 \rangle
+	\end{align*}
+	Analyse: 
+	\begin{align*}
+		  T(n) &\\ 
+		&= \mathcal{O}(n) + T (\lceil \frac{n}{2} ) \rceil + T(\lfloor \frac{n}{2} \rfloor )\\
+		&= \mathcal{O}(n \log n)\\ 
+	\end{align*}
+	
+	\[ T = \Theta (n) + T (\lceil \frac{n}{2} ) \rceil + T(\lfloor \frac{n}{2} \rfloor ) \]
+	
+	\begin{easylist}
+		& Problem:
+			&& Runderei
+		& Ausweg: 
+			&&genauer rechnen (siehe Buch)
+		& Dirty trick:
+			&& Eingabe auf \emph{Zweierpotenzen aufblasen}
+	\end{easylist}
+	
+	\paragraph{Dirty trick - Beispiel}
+	\[ (2^{\lceil \log n \rceil} -n) \times \infty \]
+	anhängen. \\
+	\( \rightarrow \) normales Master-Theorem anwendbar.\\
+	\emph{Zeit} \( \Theta (n \log n) \)
+	24
+	\paragraph{Untere Schranken} 
+	\paragraph{Eine Vergleichsbasierte untere Schranke} 
+	\subsection{Baumbasierte Sortierdarstellung} 
+	\paragraph{Beweis} 
+	\subsubsection{Randomisierung, Mittlere Ausführungszeit} 
+	\subsection{Quicksort – erster Versuch}
+
 \section[Immer die Übersicht behalten]{Prioritätslisten}
 \section[Die eierlegende Wollmilchsau]{Sortierte Liste}
 \section[Beziehungen im Griff haben]{Graphrepräsentation}
