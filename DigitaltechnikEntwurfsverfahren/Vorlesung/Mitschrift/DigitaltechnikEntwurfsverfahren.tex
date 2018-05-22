@@ -69,6 +69,7 @@
 
 % Coole Listen [Seperator-zeichen]
 \usepackage[ampersand]{easylist}
+%\ListProperties(Style**=$\diamond$)
 
 %Doppel-Linie
 \usepackage{hhline}
@@ -87,6 +88,9 @@
 
 % \emph{} - ändern
 \DeclareTextFontCommand{\emph}{\bfseries}
+
+% Neuer Befehl für not <->
+\newcommand{\nleftright}{\mathrel{\ooalign{$\Leftrightarrow$\cr\hidewidth$/$\hidewidth}}}
 
 \makeglossaries
 
@@ -818,7 +822,135 @@
 			
 		
 		
-			\subsubsection{Zahlen \& und Zeichendarstellung }
+			\subsection{Zahlen \& und Zeichendarstellung }
+			
+				\subsubsection{BCD - Kodierung}
+					\begin{easylist}[itemize]
+						& BCD überführt Dezimalzahlen ziffernweise in eine Binärdarstellung.
+						& In der BCD-Kodierung werden immer 4-Bits gruppiert. So eine Gruppe wird auch \hl{Tetrade} genannt (siehe auch: Tetradenkodierung)
+						& \( 2^4 = 16\) daher stellen 6 der 16 möglichen Kodierungen keine gültige Darstellung da, diese werden auch \hl{Pseudotetraden} genannt.
+					\end{easylist}
+				
+				\subsubsection{Gray - Kodierung}
+					Die Gray-Kodierung nutzt Binärzeichen, Besonderheit ist beim Gray-Kode dass nur pro Zählschritt, ein \hl{Zeichen geändert wird}. 
+					\paragraph{Beispiel:} 
+					\[ 3 \rightarrow 4 \] \[ 0010 \rightarrow 0110 \] statt \[ 0011 \rightarrow 0100 \]\\
+					Solche Kodierungen heißen ein\emph{schritt}ige Kodierungen.
+					
+					\paragraph{Eigenschaften:}
+					
+					\begin{easylist}
+						& Vorteile:
+							&& Die einschrittige Kodierung bietet Vorteile bei der Analog/Digital-Wandlung 
+							&& und für mechanische Abtaster.
+						& Nachteile:
+							&& Die Stellen besitzen keine feste Stellenwertigkeiten.\\
+									Das macht die Ausführung von arithmetischer Operationen schwierig!
+					\end{easylist}
+					
+					\paragraph{Gray-Kodierung: 0 - 15}
+					\begin{table}
+						\centering
+						\begin{tabular}{c|c}
+							0&\hl{0}000\\
+							1&000\hl{1}\\
+							2&00\hl{1}1\\
+							3&001\hl{0}\\
+							4&0\hl{1}10\\
+							5&011\hl{1}\\
+							6&01\hl{0}1\\
+							7&010\hl{0}\\
+							8&\hl{1}100\\
+							9&110\hl{1}\\
+							10&11\hl{1}1\\
+							11&111\hl{0}\\
+							12&1\hl{0}10\\
+							13&101\hl{1}\\
+							14&10\hl{0}1\\
+							15&100\hl{0}\\
+						\end{tabular}
+					\end{table}
+					
+					\paragraph{Umwandlung von Dual- in Gray}
+					\begin{algorithm}[H]
+						\caption{Dual- \( \rightarrow \) in Gray-Kode }
+						\DontPrintSemicolon
+						
+						\( X_1 \coloneqq \text{ Dualzahl} \)\; 
+						\BlankLine
+						\( X_2 = X_1 \times 2 \)  \tcp*{Entspricht Linksschieben um 1}
+						\( X_3 = (X_1 + X_2) \mod 2 \) \tcp*{Modulo-2 \& Addition \( \rightarrow \) \( X_1\) XOR \( X_2 \) }
+						\( X_4 = X_3 \div 2 \) \tcp*{Entspricht Rechtssschieben um 1}
+						\BlankLine
+						\( X_4 \coloneqq \text{ Gray-Kode für } X_1\) \;
+					\end{algorithm}
+					
+					\paragraph{Berechnungsbeispiel: 1111 in Gray-Kode}
+					\begin{align*}
+						X_1 &= 1111_2\\ 
+						X_2 &= X_1 \times 2\\ 
+								&= 1\; 1110\\
+						X_3 &= (X_1 + X_2) \mod 2\\ 
+						\\
+						&1111\\
+						\text{XOR } 1\; &1110 \\ \hline
+						X_3 \gets 1 \;& 0001\\
+						\\
+						X_4 &= X_3 \div 2 \\ 
+						&= 1000 \\
+						&  \text{ Gray-Kode} 
+					\end{align*}
+					
+				\subsubsection{ASCII}
+					\~{} nutzt 5 Bits für die Kodierung für:\\
+					\begin{easylist}
+						 & \( 2 \times 26  \) Buchstaben
+						 & 10 Ziffern
+						 & 32 Kommunikationssteuerzeichen
+						 & 32 Interpunktionszeichen
+					\end{easylist}
+					Insgesamt sich \( 2^5 = 128 \) Zeichen möglich.\\
+					Für zusätzliche Zeichen wie Umlaute oder andere nationale Besonderheiten reicht das nicht aus.\\
+					Um trotzdem andere Alphabete umzusetzen, hatte man zwei Möglichkeiten:
+					\begin{easylist}
+						& Die Kodierung modifizieren
+							&& ISO-7-Bit
+							&& DIN 66003
+									&&& Deutsches "ASCII" mit Umlauten
+						& Ein Bit hinzufügen, um weitere 128 Zeichen kodieren zu können
+							&& Vorteil: Man könnte das zusätzliche Bit zur Fehlererkennung einsetzen
+					\end{easylist}
+					
+				\subsubsection{Unicode}
+					Unicode ist die Erlösung von dem 7-8 Bit "F*ckfest" was bis in die 80er betrieben wurde. Die vorherigen Kodierungen waren zu spezifisch, nationale Besonderheiten, Firmenspezifisch...\\
+					Asiatische Alphabete waren nicht oder nur mit komplizierten Hacks \footnote{komplizierte Kodierungssequenzen} nutzbar.\\
+					\\
+					Eine internationale, weltweite Norm war von Nöten, um einfachen Datenaustausch möglich zu machen.\\
+					
+					\paragraph{Geschichte:}
+					Ende der 80er Jahre began das \emph{Unicode-Konsortium} mit der Entwicklung einer solchen Zeichenkodierung. Im Unicode-Konsortium waren viele Soft- und Hardwarefirmen vertreten wie Apple, IBM oder Microsoft. Der Umstieg von den alten uneinheitlichen Kodierung zum Unicode erfolgte nur sehr langsam.\\
+					
+					\paragraph{Eigenschaften:}
+					\begin{easylist}
+						& 16 Bits ermöglichen 65.536 Zeichen
+							&& Alle 16 Bits stehen für die Zeichenkodierung zur Verfügung
+								&&& Kodierungs-Schema: U+xxxx \footnote{ \(x \gets \) Hexadezimalzahl}
+						& Kodiert werden nur Zeichnen
+							&& Keine Zeichendarstellung oder Erscheinungsbild (z.B. die {\Large Größe} oder \textit{Kursiv})  
+							&& Die Unicode-Norm kodiert einfachen (nicht formatierten) Text. Keine Kodierung von Schriftgröße, Farbe usw.
+						& Unicode-Zeichen 
+							&& haben eine wohl definierte Semantik \footnote{ /Bedeutung}
+							&& werden in logischer Reihenfolge angeordnet.
+								&&&  \( \rightarrow \) Lateinische Buchstaben von links nach rechts
+								&&& \( \gets \) Arabische \& Hebräische von rechts nach links 
+						& Gleiche Zeichen werden gleichgesetzt(?)
+							&& Speziell bei Chinesisch, Japanisch, Koreanisch 
+						& Unicode ermöglicht zusammengesetzte Zeichen dynamisch zu erstellen
+							&& Ü = U+005 (+) U+0308
+							&& Zusammengesetzte Zeichen sind häufig zusätzlich mit einem eigenen Identifierer vorhanden. Ü = U+00DC
+						& 1zu1- Umsetzung zwischen Unicode und anderen weit verbreiteten Normen ist garantiert
+					\end{easylist}
+									
 			\subsection{Fehlerkorrigierende Codes}
 				\subsubsection{Fehlererkennung}
 					\paragraph{Quersumme: Einfaches Schema}
@@ -852,8 +984,8 @@
 					 \[ x_0 \oplus (x_1 \oplus \dots \oplus x_7) = 0_{8.Bit}\]
 					
 					
-				\subsubsection{Fehlerkorrektur}
-					\ul{Gewünscht wird }\\
+				\subsubsection{Fehlerkorrektur / Hammingcode}
+					\ul{Gewünscht wird: }\\
 					\begin{easylist}
 						& Position des Fehler herausfinden können
 							&& Mehr als ein Prüfbit notwendig
@@ -866,13 +998,10 @@
 							& Anzahl der Bits eines zu übertragenden Codewort
 								&& n Bits
 							& Einer der n Bits kann falsch sein
-								&& \(\implies \)  
-									\begin{align*}
-										&n \text{ Fehlerfälle}\\
-										&+ 1 \text{ Fehlerfreien Fall}
-									\end{align*}
+								&& \(\implies \) n Fehlerfälle
+								&&		+ 1 \text{ Fehlerfreien Fall}
 							& -Kodierung der (n+1) Fälle durch k Prüfbits
-								&& \[ 2^k \geq n + 1 \]
+								&& \( 2^k \geq n + 1 \)
 							& k Prüfbits sind Teil vom Codewort \\
 								\(\implies n = m + k \)\\
 								\hl{$\implies 2^k \geq m + k +1$} \\
@@ -915,10 +1044,10 @@
 						Die i-te Quersumme ergänzt alle Positionen im Kodewort,\\
 						die die Potenz \(\text{Basis}^i = 2^i  \) in ihrer Ziffernwertigkeit enthalten auf gerade Parität.\\
 						\begin{align*}
-							k_1 = QS_0 &\text{über alle ungeraden Stellen } 1,3,5 \\
-							k_2 = QS_1 &\text{über die Stellen } 2,3,6,7, 10 \\
-							k_3 = QS_2 &\text{über die Stellen } 4, 5, 6, 7, 12,  \\
-							k_4 = QS_3 &\text{über die Stellen } 8, 9, 10, 11, 12 \\
+							k_1 = 2^0 = 1 \text{ springen, 1 nehmen } =  QS_0 &\text{ über alle ungeraden Stellen } 1,3,5 \\
+							k_2 = 2^1 = 2 \text{ springen, 2 nehmen } =  QS_1 &\text{ über die Stellen } 2,3,6,7, 10 \\
+							k_3 = 2^2 = 4 \text{ springen, 4 nehmen } = QS_2 &\text{ über die Stellen } 4, 5, 6, 7, 12,  \\
+							k_4 = 2^3 =  8 \text{ springen, 8 nehmen } = QS_3 &\text{ über die Stellen } 8, 9, 10, 11, 12 \\
 						\end{align*}
 						
 						\begin{table}[H]
@@ -1395,7 +1524,562 @@
 			\colorbox{green!30}{$0$} \colorbox{blue!30}{$0000\;0000$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
 			Oder:\\
 			\colorbox{green!30}{$1$} \colorbox{blue!30}{$0000\;0000$} \colorbox{red!30}{$000\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			
+		\subsection{Beispiel: Gleitkomma in Dezimal, Multiplikation und wieder Gleitkomma}
+			Stellen Sie beide Gleitkommazahlen dezimal dar.\\
+			Was ist das Ergebnis einer Multiplikation der Zahlen im Dezimalsystem?\\
+			\\
+			\begin{align*}
+			x: \colorbox{green!30}{$1$} \colorbox{blue!30}{$1000\;0001$} \colorbox{red!30}{$110\; 1000\; 0000\; 0000\; 0000\; 0000$}\\
+			y: \colorbox{green!30}{$1$} \colorbox{blue!30}{$0111\;1110$} \colorbox{red!30}{$101\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			\end{align*}
+			\begin{align*}
+			x: \colorbox{green!30}{$1$} \colorbox{blue!30}{$1000\;0001$} \colorbox{red!30}{$110\; 1000\; 0000\; 0000\; 0000\; 0000$}\\
+			\colorbox{green!30}{$-$} \colorbox{blue!30}{$129-127$} \colorbox{red!30}{$110\; 1000\; 0000\; 0000\; 0000\; 0000$}\\
+			\colorbox{green!30}{$-$}  \colorbox{red!30}{$(1+2^{-1} + 2^{-2} + 2^{-4}) \times 2^2$}\\
+			\colorbox{green!30}{$-$}  \colorbox{red!30}{$1+ \frac{1}{2} +  \frac{1}{4} +  \frac{1}{16} \times 2^{2}$}\\
+			\colorbox{green!30}{$-$}  \colorbox{red!30}{$1+ \frac{8}{16} +  \frac{4}{16} +  \frac{1}{16} \times 2^{2}$}\\
+			\colorbox{green!30}{$-$}  \colorbox{red!30}{$1+ \frac{13}{16} \times 2^{2}$}\\
+			\colorbox{green!30}{$-$}  \colorbox{red!30}{$1,8125  \times 2^{2}$}\\
+			\colorbox{green!30}{$-$}  \colorbox{red!30}{$ 7,25 $}\\
+			-7,25\\ \hline
+			\end{align*}
+			
+			\begin{align*}
+			y:\colorbox{green!30}{$1$} \colorbox{blue!30}{$0111\;1110$} \colorbox{red!30}{$101\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			\colorbox{green!30}{$-$} \colorbox{blue!30}{$0111\;1110$} \colorbox{red!30}{$101\; 0000\; 0000\; 0000\; 0000\; 0000$}\\
+			\colorbox{green!30}{$-$} \colorbox{blue!30}{$2^1 + 2^2  + 2^3 + 2^4 + 2^5 + 2^6$} \colorbox{red!30}{$(1 + 2^{-1} + 2^{-3}) \times 2^{-1}$}\\
+			\colorbox{green!30}{$-$} \colorbox{blue!30}{$2 + 4 + 8 + 16 + 32 + 64$} \colorbox{red!30}{$1,625 \times 2^{-1}$}\\
+			\colorbox{green!30}{$-$} \colorbox{blue!30}{$126-127$} \colorbox{red!30}{$0,812.5$}\\
+			\colorbox{green!30}{$-$} \colorbox{blue!30}{$-1$} \colorbox{red!30}{$0,812.5$}\\
+			-0,8125\\ \hline
+			\end{align*}
+			
+			\begin{align*}
+			&-7,25 \times -0,8125\\
+			&= 5,890625\\
+			\end{align*}
+			
+			\begin{align*}
+			5,890625 \rightarrow \text{ Dualzahl}\\
+			\\
+			5 \div 2 = 2 \quad R 1\\
+			2 \div 2 = 1 \quad R 0\\
+			1 \div 2 = 0 \quad R 1\\
+			\\
+			0,890625 &\times 2\\ 
+			&= 1+ 0,78125\\
+			&\times 2 = 1 + 0,5625\\ 
+			&\times 2 = 1 + 0,125\\ 
+			&\times 2 = 0 + 0,25\\ 
+			&\times 2 = 0 + 0,5\\ 
+			&\times 2 = 1 + 0,0\\ 
+			\\
+			\implies 101,111001\\\hline
+			\\
+			101,11001\\
+			= 1,01111001 \times 2^{2}\\
+			\text{Exponent } = 1\\
+			2 + 127 = 129\
+			\\
+			129 \rightarrow \text{ Dualzahl}\\
+			129\div 2 = 64 \quad R1\\
+			\div 2 = 32 \quad R0\\
+			\div 2 = 16 \quad R0\\
+			\div 2 = 8 \quad R0\\
+			\div 2 = 4 \quad R0\\
+			\div 2 = 2 \quad R0\\
+			\div 2 = 1 \quad R0\\
+			\div 2 = 0 \quad R1\\
+			\implies 10000001\\
+			\\
+			\text{Vorzeichenbit } \gets 0\\ \hline
+			\\ 
+			\colorbox{green!30}{$0$} \colorbox{blue!30}{$1000 \; 0001$} \colorbox{red!30}{$011\; 1100\; 1000\; 0000\; 0000\; 0000$}\\
+			\end{align*}
 	\section{Schaltnetze}
+		
+			Schaltnetze sind:
+			\begin{easylist}
+				& Rein kombinatorische logische Schaltungen
+				& Kein Speicherverhalten
+				& Realisierung logischer Funktionen
+			\end{easylist}
+		
+			\subsubsection{Kontinuierliche und diskrete Signale}
+				\begin{enumerate}
+					\item Erfassen von Informationen mittels Sensoren
+					\item Sensordaten müssen digitalisiert werden
+					\item Algorithmen die das Signal/Sensordaten verarbeiten
+				\end{enumerate}
+			
+				\begin{labeling}{Analoges Signal}
+					\item[Ein Signal] ist eine Funktion einer unabhängigen variable t, die gewöhnlich die Zeit repräsentiert. Das Signal wird als \(U(t)\) angegeben.
+					\item[Analoges Signal] \( U(t) \) ist zu jedem Zeitpunkt definiert und kann jeden beliebigen Wert annehmen (Signal mit kontinuierlichen Werten)
+				\end{labeling}
+				
+				Gatter(?) wandelt jede Abtastperiode, \emph{analoges Signale}, \hl{Zeit- und wertkontinuierlich} ind \emph{Zeitdiskret und wertkontinuierlich}, durch Abtastung.\\
+			
+			\subsubsection{Binäre Signale}
+				Es gibt mehrere Intervalle die einen zulässigen Wert darstellen:\\
+				-- High- und Low-Intervall\\
+				-- Der Bereich zwischen High und Low ist undefiniert\\
+				\\
+				Low ist über einem Minimalwert, damit durch Störgrößen nicht ein vermeintliches Signal generiert werden kann.
+				
+		\subsection{Formale Grundlagen}
+			\subsubsection{Boolesche Algebra}
+				George Boole 1815-1864\\
+				
+				\paragraph{Definition:}
+				Als eine Boolesche Algebra bezeichnet man eine Menge \( V = \{ a,b,c, \dots \} \)\\
+				auf der zwei zweistellige Operationen \(  \oplus \) XOR und \( \otimes \) derart erklärt sind,\\
+				dass durch ihre Anwendung auf Elemente aus \( V \) wieder Elemente aus \( V \) entstehen \emph{(Abgeschlossenheit)}.\\
+				\[ BA = [V, \oplus , \otimes ] \]
+				Es gelten die vier \emph{Huntingtonschen Axiome} (H1-H4):\\
+					Für alle \( a,b \in V \) gilt:\\
+				\paragraph{H0 Abgeschlossenheit}
+				\begin{align*}
+					&a \otimes b \in V\\
+					&a \oplus b \in V\\
+				\end{align*}
+				
+				\paragraph{H1Kommutativgesetz}
+				\begin{align*}
+					&a \otimes b = b \otimes a\\
+					&a \oplus b = b \oplus a \\
+				\end{align*}
+				
+				\paragraph{H2 Distributivgesetz}
+				\begin{align*}
+					& a \otimes (b \oplus c) = (a \otimes b) \oplus (a \otimes c)\\
+					& a \oplus (b \otimes c) = (a \oplus b) \otimes (a \oplus c)\\
+				\end{align*}
+				
+				\paragraph{H3 Neutrale Elemente}
+				\begin{align*}
+					\text{Es Existieren zwei Elemente } e,n \in V \text{ so dass gilt:}&\\
+					&a \otimes e = a & \text{Eins-Element}\\
+					&a \oplus n = a &\text{Null-Element}\\
+				\end{align*}
+				
+				\paragraph{H4 Inverse Elemente}
+				\begin{align*}
+					\text{Für } \forall a \in V \text{ existiert ein Element } \overline{a} \text{ so dass gilt:}&\\
+					&a \otimes \overline{a} = n \\
+					&a \oplus \overline{a} = e\\
+				\end{align*}
+				
+				\paragraph{"Minimalste" Boolsche Algebra}
+				\begin{align*}
+					&BA = [V, \oplus , \otimes ] & V = \{ a,b,c, \dots \} \\
+					&BA_{min} = [V_{min}, \oplus , \otimes ] & V_{min} = \{e, n\}\\ \hline
+					\\
+					\text{Ist TA }= [ \{0,1\}, +. \times ] \text{ eine Boolsche Algebra?}\\
+					&\text{ ist nicht abgeschlossen bzgl. + }\\
+					&1 + 1 = 2 \notin V\\ 
+					\implies \text{TA ist keine Boolsche Algebra} &\\
+				\end{align*}
+				
+				\paragraph{Eindeutigkeit des Eins-Elements}
+				Es seien \(e_1\) und \(e_2\), zwei verschiedene Eins-Elemente, dann gilt:
+				\begin{align*}
+						&a \otimes e_1 = a &  \text{(H3) gilt auch für } a = e_2\\
+						&e_2 \otimes e_1 = e_2 &\text{(1)}\\
+						\\
+						& a \otimes e_2 = a & \text{(H3) gilt auch für } a = e_1\\
+						&e_1 \otimes e_2 = a & \text{(H3) gilt auch für } a = e_1\\
+						\\
+						&e_1 \otimes e_2 = e_1 &\text{(2)} \\
+						\text{Aus (1) und (2) folgt } e_1 = e_2&\\
+				\end{align*}
+				
+				\paragraph{Eindeutigkeit des Null-Elements}
+				Es sein \(n_1\) und \(n_2\) zwei verschiedene Null-Elemente
+				\begin{align*}
+					&a \oplus n_1 = a & \text{(H3) gilt auch für } a = n_2\\
+					&n_2 \oplus n_1 = n_2 &\text{(1)}\\
+					\\
+					& a \oplus n_2 = a & \text{(H3) gilt auch für } a = n_1\\
+					& n_1 \oplus n_2 = n_1 & \text{(2)}\\
+					\text{Aus (1) und (2) folgt } n_1 = n_2\\
+				\end{align*}
+				
+				\paragraph{Eindeutigkeit des inversen Elements}
+				Es seien \( \overline{a_1}\) und \( \overline{a_2}\) zwei verschiedene inverse Elemente für \(a\)
+				\begin{align*}
+					& a \oplus \overline{a_1} = n  & \text{(H4)}\\
+					& a \otimes \overline{a_1} = e & \text{(H4)}\\
+					\\
+					&a \otimes \overline{a_2} = n& \text{(H4)}\\
+					&a \oplus \overline{a_2} = e & \text{(H4)} \\
+					\\
+					\text{Distributivgesetz (H2)}\\
+					\overline{a_1} \otimes \underbracket{( a \oplus \overline{a_2} )}_{= e} &= \underbracket{(\overline{a_1} \otimes a)}_{ = n} \oplus (\overline{a_1} \otimes \overline{a_2})\\
+					 \overline{a_1} \otimes e &= n \oplus (\overline{a_1} \otimes \overline{a_2})\\
+					\overline{a_1} &= \overline{a_1} \otimes \overline{a_2} & \text{(1)}\\
+					\\
+					\overline{a_2} \times ( a \oplus \overline{a_1}) &= (\overline{a_2} \otimes a) \oplus (\overline{a_2} \otimes \overline{a_1}) & \text{(H2)}\\
+					&\vdots\\
+					 \overline{a_2} &= \overline{a_2} \otimes \overline{a_1} & \text{(2)}\\
+					\text{Aus (1) und (2) folgt: }  \overline{a_1} &= \overline{a_2} \implies a_1 = a_2\\
+				\end{align*}
+				
+			 \paragraph{Mengenalgebra vs. Boolsche Algebra}
+				 \begin{table}[H]
+				 	\centering
+				 	\begin{tabular}{|l|c|c|}
+				 		\hline
+				 		&Boolesche Algebra& Mengen Algebra\\ \hline
+				 		Potenzmenge einer Grundmenge& \( V \) & \( \varphi (T) \)\\
+				 		Vereinigung& \( \oplus \) &\( \cup \)\\
+				 		Durchschnitt&\( \otimes \) & \( \cap \) \\
+				 		Leere Menge& \( n \) & \( \emptyset \) \\
+				 		Grundmenge& \( e \) & \( T \)\\
+				 		Komplementmenge von A & \( \overline{a} \)  & \( \overline{A} \) \\ \hline
+				 	\end{tabular}
+			 	\caption{Vergleich Boolesche Algebra \& Mengen Algebra}
+				 \end{table}
+				 
+				 \paragraph{Mengenalgebra}	
+				 
+				 Verknüpfungsgebilde: \(MA = [ \varphi (M), \cap , \cup ]\)
+				 \begin{align*}
+				 	\forall S, T, R \in \varphi(M) \text{ gilt:}&\\
+				 	\\
+				 \end{align*}
+				 	
+				 	H0 \( \varphi (m)\) ist abgeschlossen bzgl. \( \cap \) und \( \cup \)
+				\begin{align*}
+				 	S \cap T &\in \varphi (M) \\
+				 	S \cup T &\in \varphi (M)\\
+				 	\\
+				\end{align*}
+				 	
+				 	H1 Kommutativgesetz:
+			 	\begin{align*}
+				 	S \cap T  &= T \cap S \\
+				 	S \cup T &= T \cup S \\
+				 	\\
+				\end{align*}
+				 	
+				 	H2 Distributivgesetz:
+			 	\begin{align*}
+				 	R \cap (S \cup T)& = ( R \cap S) \cup ( R \cap T)\\
+				 	R \cup (S \cap T) &= ( R \cup S) \cap ( R \cup T)\\
+				 	\\
+				\end{align*}
+				 	
+				 H3 Neutrale Elemente:
+			 	\begin{align*}
+				 	S &\cap M = S\\
+				 	S &\cup \emptyset = S\\
+				 	\\
+			   	\end{align*}
+			   	
+				   	H4 Inverse Elemente:
+			  	\begin{align*}
+				 	S \cap \overline{S} &= \emptyset \\
+				 	S \cup \overline{S} &= M \\
+				 \end{align*}
+				 
+				 \begin{table}[H]
+				 	\centering
+				 	\begin{tabular}{|l|l|l|}
+				 		\hline
+				 		&Mengenalgebra & Boolesche Algebra\\ \hline
+				 		&\( \varphi (M) \) & \( V \) \\
+				 		&\( S \in \varphi (M) \text{ oder} \) & \( a \in V \) \\
+				 		&\(  S \subseteq M  \)& \\ \hline
+				 		&\( \overline{S} \) & \( \overline{a} \) \\
+				 		Operatoren &\( \cap , \cup  \) & \( \oplus , \otimes \)  \\
+				 		Eins-Element &\( M \in \varphi (M) \) & \( e \in V \)  \\
+				 		Null-Element &\( \emptyset \in \varphi(M) \) & \( n \in V \) \\ \hline
+				 	\end{tabular}
+				 \end{table}				 
+				 
+				 \paragraph{Schaltalgebra }
+				 Spezielle Boolesche Algebra
+				 \begin{table}[H]
+				 	\centering
+				 	\begin{tabular}{|c|c|c|}
+				 		\hline
+				 		Boolesche Algebra & Schaltalgebra&\\ \hline
+				 		\( V \) & \( \{ 0, 1 \}  \) &\\
+				 		\( \oplus \) & \( \vee \)  & Disjunktion \\
+				 		\( \otimes \) & \( \wedge \)  & Konjunktion\\
+				 		\( n \) & \( 0 \)& \\
+				 		\( e \) & \( 1 \) &\\ 
+				 		\( \overline{a} \) & \( \overline{a} \) &\\ \hline
+				 	\end{tabular}
+				 \end{table}
+				 
+				 \paragraph{Huntingtonsche Axiome in der Schaltalgebra}
+				 
+				 H0 Abgeschlossenheit \\
+				 H1 Assoziativgesetz:
+				 \[ a \vee b = b \vee a \]
+				 \[ a \wedge b = b \wedge a \]
+				 \\
+				 H2 Distributivgesetz: 
+				 \[ a \wedge ( b \vee c) = ( a \wedge b) \vee ( a \wedge c ) \]
+				 \[ a \vee ( b \wedge c) = ( a \vee b) \wedge ( a \vee c ) \]\\
+				 \\
+				 H3 Neutrales Element:
+				 \[ a \vee 0 = a \]
+				 \[ a \wedge 1 = a \]
+				 \\
+				 H4 inverses Element:
+				 \[ a \wedge \overline{a} = 0 \]
+				 \[ a \vee \overline{a} = 1 \]
+				 
+				 \paragraph{0:35:09 Dualitätsprinzip}
+				 Doppelte gemoppelte Axiome\\
+				 Jeder Operator und 0 und 1, lässt sich durch das jeweilige Gegenteil ersetzen\\
+				 Vorteil beim Beweisen\\
+				 Das Prinzip: \\
+				 \begin{easylist}
+				 	& Ersetze:
+				 		&& \( \vee \iff \wedge \)
+				 		&& \( 0 \iff 1 \)
+				 	& Belasse:
+				 		&& \( a \iff a \)
+				 		&& \( \overline{a} \iff \overline{a} \)
+				 \end{easylist}
+				 \[ a \wedge ( b \vee c) = ( a \wedge b) \vee ( a \wedge c ) \]
+				 \[ a \vee ( b \wedge c) = ( a \vee b) \wedge ( a \vee c ) \]
+				 \[ \iff a [\vee \wedge] ( b [\wedge \vee] c) = ( a [\vee \wedge] b) [\wedge \vee] ( a [\vee \wedge] c )  \]
+				 
+				 Huntingtonische Axiome sind nicht beweisbar\\
+				 
+				 \paragraph{Aus den vier Huntingtonischen Axiomen lassen sich weitere Sätze ableiten}
+				 Assoziativgesetze: 
+				 \[ a \wedge ( b \vee c) = ( a \wedge b) \vee ( a \wedge c ) = a \wedge b \wedge c \]
+				 \[ a \vee ( b \wedge c) = ( a \vee b) \wedge ( a \vee c ) a \vee b \vee c \]
+				 
+				 Idempotenzgesetze:
+				 \[ a \wedge a = a \]
+				 \[ a \vee a = a \]
+				 
+				 Absorptionsgesetze:
+				 \[ a \wedge ( a \vee b ) = a \]
+				 \[ a \vee ( a \wedge b ) = a \]
+				 
+				 DeMorgan-Gesetze:
+				 \[ \overline{a \wedge b } = \overline{a} \vee \overline{b} \]
+				 \[ \overline{a \vee b } = \overline{a} \wedge \overline{b} \]
+				 
+				 \paragraph{Beweis: DeMorgan \( \overline{a \wedge b} = \overline{a} \vee \overline{b} \)} 
+				 Zu zeigen : \( (\overline{a} \vee \overline{b}) \) das Komplementelement von \( (a \wedge B) \)\\
+				UND Komplementgesetze \( (x \vee \overline{x} = 1) \) und \( (x \wedge \overline{x} = 0 ) \) sind erfüllt.\\
+				 \begin{align*}
+				 	x = a \wedge b\\
+				 	(a \wedge b) \vee ( \overline{a} \vee \overline{b} ) &= (a \vee \overline{a} \vee \overline{b} ) \wedge (b \vee \overline{a} \vee \overline{b} ) \\
+				 	&= (1 \vee \overline{b}) \wedge (1 \vee \overline{a} ) \\
+				 	&= 1 \wedge 1 \\
+				 	&= 1\\
+				 	\\
+				 	(a \wedge b) \wedge ( \overline{a}\overline{b}) &= (a \wedge b \wedge \overline{a}) \vee (a \wedge b \wedge \overline{b}) \\
+				 	&= 0 \vee 0\\
+				 	&= 0\\
+				 \end{align*}
+				 \emph{Dualitätsprinzip} ermöglicht auch hier den aus Tausch innerhalb der Dualität.\\
+				 
+				 \subsubsection{Schaltalgebra}
+				 Eingänge \( \iff \) Ausgänge \\
+				 Spannung kann \emph{\hl{Low}} und \emph{\hl{High}} sein. \\
+				 Low \( \eqqcolon \) 0 \\
+				 High \( \eqqcolon \) 1,\\
+				 in der \emph{positiven Logik}.\\
+				 
+				 \paragraph{Serien- \& Parallelschaltungen}
+				 \begin{labeling}{Parralelschaltung}
+				 	\item[Serienschaltung] Ist true wenn beide Schalter \(x_1, x_2 \) geschlossen sind.
+				 	\item[Parralelschaltung] Ist true wenn einer der beiden Schalter \(x_1, x_2 \) geschlossen ist.
+				 \end{labeling}
+				 
+				 \paragraph{Überprüfung: Gilt die boolesche Algebra}
+				 
+				 
+				 H0 Abgeschlossenheit:
+				 \[ x_1 \text{ ser } x_2 \in \{ L, H \} \]
+				 \[ x_1 \text{ par } x_2 \in \{ L, H \} \]
+				 
+				 H1 Kommutativgesetze:
+				 \[x_1 \text{ ser }  x_2 = x_2 \text{ ser } x_1 \]
+				 \[x_1 \text{ par } x_2 = x_2 \text{ par } x_1 \]
+				 
+				 H2 Distributivgesetze
+				 \[ x_1 \text{ ser } (x_2 \text{ par }  x_3 ) = (x_1 \text{ ser } x_2) \text{ par }  (x_1 \text{ ser } x_3) \]
+				 \[ x_1 \text{ par }  (x_2 \text{ ser } x_3 ) = (x_1 \text{ par }  x_2) \text{ ser } (x_1 \text{ par }  x_3) \]
+				 
+				 H3 Neutrale Elemente:\\
+				 \( V \eqqcolon \) Dauernde Verbindung
+				 \[ x \text{ \text{ par }  } V = x \]
+				 \\
+				 \( U \eqqcolon \) Dauernde Unterbrechung\\
+				 \[ x \text{ par }  U = x \]
+				 
+				 H4 Inverse Element
+				 \[x \text{ ser } \overline{x} = U \]
+				 \[x \text{ ser }  \overline{x} = V \]
+				 
+				 \begin{table}[H]
+				 	\centering
+				 	\begin{tabular}{|c c c|}
+				 		\hline
+				 		&Boolesche Algebra & \\
+				 		& \( BA = [V, \oplus , \otimes  ] \) &\\
+				 		Mengenalgebra & & Binäre Algebra \\
+				 		\( MA = [ P(M), \cap , \cup  ] \) && \(BA2 = [ \{ n, e \}, \oplus , \otimes ] \) \\
+				 		&&\\
+				 		Binäre Mengenalgebra && Schaltalgebra\\
+				 		\(MA2 = [\{ \emptyset , M  \}, \cap , \cup ]\) && \( SA = [\{0, 1 \}, \wedge , \vee] \)\\
+				 		&Aussagenlogik&\\
+				 		&\( AL = [{\text{falsch, wahr}}, \text{UND, ODER} ] \)&\\ \hline
+				 	\end{tabular}
+			 	\caption{Ungefähre Anordnung und Aufzählung der Logiken, von oben nach unten}
+				 \end{table}
+				 
+				 \paragraph{0:45:56 Schaltalgebra }
+				 \paragraph{0:54:17 2-wertige ,,binäre"" algebraische Strukturen }
+				 \paragraph{0:55:23 Zusammenfassung: Boolesche Algebra }
+				 \paragraph{0:56:01 Boolescher Ausdruck }
+				 \paragraph{0:59:21 Boolesche Funktionen }
+				 \paragraph{1:03:39 EInstellige boolsche Funktion }
+				 \paragraph{1:04:33 zweistellige Boolsche Funktion }
+				 
+				 \paragraph{Auswertung}
+				 Bindungsrangfolge:
+				 \begin{easylist}{enumerate}
+				 	& Negation \( \neg \)
+				 	& Konjunktion \( \wedge \)
+				 	& Disjunktion \( \vee \)
+				 \end{easylist}
+				 Klammern können eine andere Reihenfolge festlegen.\\
+				 
+				 \paragraph{Def. Vollständige Operationsysteme} 
+				 Ein \emph{System von Operatoren}, \\
+				 mit dem \emph{alle booleschen Funktionen dargestellt} werden können,\\
+				 heißt \emph{\hl{vollständiges Operatorensystem}}.\\
+				 \\
+				 Die Operatoren \[ \wedge \vee \overline{\phantom{A}} \] bilden ein vollständiges Operatorensystem.\\
+				 \paragraph{Beispiel:}
+				 \[ a \iff b \] liefert das gleiche Ergebnis wie \[ (a \wedge b) \vee ( \overline{a} \wedge\overline{b}) \]\\
+				 \( \iff \) lässt sich durch die Grundoperationen \(  \wedge, \vee \) und \( \overline{\phantom{A}} \) ersetzen.\\
+				 
+				 \paragraph{Motivierende Beispiele}
+				 Prüfen ob es um ein vollständiges Operatorensystem handelt:\\
+				 Wir nehmen NAND bzw. \(  \overline{\wedge}   \) .\\
+				 Zu prüfen ist ob NAND,\\
+				 Konjunktion, Disjunktion, Negation ersetzen kann. Also für:\\
+				 \begin{align*}
+				 	&\overline{x}\\
+				 	x &\wedge y \\
+				 	x &\vee y \\
+				 \end{align*}
+				 
+				 Substitutionen finden.\\
+				 \paragraph{Beispiel: NAND \(\overline{\wedge} \)}
+				 \begin{align*}
+				 	&a \overline{\wedge} a \\
+				 	=& \overline{a \wedge a}\\
+				 	=& \overline{a}\\
+				 	 \implies & \text{Negation gefunden!}\\
+				 	\\ 
+				 	&(a \bar{\wedge} b) \bar{\wedge} (a \bar{\wedge} b) \\
+				 	=& \overline{ (\overline{a \wedge b}) \wedge (\overline{ a \wedge b }) }\\
+				 	=& \overline{(\overline{a \wedge b})}\\
+				 	=& a \wedge b\\
+				 	 \implies & \text{Konjunktion gefunden!}\\
+				 	\\
+				 	&(a \bar{\wedge} a) \overline{\wedge} ( b \wedge \bar{b} ) \\
+				 	=& \overline{ (\overline{a \wedge b}) \wedge (\overline{ a \wedge b }) } \\
+				 	=& \overline{ \bar{a} \wedge \bar{b} }\\
+				 	=& a \vee b\\
+				 	 \implies & \text{Disjunktion gefunden!}\\
+				 	\implies \implies & \text{Ja NAND ist ein vollständiges Operatorensystem}\\
+				 	\\
+				 	\bar{\vee}& \text{ NOR funktioniert Analog dazu!}
+				 \end{align*}
+				 
+				 \paragraph{Weiteres Beispiel Konjunktion, Kontravalenz}
+				 Bemerkung: \( (\wedge, \nleftrightarrow) \) alleine ist kein vollständiges Operatoren System, man braucht eine "1"  \[ (\wedge , \nleftrightarrow , 1) \]
+				 
+				 \begin{align*}
+				 	( \wedge , \nleftrightarrow ) \coloneqq (\wedge \nleftrightarrow , 1 )\\
+				 	\\
+				 	a \nleftrightarrow 1& \\
+				 	=& \overline{a} \wedge 1 \vee a \wedge \underbrace{\overline{1}}_{=0} \\
+				 	=& \overline{a}\\
+				 	\implies & \text{Negation gefunden}\\
+				 	\\
+				 	a \nleftrightarrow b \nleftrightarrow ( a \wedge b ) &\\
+				 	=& a \nleftrightarrow (b \wedge ( \overline{a \wedge b)} \vee \underbrace{\overline{b} \wedge ( a \wedge b}_{=0} )\\
+				 	=& a \nleftrightarrow (b \wedge (\overline{a} \vee \overline{b})) \vee 0 \\
+				 	=& a \nleftrightarrow (b \wedge \overline{a})\\
+				 	=& a \wedge (\overline{b \wedge \overline{a}}) \vee \overline{a} \wedge ( b \wedge \overline{a} )\\
+				 	=& a \wedge (\overline{b} \vee a) \vee \overline{a} \wedge  b \wedge \overline{a} \\
+				 	=& a \wedge (\overline{b} \vee a) \vee \overline{a} \wedge  b  \\
+				 	=& \underbrace{(a \wedge \overline{b} ) \vee a}_{=a} \vee (\overline{a} \wedge b)\\
+				 	=& a \vee (\overline{a} \wedge b) \\
+				 	=& (\underbrace{a \vee \overline{a}}_{=1}) \wedge ( a \vee b )\\
+				 	=& a \vee b \\
+				 \end{align*}
+				 
+				 \paragraph{Alle Operatorensysteme}
+				 \begin{table}
+				 	\centering
+				 	\begin{tabular}{|r|c|c|c|}
+				 		\hline
+				 		Operatorensysteme & Negation & Konjunktion & Disjunktion \\ \hline
+				 		\( \wedge , \vee , \overline{\phantom{A}}  \) & \( \bar{a} \) & \( a \wedge b \) & \( a \vee b \) \\
+				 		\( \wedge, \overline{\phantom{A}} \) & \( \bar{a} \) & \( a \wedge b \) & \( \overline{ \bar{a} \wedge \bar{b} } \) \\
+				 		\( \vee , \overline{\phantom{A}} \) & \( \bar{a} \) & \( \overline{\bar{a} \vee \bar{b} } \) & \( a \vee b \) \\
+				 		\( \bar{\wedge} \) & \( a \bar{\wedge} a \) & \( (a \bar{\wedge} b) \bar{\wedge} ( a \bar{\wedge} b ) \) & \( (a \bar{\wedge} a) \bar{\wedge} ( b \bar{\wedge} b) \) \\
+				 		\( \bar{\vee} \)  & \(a \bar{\vee} a\) & \( (a \bar{\vee} a) \bar{\vee} ( b \bar{\vee} b )  \) & \((a \bar{\vee} b) \bar{\vee} ( a \bar{\vee}b)  \) \\
+				 		\( \wedge, \nleftrightarrow \)& \(a \nleftrightarrow  1\)  & \( a \wedge b \) & \(a \nleftrightarrow b \nleftrightarrow  ( a \wedge b) \) \\ \hline
+				 	\end{tabular}
+				 \end{table}
+				 
+				 \paragraph{Tautologie}
+					Wann repräsentieren zwei Ausdrücke A und B die selbe Boolesche Funktion?\\
+					Anders aus gedrückt: Ist \( A \iff B \) eine Tautologie?\\
+					\\
+					\paragraph{Beispiel}
+					Gegeben sind zwei Boolesche Funktionen:
+					\begin{align*}
+						f_1(a,b) &= (a \wedge b) \vee (\bar{a} \wedge \bar{b})\\
+						f_1(a,b) &= (a \vee \bar{b} ) \wedge (\bar{a} \vee b)\\
+					\end{align*}
+					Sind \(f_1\) und \(f_2\) identisch oder \\
+					ist \[ (a \wedge b) \vee (\bar{a} \wedge \bar{b}) \iff (a \vee \bar{b} ) \wedge (\bar{a} \vee b) \] eine Tautologie?\\
+					
+					\paragraph{Wie kann man das beweisen?}
+					Mit Hilfe einer Funktionstabelle (/ Früher: Wahrheitstafeln) oder mittel Umformungen mit Hilfe der algebraischen Gesetze.\\
+					\\
+					Zwei Ausdrücke sind äquivalent, fall die Ergebnisse ihrer Auswertung für alle möglichen Kombinationnen von Variablenbelegungen äquivalent sind. 
+					\begin{table}[H]
+						\centering
+						\begin{tabular}{|c c|c|c|c|}
+							\hline
+							a&b&\( x = (a \wedge b) \vee (\bar{a} \wedge \bar{b}) \)& \(y = ( a \vee \bar{b} ) \wedge (\bar{a} \vee b ) \)& \( x \iff x\)\\ \hline 
+							0&0&1&1&1\\
+							0&1&0&0&1\\
+							1&0&0&0&1\\
+							1&1&1&1&1\\ \hline
+						\end{tabular}
+					\end{table}
+			
+			\subsubsection{Normalformen}
+			\subsubsection{Minimalformen}
+			\subsubsection{Funktionsdarstellung im Würfelkalkül}
+			\subsubsection{NAND/NOR-Konversion}
+			
+		\subsection{Realisierung von Schaltnetzen}
+		\subsection{Entwurf von Schaltnetzen}
+		\subsection{Laufzeiteffekte}
+	
 	\section{Schaltwerke}
 	\section{Rechnerarithmetik}
 	
