@@ -64,6 +64,30 @@
 \titleformat{name=\paragraph,numberless}[block]
 {\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1.}}
 
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{Roboto}
+\setsansfont{Roboto}
+\setmonofont{Roboto}
+\setmathfont{Asana Math} % for math symbols, can be any other OpenType math font
+\setmathfont[range=\mathup]  {Roboto}
+\setmathfont[range=\mathbfup]{Roboto}
+\setmathfont[range=\mathbfit]{Roboto}
+\setmathfont[range=\mathit]  {Roboto}
+
+% O-Notation
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\SetMathAlphabet{\mathcal}{bold}{OMS}{cmsy}{b}{n}
+
+%Bibliographie-Verwaltung
+\usepackage{biblatex}
+
+%Ermöglicht [H]
+\usepackage{float}
+
+
+
 %opening
 \title{Mitschrift Algorithmen 1}
 \author{Paul Züchner}
@@ -94,7 +118,7 @@
 	\item[Analysetechniken] 
 		Leistungsgarantien, objektiver Algorithmenvergleich
 	
-	\item[O-Kalkül] 
+	\item[O-Kalkühl] 
 		//TODO Abschätzung nach oben.
 \end{description}
 
@@ -103,7 +127,7 @@
 	\subsection{Datenstrukturen}
 	
 	\subsection{Volladdition}
-		\emph{Voll}addition weil Carry-Bit/Übertrag mit beachtet wird. Zwei eventuell sehr lange Zahlen a und b als Ziffernfolge. Es gibt zwei Zahlen a und b zur Basis \emph{B} 
+		\emph{Voll}addition weil mit Carry-Bit/Übertrag mit beachtet wird. Zwei eventuell sehr lange Zahlen a und b als Ziffernfolge. Es gibt zwei Zahlen a und b. Zur Basis \emph{B} 
 		 \[ \text{Zahl} \, a = (a_{n-1} \, \dots a_0) \quad a_i \in (0 \, \dots \, B_{asis} - 1) \]
 	 	\[\ (c', \: s ) \coloneqq  a_i + b_j + c\] 
 	 	(carryflag', Ergebnis) \( \coloneqq \) Ziffer a an Stelle i + Ziffer b an Stelle j + c\\
@@ -329,64 +353,69 @@
 					}
 				}
 		\end{algorithm}
-	\subsection{Master Theorem (Einfache Form)}
-	Für die \hl{positiven Konstanten} a, b, c, d; sei \( n =b^k \) für ein \( k \in \mathbb{N} \).
-	\begin{align*}
-		r(n) =
-		\begin{dcases*}
-			a & falls \(n = 1\) Basisfall\\
-			c \times n + d \times r (\frac{n}{b}) & falls n > 1 \hl{und teile und herrsche is in use}
-		\end{dcases*}
-	\end{align*}
-	\begin{align*}
-		rekursiveFunktion(n) =
+	\subsection{Master-Theorem}
+	\href{https://www.youtube.com/watch?v=GEhb2lrcJCk&t=2985s}{Video: Vorlesung }\\
+	Das \~{} bietet eine schnelle Lösung für die Frage, in welcher Laufzeitklasse eine gegebene rekursiv definierte Funktion liegt. Jedoch kann mit dem Master-Theorem nicht jede rekursiv definierte Funktion gelöst werden. \\
+	
+	Lässt sich keiner der drei möglichen Fälle des Master-Theorems auf die Funktion T anwenden, so muss man die Komplexitätsklasse der Funktion anderweitig berechnen.
+		\subsubsection{Master Theorem (Einfache Form)}
+		Für die \hl{positiven Konstanten} a, b, c, d; sei \( n =b^k \) für ein \( k \in \mathbb{N} \).
+		\begin{align*}
+			r(n) =
 			\begin{dcases*}
-				a:LaufzeitProgrammteil & falls \(n = 1\)\\ 
-				&sofort "berechenbar"Basisfall,\\
-				&kein rekursiver Aufruf\\
-				\\
-				c:KonstanteDieDasTeilenBrauch \times n \\
-				+ d:OverheadDesTUH  \times r (\frac{n}{b}) &falls  \(n > 1\)\\
-				&\hl{und teile und herrsche is in use}
+				a & falls \(n = 1\) Basisfall\\
+				c \times n + d \times r (\frac{n}{b}) & falls n > 1 \hl{und teile und herrsche is in use}
 			\end{dcases*}
-	\end{align*}
-	
-	Es gilt:
-	\begin{align*}
-	r(n) \in 
-		\begin{dcases*}
-			\text{Theta, mindestens} & Overhead/Aufand :: Faktor wie viel kleiner die Eingabelänge wird\\
-			\Theta(n) & falls \(d < b\)\\
-			\Theta(n \log n) & falls \(d = b\)\\
-			\Theta(n^{\log_b d}) & falls \(d > b\)\\
-		\end{dcases*}
-	\end{align*}
-	
-	\subsection{Master-Theorem (unvereinfacht)}
-	Das Master-Theorem bietet unter bestimmten Bedingungen asymptotische Abschätzungen für Lösungen der Rekursionsgleichung \[ T(n) = a \times T (\frac{n}{b}) + f(n) \], zur Bestimmung der Laufzeitklasse.
-	Hierbei steht \(T(n)\) für die gesuchte Laufzeitfunktion, während a und b Konstanten sind. Ferner bezeichnet \( f(n) \) eine von \(T(n)\) unabhängige und nicht negative Funktion. Damit das Master-Theorem angewendet werden kann, müssen für die beiden Konstanten die Bedingungen \[a \geq 1 \] und \[ b > 1 \] erfüllt sein.\\
-	\\
-	\paragraph{Idee:}
-	\includegraphics{img/Rekursionsbaum_Mastertheorem}
-	//TODO:  Quelle: de.wikiversity.org.wiki.Kurs:Algorithmen.und.Datenstrukturen.Vorlesung.Mastertheorem
-	
-	\paragraph{Interpretation der Rekursion für \( T(n) \):}
-	\begin{labeling}{\(f(n)=\)}
-		\item[\(a =\)] Anzahl der Unterprobleme in der Rekursion
-		\item[\(\frac{n}{b}\)] Größe eines Unterproblems
-		\item[\( T(\frac{n}{b}) \)] Aufwand zum lösen eines Unterproblems der Größe \( \frac{n}{b} \)
-		\item [\(\frac{1}{b} =\)] Teil des Originalproblems, welches wiederum durch alle Unterprobleme repräsentiert wird
-		\item [\(f(n) = \)] Kosten (Aufwand, Nebenkosten), die durch die Division des Problems und die Kombination der Teilösungen enstehen
-	\end{labeling}
-	Das Master-Theorem unterscheidet \emph{drei Fälle}, wobei sich \hl{höchstens} ein Fall auf die gegebene Rekursion anwenden lässt. \\
-	\begin{easylist}[itemize]
-		& Fälle:
-			&& Obere Abschätzung \( \mathcal{O} \)
-			&& Exakte Abschätzung \( \Theta \)
-			&& Untere Abschätzung \( \Omega \)
-	\end{easylist}
-	\BlankLine
-	Passt \emph{keiner der Fälle} so lässt sich das Master-Theorem nicht anwenden und man muss sich \hl{anderer Methoden bedienen}. 
+		\end{align*}
+		\begin{align*}
+			rekursiveFunktion(n) =
+				\begin{dcases*}
+					a:LaufzeitProgrammteil & falls \(n = 1\)\\ 
+					&sofort "berechenbar"Basisfall,\\
+					&kein rekursiver Aufruf\\
+					\\
+					c:KonstanteDieDasTeilenBrauch \times n \\
+					+ d:OverheadDesTUH  \times r (\frac{n}{b}) &falls  \(n > 1\)\\
+					&\hl{und teile und herrsche is in use}
+				\end{dcases*}
+		\end{align*}
+		
+		Es gilt:
+		\begin{align*}
+		r(n) \in 
+			\begin{dcases*}
+				\text{Theta, mindestens} & Overhead/Aufand :: Faktor wie viel kleiner die Eingabelänge wird\\
+				\Theta(n) & falls \(d < b\)\\
+				\Theta(n \log n) & falls \(d = b\)\\
+				\Theta(n^{\log_b d}) & falls \(d > b\)\\
+			\end{dcases*}
+		\end{align*}
+		
+		\subsubsection{Master-Theorem (unvereinfacht)}
+		Das Master-Theorem bietet unter bestimmten Bedingungen asymptotische Abschätzungen für Lösungen der Rekursionsgleichung \[ T(n) = a \times T (\frac{n}{b}) + f(n) \], zur Bestimmung der Laufzeitklasse.
+		Hierbei steht \(T(n)\) für die gesuchte Laufzeitfunktion, während a und b Konstanten sind. Ferner bezeichnet \( f(n) \) eine von \(T(n)\) unabhängige und nicht negative Funktion. Damit das Master-Theorem angewendet werden kann, müssen für die beiden Konstanten die Bedingungen \[a \geq 1 \] und \[ b > 1 \] erfüllt sein.\\
+		\\
+		\paragraph{Idee:}
+		\includegraphics{img/Rekursionsbaum_Mastertheorem}
+		//TODO:  Quelle: de.wikiversity.org.wiki.Kurs:Algorithmen.und.Datenstrukturen.Vorlesung.Mastertheorem
+		
+		\paragraph{Interpretation der Rekursion für \( T(n) \):}
+		\begin{labeling}{\(f(n)=\)}
+			\item[\(a =\)] Anzahl der Unterprobleme in der Rekursion
+			\item[\(\frac{n}{b}\)] Größe eines Unterproblems
+			\item[\( T(\frac{n}{b}) \)] Aufwand zum lösen eines Unterproblems der Größe \( \frac{n}{b} \)
+			\item [\(\frac{1}{b} =\)] Teil des Originalproblems, welches wiederum durch alle Unterprobleme repräsentiert wird
+			\item [\(f(n) = \)] Kosten (Aufwand, Nebenkosten), die durch die Division des Problems und die Kombination der Teilösungen enstehen
+		\end{labeling}
+		Das Master-Theorem unterscheidet \emph{drei Fälle}, wobei sich \hl{höchstens} ein Fall auf die gegebene Rekursion anwenden lässt. \\
+		\begin{easylist}[itemize]
+			& Fälle:
+				&& Obere Abschätzung \( \mathcal{O} \)
+				&& Exakte Abschätzung \( \Theta \)
+				&& Untere Abschätzung \( \Omega \)
+		\end{easylist}
+		\BlankLine
+		Passt \emph{keiner der Fälle} so lässt sich das Master-Theorem nicht anwenden und man muss sich \hl{anderer Methoden bedienen}. 
 	
 	\subsubsection{Die drei Fälle}
 	\paragraph{Erster Fall}
@@ -511,12 +540,12 @@
  			
  			\subsubsection{Mehr Maschinenmodell}
  				\begin{description}
- 					\item[Algorithm Engineering] 
+ 					\item[Algorithmn Engeneering] 
  						Man versucht die Komplexität über praktische Algorithmen nicht anhand des Maschinenmodells der Turingmaschine zu bestimmen, sondern in möglichst realistischen Maschinenmodellen.
  					\item[Cache] 
  						Schneller Zwischenspeicher.
  						\subitem begrenzte Größe \( \implies \) (kürzlich/häufig) zugegriffene Daten sind eher im Cache
- 						\subitem blockweiser Zugriff \( \implies \) Zugriffe auf aufeinander folgende Speicherbereiche sind schnell 
+ 						\subitem blockweiser Zugriff \( \implies \) Zugriff auf aufeinander folgende Speicherbereiche sind schnell 
  						\reversemarginpar \marginnote{konsekutive \( \gets \) aufeinander folgende}
  					\item[Parallelverarbeitung] 
  						Mehrere Prozessoren \( \implies \) unabhängige Aufgaben identifizieren.
@@ -552,7 +581,7 @@
  					gilt ( vor / nach ) jedem Aufruf einer Operation auf abstraktem Datentyp
  					
  			\end{labeling}
- 			Invariante als zentrales Werkzeug für Algorithmenentwurf und Korrektheitsbeweis.	
+ 			Invariante als zentrales Werkzeug für Algorithmenentwurf und Korektheitsbeweis.	
  		
  		\subsubsection{Beispiel}
  		
@@ -596,7 +625,7 @@
  					\( n \gets n_0 \) : \( \mathbb{ N } \) \;
  					\BlankLine
  					\While{ \( n > 0 \)}{
- 						\textcolor{purple}{\Assert \( p^n r = a ^{n_0} \) 		\tcp*{Schleifeninvariante} }
+ 						\textcolor{purple}{\Assert \( n^n r = a ^{n_0} \) 		\tcp*{Schleifeninvariante} }
  						\BlankLine
  						\If{n is odd}{
  							\(n--\) \;
@@ -615,7 +644,7 @@
  		\subsection{Programmanalyse}
  			-Fundamentalistisch RAM-Befehle zählen. \\
  			-Pseudocode-Befehle \( \implies \) Maschinenbefehle\\
- 			-Hintergedanke: \( O \)-Notation vereinfacht die direkte Analyse des Pseudocodes.
+ 			-Hintergedanke: \( O \)-Notation vereinfachtdie direkte Analyse des Pseudocodes.
  				\begin{labeling}{Programme + Condition}
  					\item[Zweier Programme]
  						\( \textcolor{Green}{ T ( I, I' ) } = \textcolor{Blue}{ T( I ) + T ( I' ) } \) \reversemarginpar	\marginnote{Instruction}
@@ -678,9 +707,9 @@
 			\item[first] get first element 
 			\item[last] get last element 
 			\item[insert] insert element 
-			\item[remove] remove element from Datatype 
+			\item[remove] element from Datatype 
 			\item[pushBack] add Element als letztes Element
-			\item[pushFront] get und remove erstes Element (Müsste es hier nicht "add Element als erstes Element" heißen?)
+			\item[pushFront] get und remove erstes Element
 			\item[popBack] get und remove letztes  Element
 			\item[popFront] get und remove erstes Element
 			\item[concat]  Konkatiniere
@@ -690,7 +719,7 @@
 	
 	\begin{easylist}[itemize]
 		& Es gibt keine pauschal beste Implementierung für Folgen in der Algorithmik
-		& UArray und CArray sind Cache-efficent bei Operation findNext
+		& UArrayn und CArray sind Cache-efficent bei Operation findNext
 			&& Lokalität
 		& Listen sind verkettet / verpointert
 			&& Elemente können überall im Speicher liegen
@@ -750,8 +779,8 @@
 				\DontPrintSemicolon
 			\end{algorithm}
 			
-			Nach Splice liegen die Elemente nicht mehr in der gleichen Reihenfolge im Speicher wie durch die Liste repräsentiert\\
-			Aufwand ist nicht propotional zur Länge.\\
+			Nach Splice liegen die Elemente nicht mehr in der gleichen Reihenfolge im Speicher als wie durch die Liste repräsentiert\\
+			Aufwand ist nicht propotional zur länge.\\
 			
 			\paragraph{Beispiel zu Splice}
 				26:16 abschreiben\\
@@ -782,7 +811,7 @@
 			\paragraph{Doch nicht so einfach: Speicherverwaltung!}
 				\begin{easylist}[itemize]
 					& Wir müssen auch den Speicher wieder freigeben, wenn mir Listenelemente löschen!
-						&& Speicherverwaltung der Programmiersprache
+						&& Speicher verwaltung der Programmiersprache
 							&&& Potentiell sehr langsam
 					& Konzept: Wiederverwendung
 						&& Klasse freeList enthält ungenutzte Items
@@ -893,7 +922,7 @@
 					&& Auslagern?
 				& eingeschränkter
 					&& Kein remove() z.B.
-				& merkwürdige Benutzerschnittstelle, z.B. removeAfter()
+				& merkwürdige Benutzerschnitstelle, z.B. removeAfter()
 				& \emph{splice()} würde hier nicht mehr funktionieren
 			\end{easylist}
 		
@@ -1066,7 +1095,7 @@
 				}
 			\end{algorithm}
 			Was geht schief, wenn man auf passende Größe kürzt?\\
-			-Beim nächsten Mal push muss das Array vergrößert werden, schlechte Laufzeit und keine Amortation.\\
+			-Beim nächsten Mal push muss das Array vergrößert werden, schlechte Laufzeit und keine Amotation.\\
 			
 			\subsection{Amortisierte Komplexität}
 				Sei \emph{u} ein anfangs leeres, unbeschränktes Feld.\\
@@ -1092,23 +1121,20 @@
 			-Konto wird nicht negativ.\\
 			\\
 			Erster Aufruf von reallocate ist kein Problem \( n=2, \geq 2\text{tes pushBack} \) \\
-			Kann nie ins negative laufen, auch weil:\\
+			Kann nie ist negative laufen, auch weil:\\
 			\begin{align*}
 				\text{einzahlen: } reallocate(2n) \geq n \times pushBack_{2Token} \geq reallocate(4n)\\
 				\text{abheben: } reallocate(2n) \geq \frac{n}{2} \times popBack \geq reallocate(n)\\
 			\end{align*}
-			Amortisierte Analyse gibt konstante Laufzeit/ Aufwand \\
-		\subsection{Amortisierte Analyse}
-			\begin{easylist}[itemize]
-				& \emph{\( \theta \) }
-					&& Menge von Operationen, z.B pushBack oder popBack
-				& \emph{s} 
-					&& \emph{Zustand} der Datenstruktur
-				& \emph{\( A_{Op}(s) \)}
-					&& \emph{amorSctisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
-				& \emph{\( T_{Op}(s) \)}
-					&& \emph{tatsächliche Kosten} von Operation \( Op \in \theta \) in Zustand s
-			\end{easylist}
+			Amotisierte Analyse gibt konstante Laufzeit / Aufwand \\
+			
+		\subsection{Amotisierte Analyse}
+			\begin{labeling}{\( A_{Op}(s) \)}
+				 \item[\emph{\( \theta \) }]  Menge von Operationen, z.B pushBack oder popBack
+				 \item[\emph{s}] Zustand der Datenstruktur
+				 \item[\emph{\( A_{Op}(s) \)}] \emph{amortisierte Kosten} von Operation \( Op \in \theta \) in Zustand s
+				 \item[\emph{\( T_{Op}(s) \)}] \emph{tatsächliche Kosten} von Operation \( Op \in \theta \) in Zustand s
+			\end{labeling}
 		
 			\emph{Berechnung:}\\
 			 \[ s_0 \overset{Op1}{\rightarrow} s_1 \overset{Op_2}{\rightarrow} s_2 \overset{Op_3}{\rightarrow} \dots \overset{Op_n}{\rightarrow} s_n  \]
@@ -1130,7 +1156,7 @@
 		\subsection{Weitere Präsentationen von Folgen}
 		\paragraph{Stapel und Schlangen}
 		\begin{easylist}[itemize]
-			& Einfache Schnittstellen
+			& Einfache Schnitstellen
 			& vielseitig einsetzbar
 			& Implementierung
 				&& austauschbar
@@ -1140,7 +1166,7 @@
 	
 		\paragraph{Stack}
 		\begin{easylist}[itemize]
-			& Last in first out (LIFO)
+			& Last in first out
 			& Operationen
 				&& Push
 				&& Pop
@@ -1244,7 +1270,7 @@
 	\paragraph{Anwendung}
 		\begin{easylist}[itemize]
 			& Datenpuffer
-				&& Netzwerke
+				&& Netwerke
 				&& Pipeline- Verarbeitung
 			& Job-Queues
 				&& FIFO \( implies \) Fairness
@@ -1258,7 +1284,7 @@
 	
 		\begin{labeling}{Array, UArray}
 			\item[List] Funktioniert
-			\item[SList] Nein (würde nur für push/popFront und pushBack funktionieren)
+			\item[SList] Nein (aber würde nur für push/popFront und pushBack funktionieren)
 			\item[Array, UArray] Nein
 			\item[CArray] Funktioniert
 		\end{labeling}
@@ -2046,7 +2072,7 @@
 	 	\[ \mathbb{P} [h(x) = h(y)] = 1 \frac{1}{m} \]
 	 	
 	 	\paragraph{Theorem 3}
-	 	Theorem 1 gilt auch für universelle Familien von Hash-Funktionen
+	 	Theorem 1 gitl auch für universelle Familien von Hash-Funktionen
 	 	
 	 	\paragraph{Beweis}
 	 	Für \[ \Omega = H \]
