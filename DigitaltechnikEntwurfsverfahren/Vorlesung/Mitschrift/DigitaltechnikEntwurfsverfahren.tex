@@ -2082,10 +2082,289 @@
 						\end{tabular}
 					\end{table}
 			
-			\subsubsection{Normalformen}
+			\subsection{Normalformen}
+			Eine \emph{boolsche Funktion} kann durch verschiedene boolesche Ausdrücke beschrieben werden\\
+			Eine Standarddarstellung Boolescher Funktionen im vollständigen Operatorensystem \(( \wedge, \vee, \overline{\phantom{A}}  )\) ist die 
+				\begin{easylist}
+					& Konjunktive Normalform und die 
+					& Disjunktive Normalform
+				\end{easylist}
+			
+			\subsubsection{Literale}
+			\paragraph{Definition}
+			Ein Literal \( L_i \) ist entweder eine Variable \( x_i \) oder\\
+			ihre Negation \( \bar{x_i} \)\\
+			daher: \[ L_i \in \{ x_i, \bar{x_i} \} \]
+			
+			\subsubsection{Produktterme}
+			\paragraph{Definition}
+			Ein Produktterm \( K(x_i \dots x_m) \) ist die Konjunktion von Literalen \( \bigwedge^{\raisebox{-0.4ex}{\scriptsize m } }_{i = 1} L_i \wedge \dots \wedge L_m \)\\
+			oder die Konstante 0 und 1.\\
+			\\
+			Jeder Produktterm kann so dargestellt werden, dass eine Variable \( x \) in höchstens einem Literal vorkommt.
+			\paragraph{Beispiele}
+			\[ a \wedge b \]
+			\[ \bar{a} \wedge b \]
+			\[ a \wedge \bar{b}  \]
+			\[ \bar{a} \wedge \bar{b}  \]
+			\[ a \wedge a \wedge b  \]
+			\[ \bar{x_i} \wedge x_i \]
+			
+			\subsubsection{Idempotenzgesetz bezüglich Produktterme}
+			\begin{align*}
+				L_h &= x \text{ und } L_j &= x\\
+				&\implies L_h \wedge L_j = x\\
+				&\implies K(x_1, \dots x_m) \\
+				&= \bigwedge^{\raisebox{-0.4ex}{\scriptsize m } }_{i = 1}\\
+			\end{align*}
+			Merfaches auftauchen von x kann nach \emph{Indempotenzgesetz} gestrichen werden\\
+			
+			\begin{align*}
+			L_h = x &\text{ und } L_j = \bar{x}\\
+			\implies & L_h \wedge L_j = 0 \\
+			\implies & K(x_1, \dots x_m) = 0\\
+			& \text{Produktterm wird zu 0}\\	
+			\end{align*}
+			
+			\subsubsection{Implikat \( \implies \) Konjunktion }
+			\paragraph{Definition}
+			Ein Produktterm \( K(x_1, \dots x_n) \) heißt \emph{Implikant} einer Booleschen Funktion \( y(x_1, \dots x_m) \), \\
+			wenn \[ K \implies y \] \\
+			Das heißt, für jede Belegung  \[B \in \{ 0, 1 \}^n \] gilt:\\
+			Wenn \( K(B ) = 1, \)\\
+			dann ist auch \( y(B) = 1 \)\\
+			
+			\paragraph{Beispiel}
+			\begin{align*}
+				K &= a \wedge b \\
+				y_1 &= a \wedge b \vee c\\
+				y_2 &= a \wedge b \wedge c\\
+			\end{align*}
+			\( (\vee c )\) ist hier irrelevant, da \( a \wedge b = \) wahr sind ist dies auch bei \(y_1 \) so, egal welcher Wert \( c \) hat. \\
+			Im Gegensatz dazu ist \( y_2 \) kein Implikant.\\
+			
+			\subsubsection{Minterm}
+			\paragraph{Definition}
+			Ein Implikant einer Booleschen Funktion \( y(x_1, \dots x_n) \) heit \emph{Minterm},\\
+			wenn jede Variable \( x_i \) der Funktion \(y\) im Implikanten als Literal \emph{genau einmal} vorkommt.
+			
+			\paragraph{Beispiel}
+			\emph{Minterme einer Booleschen Funktion } \( y(x_1, \dots x_4) \) sind:\\
+			\[ x_1 \wedge x_2 \wedge x_3 \wedge x_4 \]
+			\[ x_1 \wedge \bar{x_2} \wedge x_3 \wedge x_4 \]
+			
+			\emph{Keine Minterme der Funktion sind:}\\
+			\[x_1 \wedge x_2 \]
+			\[x_1 \wedge \bar{x_2} \wedge \underbrace{x_3 \wedge x_3}_{\text{Dopplung!}} \wedge x_4 \]
+			Damit lässt sich die \emph{disjunktive Normalform} definieren!\\
+			
+			\subsubsection{Disjunktive Normalform}
+			\paragraph{Definitionen}
+			Es sei eine Boolesche Funktion \(y(x_1, \dots x_n) \) gegeben.\\
+			Ein Boolescher Ausdruck heißt \emph{disjunktive Normalform} der Funktion \(y\), \\
+			wenn er aus einer disjunktiven Verknüpfung von \emph{Mintermen} \(K_i\) besteht:
+			\[ y = K_0 \vee K_1 \dots K_k \]
+			\[ k \leq 2^n -1 \]
+			Es darf dabei keine zwei Konjunktionen \( K_i, K_j \) mit \( i \neq j \) geben,
+			die zueinander aquivalent sind.\\
+			
+			\paragraph{Beispiele}
+			\begin{align*}
+				f_1 (a, b, c) = abc \vee a \bar{b} c \vee \bar{a} \bar{b} c\\
+			\end{align*}
+			\(f_1\) ist eine \emph{DNF}.
+			
+			\begin{align*}
+				f_2 (a, b, c) = abc \vee a \overline{b} c \vee cab \vee a(bc \vee \overline{b} \overline{c})\\
+			\end{align*}
+			\( f_2 \) ist \emph{nicht in DNF}, denn \\
+			\begin{easylist}
+				& \( \overline{b} c \) enthält nicht alle Variablen.
+				& \( abc \) und \( aa\overline{b} c\) sind äquivalent.
+				& \(aa \overline{b}c \) ist kein Minterm
+			\end{easylist}
+			
+			\subsubsection{In die disjunktive Normalform überführen}
+			\[ f(a, b, c) = a \overline{b} \overline{c} \vee aa \overline{b} \vee \overline{b} c \]
+			in DNF überführen:\\
+			\begin{align*}
+				f(a, b, c) =& a \overline{b} c \vee a \overline{b} \vee \overline{b} c \\
+				=& a \overline{b} c \vee \overline{b} c & \text{Absorptionsgesetz} \\
+				=& \overline{b} c \\
+				=& (a \vee \overline{a}) \overline{b} c \\
+				=& a  \overline{b} c \vee  \overline{a} \overline{b} c \\
+			\end{align*}
+			
+			\subsubsection{Dualitätsprinzip}
+			Man ersetze 
+			\[ \vee \leftrightarrow \wedge \]
+			\[ 0 \leftrightarrow 1 \]
+			Man belasse
+			\[ a  \leftrightarrow a \]
+			\[ \overline{a} \leftrightarrow \overline{a}  \]\\ 
+			H1: Assoziativegesetz\\
+			
+			H2: Distributivgesetz\\
+			
+			H3: Neutrales Element
+			\begin{align*}
+				a \vee 0 = a \\
+				a \wedge 1 = a\\
+			\end{align*}
+			
+			H4: Inverses Element
+			\begin{align*}
+				a \wedge \overline{a} = 0\\
+				a \vee \overline{a} = 1 \\
+			\end{align*}
+			
+			\subsubsection{Implikat \( \implies \) Disjunktion }
+			\paragraph{Definition}
+			Es sei \[D(x_1 \dots x_m)\] eine Disjunktion von Literalen \[ \vee_{i=1}^{m} L_i = L_1 \vee \dots \vee L_m  \]
+			oder die Konstante 0 oder 1.\\
+			Der Term \(D(x_1 \dots x_m)\) heißt \emph{Implikat} einer Booleschen Funktion \( y( x_1 \dots x_m) \), wenn \[ \overline{D} \implies \overline{y} \]
+			
+			Das heißt für jede Belegung \( B \in \{0, 1\}^n \) gilt:\\
+			Wenn, \( D(B) = 0 \), dann ist auch \( y(B) =0 \)
+			
+			\subsubsection{Maxterm}
+			\paragraph{Definition}
+			Ein Implikat einer Boolschen Funktion \( y( x_1 \dots x_m) \) heißt \emph{Maxterm}, wenn ein Literal jeder Variable \(x_i\) der Funktion \(y\) im Implikaten \emph{genau einmal} vorkommt.
+			
+			\paragraph{Beispiel für Maxterme der Booleschen Funktion \( y(x_1 \dots x_3) \):}
+			\begin{align*}
+				x_1 \vee x_2 \vee x_3 \\
+				x_1 \vee \overline{x_2} \vee x_3 \\
+			\end{align*} 
+			
+			\subsubsection{Konjunktive Normalform}
+			\paragraph{Definition}
+			Es sei eine Boolesche Funktion \( y( x_1 \dots x_m) \) gegeben.\\
+			Ein Boolescher Ausdruck heißt \emph{konjunktive Normalform},\\
+			wenn er aus einer konjunktiven Verknüpfung von Maxtermen \(D_i\) besteht:
+			\[y = D_0 \wedge D_1 \dots D_k \]
+			\[k \leq 2^n -1 \]
+			
+			Es darf dazu keine Disjunktionen \(D_i, D_j\) mit \( i \neq j \) geben, die dazu äquivalent sind.
+			
+			\subsubsection{Minterme und Maxterme}
+			\paragraph{Definition Anzahl Min-/ Maxterme}
+			In einer Funktion mit n Variablen können bis zu \(2^n\) Min-/ Maxterme auftreten.\\
+			\begin{table}[H]
+				\centering
+				\begin{tabular}{|c|c|c|}
+					\hline
+					&Minterm & Maxterm \\
+					\hline
+					 0& \( \overline{a b c} \) & \( a \vee b \vee c \) \\ 
+					 1& \( a \overline{b} \overline{c} \) & \( \overline{a} \vee b \vee c \) \\ 
+					 2& \( \overline{a} b \overline{c} \) & \( a \vee \overline{b} \vee c \) \\ 
+					 3& \( a b \overline{c} \) & \( \overline{a} \vee \overline{b} \vee c \) \\ 
+					 4& \( \overline{a} \overline{b} c \) & \( a \vee b \vee \overline{c} \) \\ 
+					 5& \( a \overline{b} c \) & \( \overline{a} \vee b \vee \overline{c} \) \\ 
+					 6& \( \overline{a} b c \) & \( a \vee \overline{b} \vee \overline{c} \) \\ 
+					 7& \( a b c \) & \( \overline{a \vee b \vee c }\) \\ 
+					 \hline
+				\end{tabular}
+			\end{table}
+			Minterme produzieren eine 1 und Maxterme eine 0.\\
+			
+			\paragraph{Namensbedeutung}
+			\begin{easylist}
+				& Minterme
+					&&Für genau eine Belegung Funktionswert 1
+					&& Minimalität:
+						&&& \emph{maximale} Anzahl an \emph{Nullen}
+						&&& \emph{minimale} Anzahl an \emph{Einsen}
+						&& Abgesehen von trivialer \emph{Nullfunktion}
+				& Maxterme
+					&&Für genau eine Belegung Funktionswert 0
+					&& Maximalität:
+						&&& \emph{maximale} Anzahl an \emph{Einsen}
+						&&& \emph{minimale} Anzahl an \emph{Nullen}
+					&& Abgesehen von trivialer \emph{Einsfunktion}
+			\end{easylist}
+			
+			\subsubsection{DNF und KNF sind eindeutige Darstellungen}
+			\paragraph{Beispiel}
+			\begin{align*}
+				y =& a \overline{b} \vee c\\
+				=& a \overline{b} \vee c\\
+				=& (\overline{a} \vee b) \vee \overline{c}\\
+			\end{align*}
+			
+			Algebraische Umformungen in DNF 
+			\begin{align*}
+				y =& a \overline{b} \vee c\\
+				=& a \overline{b} (c \vee \overline{c}) \vee (a \vee \overline{a})( b \vee \overline{b} ) c\\
+				=& a \overline{b} c \vee a \overline{b}  \overline{c} \vee abc \vee \overline{a} bc \vee a \overline{b} c \vee\overline{a} \overline{b}  c\\
+				=& a \overline{b}  \overline{c} \vee abc \vee \overline{a} bc \vee\overline{a} \overline{b}  c\\
+			\end{align*}
+			
+			\subsubsection{Shannonsche Entwicklungssatz}
+			Um Funktionen aus DF/KF in die DNF/KNF zu überführen ist der Shannonsche Entwicklungsatz behilflich.\\
+			
+			\paragraph{Algorithmus}
+			\begin{easylist}
+				& Entwicklung nach der Variable \(x_i\)
+					&& die Variable wird in der Funktion auf den Wert 1 gesetzt
+					&& der entstehende Term konjunktiv mit \(x_i\) verknüpft
+				& \( \vee \) verküpft mit 
+					&& die Variable wird in der Funktion auf den Wert 0 gesetzt 
+					&& und der entsthende Term konjunktiv mit \( \overline{x_i} \)  verknüpft 
+			\end{easylist}
+			\begin{align*}
+				y =& f(x_1 \dots x_n)\\
+				=& [x_i \wedge f(x_1 \dots x_{i-1}, 1, x_{i+1} \dots x_n )] \vee [ \overline{x_i} \wedge f(x_1 \dots x_{i-1}, 0, x_{i+1} \dots x_n)]
+			\end{align*}
+			
+			\paragraph{Beweis}
+			\begin{align*}
+				f(x_1 \dots x_i = 1 \dots  x_n) =& [1 \wedge f(x_1 \dots x_i = 1 \dots x_n )] \\
+				\vee & [ 0 \wedge f(x_1 \dots x_i =  0 \dots x_n)] \\
+				= & f(x_1 \dots x_i = 1 \dots x_n)\\
+				\\
+				f(x_1 \dots x_i = 0 \dots  x_n) =& [0 \wedge f(x_1 \dots x_i = 1 \dots x_n )] \\
+				\vee & [1 \wedge f(x_1 \dots x_i = 0 \dots x_n )] \\
+				= & [f(x_1 \dots x_i = 0 \dots x_n)]\\
+			\end{align*}
+			
+			\paragraph{Beispiel}
+			\begin{align*}
+				y =& a \overline{b} c \vee \overline{a} \overline{b} \vee bc\\
+				=& a(1 \overline{b} c \vee \underbrace{\overline{1b}}_{=0} \vee bc ) \vee \overline{a} (\underbrace{0 \overline{b} c}_{=0}  \vee \underbrace{\overline{0 }}_{=1} \overline{b} \vee bc)\\
+				=& a( \overline{b} c \vee bc ) \vee \overline{a} (\overline{b}  \vee bc)\\
+				=& a[ b(\underbrace {\overline{1}c}_{=0}  \vee 1c) \vee \overline{b} (\overline{0}c \vee \underbrace{0c}_{=0})] \vee \overline{a}  [b (\overline{1} \vee 1c) \vee \overline{b} (\overline{0}  \vee 0c)]\\
+				=& a [ bc \vee \overline{b} c] \vee \overline{a} [bc \vee \overline{b}]\\
+				=& a(b[c1 \vee \overline{c} 0 ] \vee \overline{b} [c1 \vee \overline{c}0]) \vee \overline{a} (b[c1 \vee \overline{c} 0 ] \vee \overline{b} (c1 \vee \overline{c} 1))\\
+				= & abc \vee a \overline{b} c \vee \overline{a} bc \vee \overline{ab} c \vee \overline{abc}\\
+			\end{align*}
+			
+			0:10:03 Dualer Entwicklungssatz 
+			0:12:20 Deutung:Normalformen 
+			0:18:49 Beispiel:DNF und KNF 
+			0:25:04 DNF/KNF: Kurze Schreibweise 
+			\subsection{Minimalformen} 
+			Minimalformen sind nicht eindeutig. \( a \) ist günstiger als \( \overline{a} \) theoretisch.
+			0:28:12 Disjunktive Minimalform 
+			0:31:39 Konjunktive Minimalform
+			 \paragraph{Beispiel}
+			 \paragraph{Anmerkung!}
+			 \subsection{Funktionsdarstellung im Würfelkalkül}
+			 
+			0:44:43 Würfelkalkühl(1) 
+			0:47:25 Würfelkalkül(2) 
+			0:50:13 Würfelkalkül(3) 
+			\subsubsection{NAND/NOR-Konversion}
+			0:58:02 NAND-Konvertierung 
+			1:03:08 NAND-Funktion 
+			1:05:50 NOR-Konversion 
+			1:09:37 NAND-Konversion \\
+			1:11:31 Realisierung von Schaltnetzen 
+			
 			\subsubsection{Minimalformen}
 			\subsubsection{Funktionsdarstellung im Würfelkalkül}
-			\subsubsection{NAND/NOR-Konversion}
+
 			
 		\subsection{Realisierung von Schaltnetzen}
 		\subsection{Entwurf von Schaltnetzen}
