@@ -86,6 +86,9 @@
 %Ermöglicht [H]
 \usepackage{float}
 
+%Integral d
+\newcommand*\dif{\mathop{}\!\mathrm{d}}
+
 %opening
 \title{Mitschrift Algorithmen 1}
 \author{Paul Züchner}
@@ -97,8 +100,9 @@
 % Inhaltsverzeichnis
 \tableofcontents
 
-% eine Seite mit wichtigen Begriffen
+
 \newpage
+% eine Seite mit wichtigen Begriffen
 \section{Glossar}
 \begin{description}  
 	\item[Algorithmus] 
@@ -2144,14 +2148,14 @@
 	\paragraph{Anwendungsbeispiele}
 	\begin{easylist}
 		& Allgemein
-			&& Vorverarbeitung
+			&& Wird häufig als Vorverarbeitung für Algorithmen verwendet
 		& Suche 
 			&& Telefonbuch \( \iff \) unosrtierte Liste
 		& Gruppieren
 			&& Alternative: Hashing
 	\end{easylist}
 	
-	\paragraph{Beispiel aus Kurs/Buch}
+	\paragraph{Beispiele wo Sortierung wichtig sein kann}
 	
 	\begin{easylist}
 		& Aufbau von Suchbäumen
@@ -2183,8 +2187,8 @@
 			&& jenseits der unteren Schranke
 	\end{easylist}
 	
-	\subsection{Einfache Sortieralgorithmen mit Sentinels} 
-	\begin{algorithm}
+	\subsection{Einfache Sortieralgorithmen mit Sentinels: Insertion Sort} 
+	\begin{algorithm}[H]
 		\caption{Insertion Sort}
 		\DontPrintSemicolon
 		\SetKwProg{Function}{Function}{}{}
@@ -2196,21 +2200,27 @@
 		
 		\Procedure{insertionSort( a : \Array{\( 1 \dots n \)})}{
 			\BlankLine
-			\For{\(i \gets 2  \text{ to } n \)}{
+			\For{\((i \gets 2  \text{ to } n )\)}{
 				\BlankLine
 				\Invariant{\( a [i] \leq \dots \leq a [i-1] \)}\;
+				\BlankLine
 				\tcc{move \(a [i] \) to the right place}
 				\(e \gets a[i] \)  \tcc*{new minimum}
-				\If{\( e < a[1] \)}{
-					\For{\( j \gets i, \text{ to } 2 \)}{
+				\BlankLine
+				\If{\( (e < a[1]) \)}{
+					\For{\( (j \gets i, \text{ downto } 2 )\)}{
 						\( a[j] \gets a[j - 1] \) \;
-						\( a[1] \gets e \) \;
+					
 					} 
+					
+					\( a[1] \gets e \) \;
+				
 				} \Else{ \tcc*{use \(a[1]\) as a sentinel}
 					\For{\( (j \gets i; a[j-1] > e ; j-- )\)}{
 						\( a[j] \gets a[j - 1] \) \;
-						\( a[j] \gets e \) \;
 					}
+						\( a[j] \gets e \) \;
+					
 				}
 			}	
 		}
@@ -2234,10 +2244,10 @@
 	Die i-te Iteration braucht Zeit \( \mathcal{O}(1) \) z.B. (beinahe) sortiert).
 	\[ \sum_{i=2}^{n} \mathcal{O}(1) \in \mathcal{O}(n) \]
 	
-	\subsection{Sortieren durch Mischen} 
+	\subsection{Sortieren (MergeSort) durch Mischen } 
 	\paragraph{Idee: Teile und Herrsche}
 	
-	\begin{algorithm}
+	\begin{algorithm}[H]
 		\caption{Merge Sort}
 		\DontPrintSemicolon
 		\SetKwProg{Function}{Function}{}{}
@@ -2262,7 +2272,7 @@
 	\paragraph{Mischen} 
 	Jeweils \( min(a, b) \) in die Ausgabe schieben.
 	
-	\begin{table}
+	\begin{table}[H]
 		\centering
 		\begin{tabular}{|c c|c c|}
 			\hline
@@ -2315,14 +2325,100 @@
 	anhängen. \\
 	\( \rightarrow \) normales Master-Theorem anwendbar.\\
 	\emph{Zeit} \( \Theta (n \log n) \)
-	24
+	
 	\paragraph{Untere Schranken} 
+	Geht es schneller als \( \Theta (n log n) \)?\\
+	\emph{Unmöglichkeit}\\
+	-eine Verbesserung ist im Allgemeinen schwer zu beweisen\\
+	Sie erfordert eine Aussage über alle denkbaren Algorithmen.\\
+	\( \bot \) einschränkende Annahmen\\
+	
 	\paragraph{Eine Vergleichsbasierte untere Schranke} 
+	\emph{Vergleichsbassiertes Sortieren}\\
+	-- Informationen über Elemente nur durch Zwei-Wege-Vergleich \( e_i \leq e_j \) ?\\
+	Deterministische vergleichsbasierte Sortieralgorithmen brauchen \[ n \log n - \mathcal{O} (n) \] im schlechtesten Fall.\\
+	
+	\paragraph{Beweis:}
+	Betrachte Eingaben, die Permutationen vpn \( 1 \dots n \) sind.\\
+	Es gibt genau n! solche Permutationen.
+	
 	\subsection{Baumbasierte Sortierdarstellung} 
+	Mindestens ein Blatt pro Permutation von \( e_1 \dots d_n \) Ausführungszeit entspricht Tiefe T\\
+	
 	\paragraph{Beweis} 
+	Baum der Tiefe T hat höchstens \[ 2^{T} \text{ Blätter} \].
+	
+	\begin{align*}
+		\implies & 2^T \leq n!\\
+		\iff & T \geq \log \underbrace{n!}_{\geq (\frac{n}{e})^n} \geq \log \frac{n}{e}^n\\
+		=& n \log n - n \log e \\
+		=&n \log n - \mathcal{O}(n)\\
+	\end{align*}
+	
+	Einfache Approximation der Fakultät: \[ (\frac{n}{e})^n \leq n! \leq n^n \]
+	Beweis für linken Teil:\\
+	\begin{align*}
+		\ln n! =& \sum_{2 \leq i \leq n} \ln i \geq \int_{1}^{n} \ln x \dif x\\
+		=& [x(\ln x - 1)]^{x=n}_{x=1} \geq n(\ln n - 1)\\
+		\implies & n! \geq e^{n(\ln n-1)} \\
+		=& \frac{e^{n \ln n}}{e^n}\\
+		=& \frac{n^n}{e^n} \\
+		=& (\frac{n}{e})^n\\
+	\end{align*}
+	
 	\subsubsection{Randomisierung, Mittlere Ausführungszeit} 
+	\[ n \log n - \mathcal{O} (n) \]
+	
 	\subsection{Quicksort – erster Versuch}
+	
+	\paragraph{Idee}
+	Teile-und-Herrsche aber verglichen mit Mergesort "andersrum"\\
+	Leiste Arbeit vor rekursivem Aufruf\\
+	
+	\begin{algorithm}
+		\caption{Quick Sort}
+		\DontPrintSemicolon
+		\SetKwProg{Function}{Function}{}{}
+		\SetKwProg{Procedure}{Procedure}{}{}
+		\SetKwProg{Class}{Class}{}{}
+		\SetKw{Assert}{assert}
+		\SetKw{Invariant}{invariant}
+		\SetKwArray{Array}{Array}
+		
+		\Function{quickSort( s : Sequence of Element ) : Sequence of Element}{
+			\BlankLine
+			\If{(\(|s| \leq 1 \))}{
+				\Return{s}
+			}
+			\BlankLine
+			pick some \( p \in s \) \;
+			\( a \gets \langle a \in s : e < p \rangle \) \;
+			\( b \gets \langle e \in s : e = p \rangle \) \;
+			\( c \gets \langle e \in s : e > p \rangle \) \;
+			\Return{ concatenation of quickSort(a), b, and quickSort(c) }
+		}
+	\end{algorithm}
 
+	\paragraph{Analyse im schlechtesten Fall}
+	\emph{Annahme:}\\
+	Pivot ist immer Minimum (oder Max.) der Eingabe \\
+	\[
+		T(n) = 
+	\begin{dcases*}
+		\Theta(1) & if \(n = 1\)\\
+		\Theta(n) +T(n-1) & if \(n \geq 2\)
+	\end{dcases*}
+	\]
+	
+	\begin{align*}
+		T(n) &= \Theta(n + [n - 1]) + \dots +1) \\
+		&= \Theta(n^2)\\
+	\end{align*}
+	
+	
+			
+			
+		
 \section[Immer die Übersicht behalten]{Prioritätslisten}
 \section[Die eierlegende Wollmilchsau]{Sortierte Liste}
 \section[Beziehungen im Griff haben]{Graphrepräsentation}
