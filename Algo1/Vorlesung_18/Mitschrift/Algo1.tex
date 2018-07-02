@@ -2003,41 +2003,41 @@
 			& Array \( A[ h_i(x) ] \) von Bits
 		\end{easylist}
 	
-	\paragraph{insert(x):}
-	-- setze \[A [h_i (x)] = 1 \] für \[ \forall i \in \{1,..,k \} \]
+		\paragraph{insert(x):}
+		-- setze \[A [h_i (x)] = 1 \] für \[ \forall i \in \{1,..,k \} \]
+		
+		\paragraph{contains(x):}
+		--wenn \[ A [h_i (x)] = 1 \] für \[ \forall i \in \{1,..,k\} \implies true \] --sonst \[ \implies false \]
 	
-	\paragraph{contains(x):}
-	--wenn \[ A [h_i (x)] = 1 \] für \[ \forall i \in \{1,..,k\} \implies true \] --sonst \[ \implies false \]
+		\subsubsection{Wahrscheinlichkeit von false positives}
+		Wahrscheinlichkeit für 1 an Stelle i:\\
+		\begin{align*}
+			Pr[A[i] &= 1] & \text{nach n Einfügungen}\\
+			&= 1 - Pr[A[i] = 0] & \text{nach n Einfügungen}\\
+			&= 1 - ( 1 - \frac{1}{m} )^{kn}\\
+			&\approx 1 - e^{\frac{-kn}{m}}\\ 
+		\end{align*}
+		\(\implies\) Wahrscheinlichkeit für \emph{false positive}: \[ f^+ \approx (1 - e ^{\frac{-kn}{m}})^k \]
+		
+		\paragraph{Beispiel:}
+		\begin{align*}
+			&n = 100 000 \text{ Objekte}\\
+			&m = 1 000 000 \text{ Bit} \\
+			&k = 7 \text{ unabhängige Hashfunktionen}\\
+		\end{align*}
+		\begin{easylist}
+			& Wahrscheinlichkeit für false positive \( < 1 \% \) 
+			& Speierplatz \( \approx \frac{m}{n} = 10  \) Bit pro Objekt
+		\end{easylist}
 	
-	\subsubsection{Wahrscheinlichkeit von false positives}
-	Wahrscheinlichkeit für 1 an Stelle i:\\
-	\begin{align*}
-		Pr[A[i] &= 1] & \text{nach n Einfügungen}\\
-		&= 1 - Pr[A[i] = 0] & \text{nach n Einfügungen}\\
-		&= 1 - ( 1 - \frac{1}{m} )^{kn}\\
-		&\approx 1 - e^{\frac{-kn}{m}}\\ 
-	\end{align*}
-	\(\implies\) Wahrscheinlichkeit für \emph{false positive}: \[ f^+ \approx (1 - e ^{\frac{-kn}{m}})^k \]
-	
-	\paragraph{Beispiel:}
-	\begin{align*}
-		&n = 100 000 \text{ Objekte}\\
-		&m = 1 000 000 \text{ Bit} \\
-		&k = 7 \text{ unabhängige Hashfunktionen}\\
-	\end{align*}
-	\begin{easylist}
-		& Wahrscheinlichkeit für false positive \( < 1 \% \) 
-		& Speierplatz \( \approx \frac{m}{n} = 10  \) Bit pro Objekt
-	\end{easylist}
-
-	\begin{labeling}{Nachteile}
-		\item[\emph{Vorteile}] 
-		\item[+]  Wenig Speicherplatzverbrauch
-		\item[+] Schneller als Suche \( ( \mathcal{O}(1) vs. \mathcal{O}  (n)) \)
-		\item[+] Verlässliches Negativergebnis
-		\item[\emph{Nachteile}] 
-		\item[\(-\)] False Positives möglich
-	\end{labeling}
+		\begin{labeling}{Nachteile}
+			\item[\emph{Vorteile}] 
+			\item[+]  Wenig Speicherplatzverbrauch
+			\item[+] Schneller als Suche \( ( \mathcal{O}(1) vs. \mathcal{O}  (n)) \)
+			\item[+] Verlässliches Negativergebnis
+			\item[\emph{Nachteile}] 
+			\item[\(-\)] False Positives möglich
+		\end{labeling}
 
 	\section{Hash-Funktionen}
 		\subsection{Analyse für zufällige Hash-Funktionen}
@@ -2077,358 +2077,1005 @@
 	 	\[ \mathbb{P}[X_e = 1] = \frac{1}{m} \]
 	 	Der Rest geht wie vorher.
 	 	
-	 \paragraph{Eine einfache universelle Familie}
-	 m sei eine Primzahl, 
-	 \[ \text{Key } \subseteq \{ 0,..m m - 1 \}^k  \]
-	 
-	 \paragraph{Theorem 4}
-	 Für \[ a = (a_1,..., a_k) \in \{0,..., m-1\}^k  \]
-	 definiere \[h_a(x) = a \times x \mod m \],
-	 \[ H = \{h_a : a \in \{ 0.. m-1 \}^k \} \]\\
-	 \emph{H ist eine universelle Familie von Hash-Funktionen.}
-	 
-	 \paragraph{Beispiel für H}
-	 Für \[ a = (a_1,..., a_k) \in \{0,..., m-1\}^k  \]
-	 definiere \[h_a(x) = a \times x \mod m \],
-	 \begin{align*}
-	 	k &= 3\\
-	 	m &= 11 \\
-	 	\text{wähle } a = (8, 1, 5)\\ \hline
-	 	\\
-	 	h_a ((1, 1, 2)) &= (8, 1, 5) \times (1, 1, 2)\\
-	 	&= 8 \times 1 + 1 \times 1+5 \times 2\\
-	 	&=19\\
-	 	&\equiv 8 \mod 11\\
-	 \end{align*}
-	 
-	 \paragraph{Beweis Theorem}
-	 Betrachte \[ x = (x_1,..., x_k) \] \[ y = (y_1,..., y_k) \]
-	 mit \[ x_j \neq y_j \]
-	 zähle \[a\] mit \[ h_a(x) = h_a(y) \]\\
-	 Für jede Wahl der 
-	 \(a_i : i \neq j : \exists! a_j : h_a(x) = h_a(y) : \)
-	 \begin{align*}
-	 	&\sum_{1 \leq i \leq k} a_i x_i \\
-	 	&\equiv \sum_{1 \leq i \leq k} a_i y_i (\mod m)\\
-	 	& \iff a_j ( xj - y_j)\\
-	 	& \equiv \sum_{i \neq , 1 \leq i \leq k} a_i(y_i . x_i)(\mod m)\\
-	 	& \iff a_j \\
-	 	& \equiv (x_j - y_j)^{-1} \sum_{i \neq j , 1 \leq i \leq k} a_i (y_i - x_i)(\mod m)\\
-	 \end{align*}
-	 
-	 \[m^{k-1} \text{ Möglichkeiten} \] 
-	 die \( a_i  \)  (mit \( i \neq j \)) auszuwählen.\\
-	 \[ m^k \] ist die Gesamtzahl der \(a\), daher, 
-	 \[\mathbb{P}[h_a(x) = h_a (y) ]  \]
-	 \[ = \frac{m^{k - 1}}{m^k} \]
-	 \[ = \frac{1}{m} \]
+		 \paragraph{Eine einfache universelle Familie}
+		 m sei eine Primzahl, 
+		 \[ \text{Key } \subseteq \{ 0,..m m - 1 \}^k  \]
+		 
+		 \paragraph{Theorem 4}
+		 Für \[ a = (a_1,..., a_k) \in \{0,..., m-1\}^k  \]
+		 definiere \[h_a(x) = a \times x \mod m \],
+		 \[ H = \{h_a : a \in \{ 0.. m-1 \}^k \} \]\\
+		 \emph{H ist eine universelle Familie von Hash-Funktionen.}
+		 
+		 \paragraph{Beispiel für H}
+		 Für \[ a = (a_1,..., a_k) \in \{0,..., m-1\}^k  \]
+		 definiere \[h_a(x) = a \times x \mod m \],
+		 \begin{align*}
+		 	k &= 3\\
+		 	m &= 11 \\
+		 	\text{wähle } a = (8, 1, 5)\\ \hline
+		 	\\
+		 	h_a ((1, 1, 2)) &= (8, 1, 5) \times (1, 1, 2)\\
+		 	&= 8 \times 1 + 1 \times 1+5 \times 2\\
+		 	&=19\\
+		 	&\equiv 8 \mod 11\\
+		 \end{align*}
+		 
+		 \paragraph{Beweis Theorem}
+		 Betrachte \[ x = (x_1,..., x_k) \] \[ y = (y_1,..., y_k) \]
+		 mit \[ x_j \neq y_j \]
+		 zähle \[a\] mit \[ h_a(x) = h_a(y) \]\\
+		 Für jede Wahl der 
+		 \(a_i : i \neq j : \exists! a_j : h_a(x) = h_a(y) : \)
+		 \begin{align*}
+		 	&\sum_{1 \leq i \leq k} a_i x_i \\
+		 	&\equiv \sum_{1 \leq i \leq k} a_i y_i (\mod m)\\
+		 	& \iff a_j ( xj - y_j)\\
+		 	& \equiv \sum_{i \neq , 1 \leq i \leq k} a_i(y_i . x_i)(\mod m)\\
+		 	& \iff a_j \\
+		 	& \equiv (x_j - y_j)^{-1} \sum_{i \neq j , 1 \leq i \leq k} a_i (y_i - x_i)(\mod m)\\
+		 \end{align*}
+		 
+		 \[m^{k-1} \text{ Möglichkeiten} \] 
+		 die \( a_i  \)  (mit \( i \neq j \)) auszuwählen.\\
+		 \[ m^k \] ist die Gesamtzahl der \(a\), daher, 
+		 \[\mathbb{P}[h_a(x) = h_a (y) ]  \]
+		 \[ = \frac{m^{k - 1}}{m^k} \]
+		 \[ = \frac{1}{m} \]
 
-\section[Effizienz durch Ordnung]{Sortieren}
-	\subsection{Sortieren und Co} 
-	
-	\paragraph{Lochkartensortierer} 
-	Abfolge:\\
-	\begin{easylist}
-		& \emph{1. Durchlauf}
-			&& Alle Karten werden nach der \emph{Einerziffer} sortiert.
-		& \emph{2. }
-			&& Alle Karten werden nach der \emph{Zehnerziffer} sortiert.
-		& \emph{3. }
-			&& Alle Karten werden nach der \emph{Hunderterziffer} sortiert
-		& \emph{4. }
-			&& Die Lochkarten sind nun \emph{absteigend sortiert}
-	\end{easylist}
-	
-	\subsection{Grundproblem Sortieren} 
-	Gegeben: \[ \text{Elementfolge } s = \langle w_1 \dots  e_n \rangle \]
-	Gesucht: \[ s' = \langle e_1' \dots  e_n' \rangle \]
-	mit \[ s' \text{ ist eine Permutation von s} \]
-	\[ e_1 ' \leq \dots \leq e'_n\] für eine Totalordnung "\( \leq \)"
-	
-	\paragraph{Anwendungsbeispiele}
-	\begin{easylist}
-		& Allgemein
-			&& Wird häufig als Vorverarbeitung für Algorithmen verwendet
-		& Suche 
-			&& Telefonbuch \( \iff \) unosrtierte Liste
-		& Gruppieren
-			&& Alternative: Hashing
-	\end{easylist}
-	
-	\paragraph{Beispiele wo Sortierung wichtig sein kann}
-	
-	\begin{easylist}
-		& Aufbau von Suchbäumen
-		& Kruskals MST-Algorithmus
-		& Rucksackproblem
-		& Scheduling
-			&& Die schwersten Probleme zu erst
-		& Sekundärspeicheralgorithmen
-			&& z.B. Datenbank-\emph{Join}
-	\end{easylist}
-	
-	\emph{Viele verwandte Probleme.}\\
-	Zum Beispiel:
-	\begin{easylist}
-		& \emph{Transpositionen} dünner Matritzen
-		& invertierten Index aufbauen
-		& Konversion zwischen Graphrepräsentationen
-	\end{easylist}
-	
-	\paragraph{Überblick}
-	
-	\begin{easylist}
-		& Einfache Algorithmen 
-		& Kleine Datenmengen
-		& Eine passende untere Schranke
-		& Quiksort
-		& Das Auswahlproblem
-		& Ganzzahlige Schlüssel
-			&& jenseits der unteren Schranke
-	\end{easylist}
-	
-	\subsection{Einfache Sortieralgorithmen mit Sentinels: Insertion Sort} 
-	\begin{algorithm}[H]
-		\caption{Insertion Sort}
-		\DontPrintSemicolon
-		\SetKwProg{Function}{Function}{}{}
-		\SetKwProg{Procedure}{Procedure}{}{}
-		\SetKwProg{Class}{Class}{}{}
-		\SetKw{Assert}{assert}
-		\SetKw{Invariant}{invariant}
-		\SetKwArray{Array}{Array}
+	\section[Effizienz durch Ordnung]{Sortieren}
+		\subsection{Sortieren und Co} 
 		
-		\Procedure{insertionSort( a : \Array{\( 1 \dots n \)})}{
-			\BlankLine
-			\For{\((i \gets 2  \text{ to } n )\)}{
+		\paragraph{Lochkartensortierer} 
+		Abfolge:\\
+		\begin{easylist}
+			& \emph{1. Durchlauf}
+				&& Alle Karten werden nach der \emph{Einerziffer} sortiert.
+			& \emph{2. }
+				&& Alle Karten werden nach der \emph{Zehnerziffer} sortiert.
+			& \emph{3. }
+				&& Alle Karten werden nach der \emph{Hunderterziffer} sortiert
+			& \emph{4. }
+				&& Die Lochkarten sind nun \emph{absteigend sortiert}
+		\end{easylist}
+	
+		\subsection{Grundproblem Sortieren} 
+		Gegeben: \[ \text{Elementfolge } s = \langle w_1 \dots  e_n \rangle \]
+		Gesucht: \[ s' = \langle e_1' \dots  e_n' \rangle \]
+		mit \[ s' \text{ ist eine Permutation von s} \]
+		\[ e_1 ' \leq \dots \leq e'_n\] für eine Totalordnung "\( \leq \)"
+		
+		\paragraph{Anwendungsbeispiele}
+		\begin{easylist}
+			& Allgemein
+				&& Wird häufig als Vorverarbeitung für Algorithmen verwendet
+			& Suche 
+				&& Telefonbuch \( \iff \) unosrtierte Liste
+			& Gruppieren
+				&& Alternative: Hashing
+		\end{easylist}
+		
+		\paragraph{Beispiele wo Sortierung wichtig sein kann}
+		
+		\begin{easylist}
+			& Aufbau von Suchbäumen
+			& Kruskals MST-Algorithmus
+			& Rucksackproblem
+			& Scheduling
+				&& Die schwersten Probleme zu erst
+			& Sekundärspeicheralgorithmen
+				&& z.B. Datenbank-\emph{Join}
+		\end{easylist}
+		
+		\emph{Viele verwandte Probleme.}\\
+		Zum Beispiel:
+		\begin{easylist}
+			& \emph{Transpositionen} dünner Matritzen
+			& invertierten Index aufbauen
+			& Konversion zwischen Graphrepräsentationen
+		\end{easylist}
+		
+		\paragraph{Überblick}
+		
+		\begin{easylist}
+			& Einfache Algorithmen 
+			& Kleine Datenmengen
+			& Eine passende untere Schranke
+			& Quiksort
+			& Das Auswahlproblem
+			& Ganzzahlige Schlüssel
+				&& jenseits der unteren Schranke
+		\end{easylist}
+	
+		\subsection{Einfache Sortieralgorithmen mit Sentinels: Insertion Sort} 
+		\begin{algorithm}[H]
+			\caption{Insertion Sort}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Procedure{insertionSort( a : \Array{\( 1 \dots n \)})}{
 				\BlankLine
-				\Invariant{\( a [i] \leq \dots \leq a [i-1] \)}\;
-				\BlankLine
-				\tcc{move \(a [i] \) to the right place}
-				\(e \gets a[i] \)  \tcc*{new minimum}
-				\BlankLine
-				\If{\( (e < a[1]) \)}{
-					\For{\( (j \gets i, \text{ downto } 2 )\)}{
-						\( a[j] \gets a[j - 1] \) \;
+				\For{\((i \gets 2  \text{ to } n )\)}{
+					\BlankLine
+					\Invariant{\( a [i] \leq \dots \leq a [i-1] \)}\;
+					\BlankLine
+					\tcc{move \(a [i] \) to the right place}
+					\(e \gets a[i] \)  \tcc*{new minimum}
+					\BlankLine
+					\If{\( (e < a[1]) \)}{
+						\For{\( (j \gets i, \text{ downto } 2 )\)}{
+							\( a[j] \gets a[j - 1] \) \;
+						
+						} 
+						
+						\( a[1] \gets e \) \;
 					
-					} 
-					
-					\( a[1] \gets e \) \;
-				
-				} \Else{ \tcc*{use \(a[1]\) as a sentinel}
-					\For{\( (j \gets i; a[j-1] > e ; j-- )\)}{
-						\( a[j] \gets a[j - 1] \) \;
+					} \Else{ \tcc*{use \(a[1]\) as a sentinel}
+						\For{\( (j \gets i; a[j-1] > e ; j-- )\)}{
+							\( a[j] \gets a[j - 1] \) \;
+						}
+							\( a[j] \gets e \) \;
+						
 					}
-						\( a[j] \gets e \) \;
-					
+				}	
+			}
+		\end{algorithm}
+		
+		\paragraph{Beispiel}
+		\begin{align*}
+			& \langle 4 \rangle , \langle 7, 1, 1, \rangle\\
+			\implies & \langle 4, 7 \rangle , \langle 1, 1 \rangle \\
+			\implies & \langle 1, 4, 7 \rangle , \langle 1 \rangle \\
+			\implies & \langle 1, 1, 4, 7  \rangle , \langle  \rangle \\
+		\end{align*}
+		
+			\subsubsection{Analyse} 
+			Die i-te Iteration braucht Zeit \( \Theta (i) \).\\
+			\begin{align*}
+				\sum_{i=2}^{n} &= \frac{n(n+1)}{2} -1 \\
+				&= \Theta (n^2)\\
+			\end{align*}
+			
+			Die i-te Iteration braucht Zeit \( \mathcal{O}(1) \) z.B. (beinahe) sortiert).
+			\[ \sum_{i=2}^{n} \mathcal{O}(1) \in \mathcal{O}(n) \]
+	
+		\subsection{Sortieren (MergeSort) durch Mischen } 
+		\paragraph{Idee: Teile und Herrsche}
+		
+		\begin{algorithm}[H]
+			\caption{Merge Sort}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+		
+			\Function{mergeSort(\( \langle e_1 \dots e_n \rangle \)) : Sequence of Element}{
+				\BlankLine
+				\If{\((n=1)\)}{ \tcc{best-case}
+					\Return{\( \langle e_1 \rangle \)}
+				} \Else {
+				\Return{ merge( mergeSort(\( e_1 \dots e_{ \langle \lfloor \frac{n}{2} \rfloor } \rangle \)), mergeSort(\( \langle e_{\lfloor \frac{n}{2} \rfloor + 1} \dots e_n \rangle \)  ) }
+			}
+			}
+		\end{algorithm}
+		
+		
+		
+		\paragraph{Mischen} 
+		Jeweils \( min(a, b) \) in die Ausgabe schieben.
+		
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{|c c|c c|}
+				\hline
+				a&b&c&operation\\
+				\hline
+				\( \langle 1, 2, 7 \rangle \) & \( \langle 1, 2, 8, 8  \rangle \) &\( \langle   \rangle \) & move a \\
+				\( \langle 2, 7 \rangle \) & \( \langle 1, 2, 8, 8  \rangle \) &\( \langle 1  \rangle \) & move  b \\
+				\( \langle 2, 7 \rangle \) & \( \langle 2, 8, 8  \rangle \) &\( \langle 1, 1  \rangle \) & move a \\
+				\( \langle 7 \rangle \) & \( \langle 2, 8, 8  \rangle \) &\( \langle 1, 1, 2  \rangle \) & move b\\
+				\( \langle 7 \rangle \) & \( \langle  8, 8  \rangle \) &\( \langle 1, 1, 2, 2  \rangle \) & move a \\
+				\( \langle  \rangle \) & \( \langle  8, 8  \rangle \) &\( \langle 1, 1, 2, 2 , 7  \rangle \) & concat b \\
+				\hline
+				\( \langle  \rangle \) & \( \langle  \rangle \) &\( \langle 1, 1, 2, 2 , 7, 8, 8  \rangle \) & \\
+				\hline
+			\end{tabular}
+		\end{table}
+		Zeit \( \mathcal{O}(n) \)
+		
+			\subsubsection{Analyse} 
+			Folie: 14.05.18 \#22
+			\begin{align*}
+			\langle 2, 7, 1, 8&, 2, 8, 1  \rangle \\
+			\langle 2, 7, 1 \rangle & \langle 2, 8, 1  \rangle \\
+			\langle 2 \rangle  \langle 7, 1 \rangle & \langle 8,2  \rangle  \langle 8, 1 \rangle \\
+			\langle 2 \rangle \langle 7  \rangle \langle 1 \rangle  \langle 8 & \rangle \langle 2 \rangle  \langle 8 \rangle \langle 1 \rangle\\
+			\langle 2 \rangle \langle 1, 7 \rangle \langle 2, 8  \rangle & \langle 1, 8  \rangle \\
+			\langle 1, 2, 7  \rangle & \langle 1, 2, 8, 8 \rangle \\
+			\langle 1, 1, 2, 2&, 7, 8, 8 \rangle
+			\end{align*}
+			Analyse: 
+			\begin{align*}
+				  T(n) &\\ 
+				&= \mathcal{O}(n) + T (\lceil \frac{n}{2} ) \rceil + T(\lfloor \frac{n}{2} \rfloor )\\
+				&= \mathcal{O}(n \log n)\\ 
+			\end{align*}
+			
+			\[ T = \Theta (n) + T (\lceil \frac{n}{2} ) \rceil + T(\lfloor \frac{n}{2} \rfloor ) \]
+			
+			\begin{easylist}
+				& Problem:
+					&& Runderei
+				& Ausweg: 
+					&&genauer rechnen (siehe Buch)
+				& Dirty trick:
+					&& Eingabe auf \emph{Zweierpotenzen aufblasen}
+			\end{easylist}
+			
+			\paragraph{Dirty trick - Beispiel}
+			\[ (2^{\lceil \log n \rceil} -n) \times \infty \]
+			anhängen. \\
+			\( \rightarrow \) normales Master-Theorem anwendbar.\\
+			\emph{Zeit} \( \Theta (n \log n) \)
+			
+			\paragraph{Untere Schranken} 
+			Geht es schneller als \( \Theta (n log n) \)?\\
+			\emph{Unmöglichkeit}\\
+			-eine Verbesserung ist im Allgemeinen schwer zu beweisen\\
+			Sie erfordert eine Aussage über alle denkbaren Algorithmen.\\
+			\( \bot \) einschränkende Annahmen\\
+			
+			\paragraph{Eine Vergleichsbasierte untere Schranke} 
+			\emph{Vergleichsbassiertes Sortieren}\\
+			-- Informationen über Elemente nur durch Zwei-Wege-Vergleich \( e_i \leq e_j \) ?\\
+			Deterministische vergleichsbasierte Sortieralgorithmen brauchen \[ n \log n - \mathcal{O} (n) \] im schlechtesten Fall.\\
+			
+			\paragraph{Beweis:}
+			Betrachte Eingaben, die Permutationen von \( 1 \dots n \) sind.\\
+			Es gibt genau n! solche Permutationen.
+			
+		\subsection{Baumbasierte Sortierdarstellung} 
+		Mindestens ein Blatt pro Permutation von \( e_1 \dots d_n \) Ausführungszeit entspricht Tiefe T\\
+		
+		\paragraph{Beweis} 
+		Baum der Tiefe T hat höchstens \[ 2^{T} \text{ Blätter} \].
+		
+		\begin{align*}
+			\implies & 2^T \leq n!\\
+			\iff & T \geq \log \underbrace{n!}_{\geq (\frac{n}{e})^n} \geq \log \frac{n}{e}^n\\
+			=& n \log n - n \log e \\
+			=&n \log n - \mathcal{O}(n)\\
+		\end{align*}
+		
+		Einfache Approximation der Fakultät: \[ (\frac{n}{e})^n \leq n! \leq n^n \]
+		Beweis für linken Teil:\\
+		\begin{align*}
+			\ln n! =& \sum_{2 \leq i \leq n} \ln i \geq \int_{1}^{n} \ln x \dif x\\
+			=& [x(\ln x - 1)]^{x=n}_{x=1} \geq n(\ln n - 1)\\
+			\implies & n! \geq e^{n(\ln n-1)} \\
+			=& \frac{e^{n \ln n}}{e^n}\\
+			=& \frac{n^n}{e^n} \\
+			=& (\frac{n}{e})^n\\
+		\end{align*}
+	
+			\subsubsection{Randomisierung, Mittlere Ausführungszeit} 
+			\[ n \log n - \mathcal{O} (n) \]
+	
+		\subsection{Quicksort – erster Versuch}
+	
+		\paragraph{Idee}
+		Teile-und-Herrsche aber verglichen mit Mergesort "andersrum"\\
+		Leiste Arbeit vor rekursivem Aufruf\\
+		
+		\begin{algorithm}
+			\caption{Quick Sort}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Function{quickSort( s : Sequence of Element ) : Sequence of Element}{
+				\BlankLine
+				\If{(\(|s| \leq 1 \))}{
+					\Return{s}
 				}
-			}	
-		}
-	\end{algorithm}
+				\BlankLine
+				pick some \( p \in s \) \;
+				\( a \gets \langle a \in s : e < p \rangle \) \;
+				\( b \gets \langle e \in s : e = p \rangle \) \;
+				\( c \gets \langle e \in s : e > p \rangle \) \;
+				\BlankLine
+				\Return{ concatenation(quickSort(a), b,  quickSort(c)) }
+			}
+		\end{algorithm}
 	
-	\paragraph{Beispiel}
-	\begin{align*}
-		& \langle 4 \rangle , \langle 7, 1, 1, \rangle\\
-		\implies & \langle 4, 7 \rangle , \langle 1, 1 \rangle \\
-		\implies & \langle 1, 4, 7 \rangle , \langle 1 \rangle \\
-		\implies & \langle 1, 1, 4, 7  \rangle , \langle  \rangle \\
-	\end{align*}
+		\paragraph{Analyse im schlechtesten Fall}
+		\emph{Annahme:}\\
+		Pivot ist immer Minimum (oder Max.) der Eingabe \\
+		\[
+			T(n) = 
+		\begin{dcases*}
+			\Theta(1) & if \(n = 1\)\\
+			\Theta(n) +T(n-1) & if \(n \geq 2\)
+		\end{dcases*}
+		\]
+		
+		\begin{align*}
+			T(n) &= \Theta(n + [n - 1]) + \dots +1) \\
+			&= \Theta(n^2)\\
+		\end{align*}
+		
+	    Quicksort: Analyse im besten Fall 
+	    Zufälliger Pivot 
+	    
+			\subsubsection{Quicksort: Laufzeit }
+			\paragraph{Beweise }
+		
+			\subsubsection{ Quicksort: Effiziente Implementierung}
+			 Pseudo-Inplace(Rekursion -> Stack)
+			
+			\subsubsection{Beispiel: Partitionierung} 
+			Beispiel: Rekursion 
+			Algo erklären
+			Größerer Basisfall 
+			Trick
+		
+			\subsubsection{Halbrekursive Implementierung }
+			Pro und Kontra Merge/Quick
+			
+			V10	 Auswahl (Selection) 
+			Auswahlproblem
+			Beispiel 
+			Auswahl: Anwendungen 
+			\subsubsection{Quickselect}
+			Beispiel 
+			Analyse 
+			Mehr zum Auswahlproblem 
+			
+			\subsubsection{Durchbrechen der unten Schranke - Ganzzahliges Sortieren }
+			
+		\subsection{Bucketsort}
+		
+			\subsubsection{0:25:17 Schlüssel 0....k-1: Bucket Sort }
+			0:28:49 Beispiel: k=4 
+			erklären
+			
+			\subsubsection{0:30:46 Array-Implementierung}
+			algo nortieren
+			0:31:13 Beispiel
+			
+			\subsubsection{0:35:37 \(K^d\) Schlüssel}
+			0:41:49 LSD-Radix-Sort: Beispiel 
+			0:41:56 Mehr zu ganzzahligem Sortieren 
+			0:42:10 Sortieren: vergleichsbasiert vs. ganzzahlig 
+			pros
+			0:43:48 Was haben wir jeneseits von Sortieren gelernt? 
+			0:49:00 Sortieren durch Einfügen: In-Place 
+			1:16:55 Split Sort 
+			1:22:09 Vorgefertigte Sortieralgorithmen in aktuellen Programmiersprachen 
+			1:23:18 C++ 
+			1:24:23 Java 
+			
+			V11	
+			0:00:08 Halbrekursive Implementierung 
+			0:04:39 Quadratische Komplexität bei gleichen Elementen? 
+			0:11:21 Vergleich Quicksort Mergesort 
+			0:15:33 Auswahl (Selection) 
+			0:20:18 Quickselect 
+			0:37:05 Array-Implementierung 
+			0:47:51 Least-Sigmificant-Digit Radix-Sortieren 
+			0:55:05 Mehr zu ganzzahligem Sortieren 
+			
+	\section{0:45:52 Übung} 
+		\subsection{0:50:11 Sortieren durch Einfügen}
+			\subsubsection{Sentinel}
+			
+		\subsection{Quantifiziertes Chaos}
+			\subsubsection{0:55:34 Inversionen} 
+			\subsubsection{0:58:22 Runs }
+			\subsubsection{0:59:42 Removal} 
+			1:00:26 Adaptives Sortieren 
+			1:01:21 Insertion Sort: Adaptiv? 
+			1:02:12 Insertion Sort: Erwartete Laufzeit 
+			1:06:36 Natural Merge Sort 
+			\subsubsection{Erwartete Anzahl von Runs}
+			n \( \coloneqq \) Anzahl der Elemente\\
+			k \(\coloneqq\) Anzahl der Runs\\
+			\( \#_k  \) Anzahl der Permutationen\\
+			\begin{align*}
+				2 E[R(\sigma)] =& \sum_{k=1}^{n} \frac{\#k}{n!}k + \sum_{k=1}^{n} \frac{\#n-k+1}{n!} (n - k + 1)\\
+				=& \sum_{k=1}^{n} \frac{\#k}{n!}k + \sum_{k=1}^{n} \frac{\#k}{n!} (n - k + 1) & \text{Benutze: } \#k = \#n-k+1 \\
+				=& \sum_{k=1}^{n} \frac{\#k}{n!}(k + [n - k + 1]) \\
+				=& \frac{n + 1}{n!} \sum_{k=1}^{n} \#k \\
+				=& \frac{n + 1}{n!} n!\\
+				\implies & E[R(\sigma)] = \frac{n+1}{2}\\
+			\end{align*}	
+		v12	
 	
-	\subsubsection{Analyse} 
-	Die i-te Iteration braucht Zeit \( \Theta (i) \).\\
-	\begin{align*}
-		\sum_{i=2}^{n} &= \frac{n(n+1)}{2} -1 \\
-		&= \Theta (n^2)\\
-	\end{align*}
+	\section{3. Übung Algorithmen I} 
+			\subsubsection{0:45:04 Erinnerung: Bucketsort} 
+			0:46:03 Bucket Sort Spezial 
+			0:54:52 Priority Queues 
+			0:57:02 Spezielle Priority Queues 
+			0:58:36 Bucket Queue 
+			1:01:41 Binary Radix Heap 
+			1:08:58 Binary Radix Heap: deleteMin 
+			1:11:34 Möglichkeit Ternärer Radix Heaps 
+			1:13:12 Schnelle Heaps: Zusammenfassung
+			
+			
+		
+	\section[Immer die Übersicht behalten]{Prioritätslisten}
+		\subsection{Heapsort}
+		Prioritätslisten 
+		Binäre Heaps 
+		Implizite Baum-Repräsentation
+		Heap-Algorithmus 
+		Prozedur siftDown
+		Einfügen 
+		
+		\begin{algorithm}
+			\caption{deleteMin und siftDown (= nach unten sieben)}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Function{deleteMin() : Element}{
+				result \( \gets \) h[1] : Element \;
+				h[1] \(\gets \) h[n] \;
+				\( n-- \) \;
+				siftDown(1)\;
+				\Return{result}\;
+			}
+			
+			\BlankLine
+			\Procedure{siftDown(i : \( \mathbb{N} \))}{
+				\Assert{heap property, except possibly at \( j = 2i \) und \( j = 2i + 1 \) }\;
+				\If{ (\( 2 i \leq n \))}{
+					\If{(\( 2i + 1 > n \vee h[2i] \leq h[2i +1] \))}{
+						\( m \gets 2i \)\;	
+					} \Else{
+						\( m \gets 2i +1 \) \;
+					}
+					\Assert{ \( \nexists \text{ sibling}(m) \vee h[sibling(m)] \geq h[m] \) } \;
+					\If{(\( h[i] > h[m] \))}{
+						\tcp{Heap-Eigenschaft verletzt}
+						swap( h[i], h[m] )\;
+						siftDown(m)\;
+					}
+				} 
+				\Assert{the heap property holds for the subtree rooted at i}
+			}
+		\end{algorithm}
 	
-	Die i-te Iteration braucht Zeit \( \mathcal{O}(1) \) z.B. (beinahe) sortiert).
-	\[ \sum_{i=2}^{n} \mathcal{O}(1) \in \mathcal{O}(n) \]
+		\begin{algorithm}
+			\caption{deleteMin und siftDown vereinfacht}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Function{deleteMin() : Element}{
+				result \( \gets \) h[1] : Element \;
+				h[1] \(\gets \) h[n] \;
+				\( n-- \) \;
+				siftDown(1)\;
+				\Return{result}\;
+			}
+			
+			\BlankLine
+			\Procedure{siftDown(i : \( \mathbb{N} \))}{
+				\Assert{heap property, except possibly at \( j = 2i = \text{linker Nachbar} \) und \( j = 2i + 1 = \text{rechter Nachbar} \) }\;
+				\If{ (\( linker \leq n \))}{
+					\If{(\( rechter > n \vee h[linker] \leq h[rechter] \))}{
+						\( m \gets linker \)\;	
+					} \Else{
+						\( m \gets rechter \) \;
+					}
+					\Assert{ \( \nexists \text{ sibling}(m) \vee h[sibling(m)] \geq h[m] \) } \;
+					\If{(\( h[i] > h[m] \))}{
+						\tcp{Heap-Eigenschaft verletzt}
+						swap( h[i], h[m] )\;
+						siftDown(m)\;
+					}
+				} 
+				\Assert{the heap property holds for the subtree rooted at i}
+			}
+		\end{algorithm}
+		
+		Binärer Heap 
+		- Analyse 
+		- Konstruktion 
+		Ein nützlicher Rechentrick \\
+		Heapsort: 
+		-Beispiel 
+		Heapsort vs. Quicksort vs. Mergesort 
+		Adressierbare Prioritätslisten 
+		
+		Adressierbare Prioritätslisten: Anwendungen 
+		Adressierbare Binäre Heaps 
+		Adressierbare Prioritätslisten - Laufzeiten 
+		Prioritätslisten: Mehr 
+		Prioritätslisten: Zusammenfassung
 	
-	\subsection{Sortieren (MergeSort) durch Mischen } 
-	\paragraph{Idee: Teile und Herrsche}
+	\section[Die eierlegende Wollmilchsau]{Sortierte Liste}
+		\[ \langle e_1 \dots e_n \rangle  \text{ mit } e_1 \leq \dots \leq e_n \]\\
+			Kennzeichnende Funktion:\\
+			M.locate(k) \(\gets\) addressOf \( min \{ e \in M : e \geq k \} \)\\
+	
+			\subsection{Binär Baum} 
+			\paragraph{Innere Knoten}
+			\[v = (k, l, r)\]
+			\[ v = (\text{Spalt-key, linker, rechter Teilbaum}) \]
+			\emph{Invariante}
+			über l erreichbare Blätter haben 
+			\[ \text{Schlüssel} \leq k \] 
+			über r:
+			\[ \text{Schlüssel} > k \]
+			
+			\begin{algorithm}[H]
+				\caption{locate Binary tree}
+				\DontPrintSemicolon
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				\SetKwProg{Class}{Class}{}{}
+				\SetKw{Assert}{assert}
+				\SetKw{Invariant}{invariant}
+				\SetKwArray{Array}{Array}
+				
+				\Function{locate(k, x)}{
+					\If{x is leaf}{
+						\If{ \( k \leq x \)}{
+							\Return{x} \;
+						} \Else{
+							\Return{ x\( \rightarrow \)next }
+						}
+					}
+					\If{\( k \leq x \)}{
+						\Return{ locate(k, x\( \rightarrow \)left ) }
+					} \Else{ 
+						\Return{ locate(k, x\( \rightarrow \)right ) }
+					}
+				}
+			\end{algorithm}
+		
+			\paragraph{Invariante}
+			Sei X die Menge aller von x erreichbaren Listenelement.\\
+			Listenelement links von X sind \( < k \) \\
+			Listenelement rechts von X sind \( >k \)\\
+			
+			\paragraph{Laufzeit}
+			\begin{easylist}
+				& Laufzeit
+					&& \( \mathcal{O}(\text{Höhe}) \)
+				& Bester Fall
+					&& perfekt balanciert, Tiefe \( = \lfloor \log n \rfloor \)
+				& Schlechtester Fall
+					&& Höhe n
+			\end{easylist}
+	
+		\paragraph{Suchbäume balancieren?}
+		\begin{easylist}
+			& Perfekte Balance
+				&& schwer aufrechtzuerhalten
+			& Flexible Höhe \( \mathcal{O}(\log n) \)
+				&& balancierte binäre Suchbäume / nicht Teil der Vorlesung
+			& Flexibler Knotengrad
+				&& (a, b)-Bäume
+					&&&\( \approx \) Grad zwischen a und b
+					&&& Höhe \( \approx \log_a n \) 
+		\end{easylist}
+	
+		\subsection{AB-Baum}
+			\begin{easylist}
+				& Blätter
+					&& Listenelemente 
+						&&& Alle mit gleicher Tiefe!
+				& Innere Knoten
+					&& Grad a...b
+				& Wurzel
+					&& Grad 2...b 
+					&& Grad 1 für \( \langle \rangle \)
+		\end{easylist}
+	
+		\paragraph{Items}
+		\begin{algorithm}[H]
+			\caption{items class}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Arraq}{Array}
+			
+			\Class{ABHandle : Pointer to ABItem or Item }{
+				\Class{ABItem(splitters : Sequence of Key, children : Sequence of ABHandle)}{
+					\( d \gets |children| : 1 \dots b \) \tcc*{outdegree}
+					\( s \gets splitters  \) : \Arraq{\( 1 \dots b - 1 \)} of Key \;
+					\( c \gets children \) : \Arraq{\( 1 \dots b \) } of Handle \;
+				}
+			}
+		\end{algorithm}
+	\paragraph{Invariante}
+	e über c[i] erreichbar \\
+	\( \implies s[i - 1] < key(e) \leq s[i] \) mit \\
+	\( s[0] = - \infty \) \\
+	\( s[d] = s[d+1] = \infty \)\\
 	
 	\begin{algorithm}[H]
-		\caption{Merge Sort}
+		\caption{Initialisierung Class }
 		\DontPrintSemicolon
 		\SetKwProg{Function}{Function}{}{}
 		\SetKwProg{Procedure}{Procedure}{}{}
 		\SetKwProg{Class}{Class}{}{}
 		\SetKw{Assert}{assert}
 		\SetKw{Invariant}{invariant}
-		\SetKwArray{Array}{Array}
-	
-		\Function{mergeSort(\( \langle e_1 \dots e_n \rangle \)) : Sequence of Element}{
-			\BlankLine
-			\If{\((n=1)\)}{ \tcc{best-case}
-				\Return{\( \langle e_1 \rangle \)}
-			} \Else {
-			\Return{ merge( mergeSort(\( e_1 \dots e_{\lfloor \frac{n}{2} \rfloor } \rangle \)), mergeSort(\(e_{\lfloor \frac{n}{2} \rfloor + 1} \dots e_n \rangle \)  ) }
-		}
-		}
-	\end{algorithm}
-	
-	
-	
-	\paragraph{Mischen} 
-	Jeweils \( min(a, b) \) in die Ausgabe schieben.
-	
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{|c c|c c|}
-			\hline
-			a&b&c&operation\\
-			\hline
-			\( \langle 1, 2, 7 \rangle \) & \( \langle 1, 2, 8, 8  \rangle \) &\( \langle   \rangle \) & move a \\
-			\( \langle 2, 7 \rangle \) & \( \langle 1, 2, 8, 8  \rangle \) &\( \langle 1  \rangle \) & move  b \\
-			\( \langle 2, 7 \rangle \) & \( \langle 2, 8, 8  \rangle \) &\( \langle 1, 1  \rangle \) & move a \\
-			\( \langle 7 \rangle \) & \( \langle 2, 8, 8  \rangle \) &\( \langle 1, 1, 2  \rangle \) & move b\\
-			\( \langle 7 \rangle \) & \( \langle  8, 8  \rangle \) &\( \langle 1, 1, 2, 2  \rangle \) & move a \\
-			\( \langle  \rangle \) & \( \langle  8, 8  \rangle \) &\( \langle 1, 1, 2, 2 , 7  \rangle \) & concat b \\
-			\hline
-			\( \langle  \rangle \) & \( \langle  \rangle \) &\( \langle 1, 1, 2, 2 , 7, 8, 8  \rangle \) & \\
-			\hline
-		\end{tabular}
-	\end{table}
-	Zeit \( \mathcal{O}(n) \)
-	
-	\subsubsection{Analyse} 
-	Folie: 14.05.18 \#22
-	\begin{align*}
-	\langle 2, 7, 1, 8&, 2, 8, 1  \rangle \\
-	\langle 2, 7, 1 \rangle & \langle 2, 8, 1  \rangle \\
-	\langle 2 \rangle  \langle 7, 1 \rangle & \langle 8,2  \rangle  \langle 8, 1 \rangle \\
-	\langle 2 \rangle \langle 7  \rangle \langle 1 \rangle  \langle 8 & \rangle \langle 2 \rangle  \langle 8 \rangle \langle 1 \rangle\\
-	\langle 2 \rangle \langle 1, 7 \rangle \langle 2, 8  \rangle & \langle 1, 8  \rangle \\
-	\langle 1, 2, 7  \rangle & \langle 1, 2, 8, 8 \rangle \\
-	\langle 1, 1, 2, 2&, 7, 8, 8 \rangle
-	\end{align*}
-	Analyse: 
-	\begin{align*}
-		  T(n) &\\ 
-		&= \mathcal{O}(n) + T (\lceil \frac{n}{2} ) \rceil + T(\lfloor \frac{n}{2} \rfloor )\\
-		&= \mathcal{O}(n \log n)\\ 
-	\end{align*}
-	
-	\[ T = \Theta (n) + T (\lceil \frac{n}{2} ) \rceil + T(\lfloor \frac{n}{2} \rfloor ) \]
-	
-	\begin{easylist}
-		& Problem:
-			&& Runderei
-		& Ausweg: 
-			&&genauer rechnen (siehe Buch)
-		& Dirty trick:
-			&& Eingabe auf \emph{Zweierpotenzen aufblasen}
-	\end{easylist}
-	
-	\paragraph{Dirty trick - Beispiel}
-	\[ (2^{\lceil \log n \rceil} -n) \times \infty \]
-	anhängen. \\
-	\( \rightarrow \) normales Master-Theorem anwendbar.\\
-	\emph{Zeit} \( \Theta (n \log n) \)
-	
-	\paragraph{Untere Schranken} 
-	Geht es schneller als \( \Theta (n log n) \)?\\
-	\emph{Unmöglichkeit}\\
-	-eine Verbesserung ist im Allgemeinen schwer zu beweisen\\
-	Sie erfordert eine Aussage über alle denkbaren Algorithmen.\\
-	\( \bot \) einschränkende Annahmen\\
-	
-	\paragraph{Eine Vergleichsbasierte untere Schranke} 
-	\emph{Vergleichsbassiertes Sortieren}\\
-	-- Informationen über Elemente nur durch Zwei-Wege-Vergleich \( e_i \leq e_j \) ?\\
-	Deterministische vergleichsbasierte Sortieralgorithmen brauchen \[ n \log n - \mathcal{O} (n) \] im schlechtesten Fall.\\
-	
-	\paragraph{Beweis:}
-	Betrachte Eingaben, die Permutationen vpn \( 1 \dots n \) sind.\\
-	Es gibt genau n! solche Permutationen.
-	
-	\subsection{Baumbasierte Sortierdarstellung} 
-	Mindestens ein Blatt pro Permutation von \( e_1 \dots d_n \) Ausführungszeit entspricht Tiefe T\\
-	
-	\paragraph{Beweis} 
-	Baum der Tiefe T hat höchstens \[ 2^{T} \text{ Blätter} \].
-	
-	\begin{align*}
-		\implies & 2^T \leq n!\\
-		\iff & T \geq \log \underbrace{n!}_{\geq (\frac{n}{e})^n} \geq \log \frac{n}{e}^n\\
-		=& n \log n - n \log e \\
-		=&n \log n - \mathcal{O}(n)\\
-	\end{align*}
-	
-	Einfache Approximation der Fakultät: \[ (\frac{n}{e})^n \leq n! \leq n^n \]
-	Beweis für linken Teil:\\
-	\begin{align*}
-		\ln n! =& \sum_{2 \leq i \leq n} \ln i \geq \int_{1}^{n} \ln x \dif x\\
-		=& [x(\ln x - 1)]^{x=n}_{x=1} \geq n(\ln n - 1)\\
-		\implies & n! \geq e^{n(\ln n-1)} \\
-		=& \frac{e^{n \ln n}}{e^n}\\
-		=& \frac{n^n}{e^n} \\
-		=& (\frac{n}{e})^n\\
-	\end{align*}
-	
-	\subsubsection{Randomisierung, Mittlere Ausführungszeit} 
-	\[ n \log n - \mathcal{O} (n) \]
-	
-	\subsection{Quicksort – erster Versuch}
-	
-	\paragraph{Idee}
-	Teile-und-Herrsche aber verglichen mit Mergesort "andersrum"\\
-	Leiste Arbeit vor rekursivem Aufruf\\
-	
-	\begin{algorithm}
-		\caption{Quick Sort}
-		\DontPrintSemicolon
-		\SetKwProg{Function}{Function}{}{}
-		\SetKwProg{Procedure}{Procedure}{}{}
-		\SetKwProg{Class}{Class}{}{}
-		\SetKw{Assert}{assert}
-		\SetKw{Invariant}{invariant}
-		\SetKwArray{Array}{Array}
+		\SetKwArray{Arraq}{Array}
 		
-		\Function{quickSort( s : Sequence of Element ) : Sequence of Element}{
+		\Class{ABTree( \( a \geq 2 : \mathbb{N}, b \geq 2a - 1 : \mathbb{N} \) of Element )}{
+			l\( \gets \langle \rangle \) : list of Element \;
+			r : ABItem( \( \langle \rangle , \langle l \rightarrow head \rangle \) ) \;
+			height \( \gets \) 1 : \( \mathbb{N} \) \;
 			\BlankLine
-			\If{(\(|s| \leq 1 \))}{
-				\Return{s}
+			\tcc{Locate the smallest Item with key \( k' \geq k \)}
+			\Function{locate(k : Key) : Handle}{
+				\Return{r\( \rightarrow \) locateRec(k, height)}\;
 			}
-			\BlankLine
-			pick some \( p \in s \) \;
-			\( a \gets \langle a \in s : e < p \rangle \) \;
-			\( b \gets \langle e \in s : e = p \rangle \) \;
-			\( c \gets \langle e \in s : e > p \rangle \) \;
-			\Return{ concatenation of quickSort(a), b, and quickSort(c) }
 		}
 	\end{algorithm}
 
-	\paragraph{Analyse im schlechtesten Fall}
-	\emph{Annahme:}\\
-	Pivot ist immer Minimum (oder Max.) der Eingabe \\
-	\[
-		T(n) = 
-	\begin{dcases*}
-		\Theta(1) & if \(n = 1\)\\
-		\Theta(n) +T(n-1) & if \(n \geq 2\)
-	\end{dcases*}
-	\]
-	
-	\begin{align*}
-		T(n) &= \Theta(n + [n - 1]) + \dots +1) \\
-		&= \Theta(n^2)\\
-	\end{align*}
-	
-	
+		\begin{algorithm}[H]
+			\caption{Locate}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Arraq}{Array}
 			
-			
+			\Function{ABItem::locateLocally(k : Key) : \( \mathbb{N} \)}{
+				\Return{\( min \{ i \in 1 \dots d : k \leq s[i] \} \)}\;
+			}
+			\Function{ABItem::locateRec(k : Key, h : \( \mathbb{N} \)) : Handle}{
+				i \( \gets \) locateLocally(k) \;
+				\If{ h = 1 }{
+					\If {\( c[i] \rightarrow e \geq k \)}{
+						\Return{c[i]}
+					} \Else{
+						\Return{c[i] \( \rightarrow \) next}
+					}
+				} \Else{
+					\Return{c[i] \( \rightarrow \) locateRec (k, h - 1)}
+				}
+			}
+		\end{algorithm}
+	
+		\paragraph{Laufzeit}
+		\[ \mathcal{O}(b \times \text{height}) \]
+		Lemma: \[ \text{height} = h \leq 1 + \lfloor \log_a \frac{n + 1}{2} \]
 		
-\section[Immer die Übersicht behalten]{Prioritätslisten}
-\section[Die eierlegende Wollmilchsau]{Sortierte Liste}
-\section[Beziehungen im Griff haben]{Graphrepräsentation}
-\section[Globalen Dingen auf der Spur]{Graphtraversierung}
-\section[Schnellstens zum Ziel]{Kürzeste Wege}
-\section[Immer gut verbunden]{Minimale Spannbäume}
-\section[Noch mehr Entwurfsmethoden]{Optimierung}
-\section{Nützlich für die Prüfung}
-	\begin{easylist}
-		& Logarhytmus Umformungsregeln für \(\mathcal{O}\)-Kalkül
-	\end{easylist}
+		\begin{algorithm}[H]
+			\caption{AB-Tree insert (vereinfacht)}
+			\caption{AB-Tree insert}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Procedure{ABTree::insert(e : Element)}{
+				(k, t) \( \gets \) r\( \rightarrow \)insertRec(e, height, l)\;
+				\If{t \( \neq \) null}{
+					r \( \gets \) allocate ABItem( \( \langle k \rangle , \langle r, t \rangle \) )\;
+					height++\;
+				}
+			}
+		\end{algorithm}
+		
+		\begin{algorithm}[H]
+			\caption{AB-Tree insert}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Function{ABItem::insertRec(e : Element, h : \( \mathbb{N} \), l : List) : Key \( \times \)ABHandle }{
+				i \( \gets \) locateLocally(e)\;
+				\BlankLine
+				\If{ h = 1}{
+					(k, t) \( \gets \) (key(e), l\( \rightarrow \)insertBefore(e, c[i])) \tcc*{base}
+				} \Else{
+					(k, t) \( \gets \) c[i]\( \rightarrow \)insertRec(e, h-1, l) \tcc*{recurse}
+					\If{t = null}{
+						(\( \bot \), null) \;
+					}
+				}
+				\BlankLine
+				\( s'\gets \langle s [1]  \dots s[i-1], k, s[i] \dots s[d-1] \rangle \) \tcc*{new splitter}
+				\( c'\gets \langle c[1] \dots c[i-1], t, c[i] \dots c[d] \rangle  \) \tcc*{new child}
+				\If{d \( <\) b}{
+					\(s, c, d \gets (s', c', d+1) \)\;
+					\Return{(\( \bot \), null)}\;
+				} \Else {
+					\tcp{split this node}
+					\(d \gets \lfloor \frac{(b+1)}{2} \rfloor \) \;
+					\( s \gets s'[ b+2 - d \dots b] \) \;
+					\( c \gets c'[b+2 - d \dots b + 1] \)\;
+					\Return{s'[b + 1 - d], allocate ABItems(s'1 ... b - d] c'[1 ... b + 1 - d])}
+				}
+			}
+		\end{algorithm}
+	
+		\begin{algorithm}[H]
+			\caption{Remove (vereinfacht)}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Procedure{remove(e)}{
+				Finde Pfad Wurzel \( \rightarrow \)e \;
+				l\( \rightarrow \)(e)\;
+				entferne key(e) in Vorgänger u \;
+				\If{\( u\rightarrow d = a - 1 \)}{
+					finde Nachbarn u'\;
+					\If{u'\( \rightarrow d + a - 1 \leq b \) }{
+						fus(u', u)\;
+						Weiter oben Splitter entfernen\;
+						\( \dots \)\;
+						ggf. Wurzel entfernen \;
+					} \Else{
+						balance(u', u)\;
+					}
+				}
+			}
+		\end{algorithm}
+
+	\section{Graphrepräsentation}
+	\[ G = (V, E) \]
+	\[ n = |V| \]
+	\[ m = |E| \]
+	Knoten: s, t, u, v, w, x, y, z \\
+	Kanten bzw. Knotenpaare \( e \in E \).\\
+	Ungerichtete Graphen sind (beidseitig) gerichtete Graphen\\
+	
+		\subsection{Grundlagen Graphentheorie}
+	
+			\subsubsection{Graphen und Relationen}
+			DAG Matrix Diagonale Diagonale plus eine Hälfte Nullen
+			Satz von Euler\\
+	
+		\subsection{Operationen}
+	
+		\begin{easylist}
+			& Statische Graphen
+				&& Konstruktion
+				&& Konversion
+				&& Ausgabe
+				&&Navigation
+					&&& Knoten v gegeben, finde ausgehende Kanten 
+			& Dynamische Graphen
+				&& Knoten \&{} Kanten
+					&&& Einfügen
+					&&& Löschen
+			& Weitere Operationen
+				&& Zugriff auf assoziierte Informationen z.B. Kantengewicht
+				&& Mehr Navigation
+					&&& Finde eingehende Kanten
+				&& Kantenanfragen
+					&&& \( (z, x) \in E? \)
+		\end{easylist}
+	
+		\subsection{Darstellungsformen}
+		
+			\subsubsection{Kantenfolgenrepräsentation}
+			\[ \text{Graph} \iff \langle (u, v), (v, w), (w, u), (u, w) \rangle \]
+			\begin{description}
+				\item[+] kompackt
+				\item[+] gut für I/O
+				\item[-] Fast keine nützlichen Operationen - außer alle Kanten zu durchlaufen
+			\end{description}
+		
+		
+			\subsubsection{Adjazenfelder}
+			Zwei Arrays, Array V speichert den Index der ersten ausgehenden Kante und\\
+			Array E speichert die Ziele und zwar gruppiert nach Startknoten\\
+			Dummy-Eintrag für Array-Ende \( V[n + 1] \) speichert m + 1\\
+			\[ V \coloneqq [1 \dots n + 1] \]
+			\[ E \coloneqq [1 \dots m + 1] \]
+			\\
+			\[ \text{Ausgangsgrad}(v) = V[ v + 1] - V[v] \]
+		
+			\begin{algorithm}
+				\caption{KSort ähnlich BucketSort}
+				\DontPrintSemicolon
+				\SetKwProg{Function}{Function}{}{}
+				\SetKwProg{Procedure}{Procedure}{}{}
+				\SetKwProg{Class}{Class}{}{}
+				\SetKw{Assert}{assert}
+				\SetKw{Invariant}{invariant}
+				\SetKwArray{Array}{Array}
+				
+				\Function{adjacencyArray(EdgeList)}{
+					\( V = \langle 1, 0 \dots 0 \rangle \) : \Arraq{\( 1 \dots n + 1 \)} of \( \mathbb{N} \) \;
+					\ForEach{\((u, v) \in  \) Edgelist}{
+						V[u]++ \tcc*{count}
+					}
+					\For{\( v \gets 2 \text{ to } n + 1 \)}{
+						\( V[v] += V[v - 1] \) \tcc*{prefix sums}
+					}
+				\ForEach{\( (u, v) \in  \) Edgelist}{
+					\( E [ --- V[u]] \gets v \) \tcc*{place}
+				}
+			\Return{\( (V, E) \)}
+				}
+			\end{algorithm}
+			
+			\paragraph{Operationen Adjazenzfelder}
+			\begin{easylist}
+				& Navigation 
+					&& einfach
+				& Kantengewichte
+					&& E wird Feld/r von Records
+				& Knoteninfos
+					&& V wird Felde/r von Records
+				& Eingehende Kanten 
+					&&umgedrehten Graphen speichern
+				& Kanten löschen
+					&& Explizite Endindizes
+				& Batched updates
+					&& Neu aufbauen
+				& Kantenanfragen
+					&& Hashtabelle \(H_E\) speichert (ggf. zusätzlich) alle Kanten
+					&& Unabhängig von der sonstigen Graphenrepräsentation
+			\end{easylist}
+	
+			
+			\subsubsection{Adjazenzliste}
+			Speichert (doppelt) verkettete Listen adjazenter Kanten für jeden Knoten.\\
+			\begin{description}
+				\item[+] einfaches Einfügen von Kanten
+				\item[+] einfaches Löschen von Kanten (ordnungserhaltend)
+				\item[-] mehr Platzbedarf als Adjazenzfelder 3x
+				\item[-] mehr Cache-Misses
+			\end{description}
+			
+			Die (Graph)Datenstruktur sollte an die Anwendung angepasst sein.
+			\begin{easylist}
+				& Ziel
+					&& Schnell \&{} kompakt
+				& Entwurfsprinzip
+					&& make the common case fast
+				& Listen möglichst vermeiden
+				& Mögliches Problem
+					&& Software-Engineering-Alptraum
+					&& Möglicher Ausweg
+						&&& Trennung von Algorithmus \&{} Repräsentation
+			\end{easylist}
+			
+			\subsubsection{Adjazenz-Matrix}
+			\[ A \in \{0, 1\}^{n \times n} \text{ with } A(i, j) = [(i, j) \in E ] \]
+			\begin{description}
+				\item[++] verbindet Lineare Algebra mit Graphentheorie
+				\item[+] platzeffizient für sehr dichte Graphen
+				\item[+] einfache Kantenanfragen
+				\item[--] langsame Navigation
+				\item[-- --] platzineffizent wenn der Graph nicht sehr dicht ist
+			\end{description}
+			Beschleunigungstechniken\\
+			\begin{easylist}
+				& \( \mathcal{O}(\log k) \) Matrixmultiplikation für Potenzberechnung
+				& Matrixmultiplikation in subkubischer Zeit 
+					&& z.B. Strassen-Algorithmus
+			\end{easylist}
+			Pfade zählen, Beweis ansehen\\
+			
+			\subsubsection{Implizite Repräsentation}
+			\paragraph{Intervallgraphen}
+			\[ V = \{[a_1, b_1] \dots [a_n, b_n]\} \]
+			\[ E = \{\} \]
+			algo\\
+			
+			\subsubsection{Zusammenfassung}
+		
+		\subsection{DAG-Erkennung}
+		isdag (directed azyclicl graph)\\
+		\begin{algorithm}
+			\DontPrintSemicolon
+			\SetKwProg{Function}{Function}{}{}
+			\SetKwProg{Procedure}{Procedure}{}{}
+			\SetKwProg{Class}{Class}{}{}
+			\SetKw{Assert}{assert}
+			\SetKw{Invariant}{invariant}
+			\SetKwArray{Array}{Array}
+			
+			\Function{isDAG(\(G = (V, E)\))}{
+				\While{\( \exists v \ in V : \text{indegree}(v) = 0 \)}{
+					\Invariant{G is a DAG \( \iff \) the input graph is a DAG}\;
+					\( V \gets V \setminus \{ v \} \)\;
+					\( E \gets E \setminus (\{ v \} \times V \cup V \times \{v\} ) \) \;
+				}
+				\Return{\( |V| = 0 \)}
+			}
+		\end{algorithm}
+	
+		indegree Eingangsknoten\\
+		ist arzyklisch\\
+		
+		\subsection{Graphtraversierung}
+		\subsubsection{Kantenklassifizierung}
+		tree oder eine der anderen Kategorien\\
+		\begin{easylist}
+			& Abkürzungen
+				&& forward
+				&& backward
+				&& cross
+			& Baumkanten tree
+		\end{easylist}
+		
+			\subsubsection{Breitensuche}
+			Def\\
+			Breitensuchschema\\
+			Schicht für Schicht aufbauen\\
+			Algo\\
+			Parent Erweiterung, Startknoten hat sich selbst als Parent\\
+			Alternative Repräsentation\\
+			\subsubsection{Tiefensuche}
+			Tiefensuchschema\\
+			depth first search, Vorteil Rekursion möglich\\
+			Vielleicht mal Wikipedia abchecken?\\
+			
+			\subsubsection{DFS-Baum}
+			\paragraph{Nummerierung}
+			\paragraph{Fertigstellungszeit}
+			\paragraph{Kantenklassifizierung}
+			
+			\subsection{Topologische Sortierung}
+			Alle Kanten gehen nach rechts.\\
+			\paragraph{Theorem 1}
+			\paragraph{Theorem 2}
+			\subsubsection{Topologische Sortierung mit Tiefensuche}
+			Beweis anschauen\\
+		
+		\subsection{BFS vs. DFS}
+		
+	\section{Kürzeste Wege Problem}
+		\subsection{Dijkstra}
+		
+	
+	\section{Minimale Spannbäume}
+	\section[Noch mehr Entwurfsmethoden]{Optimierung}
+	\section{Nützlich für die Prüfung}
+		\begin{easylist}
+			& Logarhytmus Umformungsregeln für \(\mathcal{O}\)-Kalkül
+		\end{easylist}
 
 \end{document}
