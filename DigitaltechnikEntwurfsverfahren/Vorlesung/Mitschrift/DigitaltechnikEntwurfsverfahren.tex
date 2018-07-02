@@ -1828,7 +1828,7 @@
 				 \paragraph{Huntingtonsche Axiome in der Schaltalgebra}
 				 
 				 H0 Abgeschlossenheit \\
-				 H1 Assoziativgesetz:
+				 H1 Kommutativgesetz:
 				 \[ a \vee b = b \vee a \]
 				 \[ a \wedge b = b \wedge a \]
 				 \\
@@ -2126,7 +2126,7 @@
 			& \text{Produktterm wird zu 0}\\	
 			\end{align*}
 			
-			\subsubsection{Implikat \( \implies \) Konjunktion }
+			\subsubsection{Implikant \( \implies \) Konjunktion }
 			\paragraph{Definition}
 			Ein Produktterm \( K(x_1, \dots x_n) \) heißt \emph{Implikant} einer Booleschen Funktion \( y(x_1, \dots x_m) \), \\
 			wenn \[ K \implies y \] \\
@@ -2143,7 +2143,7 @@
 			\( (\vee c )\) ist hier irrelevant, da \( a \wedge b = \) wahr sind ist dies auch bei \(y_1 \) so, egal welcher Wert \( c \) hat. \\
 			Im Gegensatz dazu ist \( y_2 \) kein Implikant.\\
 			
-			\subsubsection{Minterm}
+			\subsection{Minterm}
 			\paragraph{Definition}
 			Ein Implikant einer Booleschen Funktion \( y(x_1, \dots x_n) \) heit \emph{Minterm},\\
 			wenn jede Variable \( x_i \) der Funktion \(y\) im Implikanten als Literal \emph{genau einmal} vorkommt.
@@ -2196,6 +2196,7 @@
 			\end{align*}
 			
 			\subsubsection{Dualitätsprinzip}
+			\label{subsubsec:dualitaetsprinzip}
 			Man ersetze 
 			\[ \vee \leftrightarrow \wedge \]
 			\[ 0 \leftrightarrow 1 \]
@@ -2227,7 +2228,7 @@
 			Das heißt für jede Belegung \( B \in \{0, 1\}^n \) gilt:\\
 			Wenn, \( D(B) = 0 \), dann ist auch \( y(B) =0 \)
 			
-			\subsubsection{Maxterm}
+			\subsection{Maxterm}
 			\paragraph{Definition}
 			Ein Implikat einer Boolschen Funktion \( y( x_1 \dots x_m) \) heißt \emph{Maxterm}, wenn ein Literal jeder Variable \(x_i\) der Funktion \(y\) im Implikaten \emph{genau einmal} vorkommt.
 			
@@ -2340,7 +2341,23 @@
 				= & abc \vee a \overline{b} c \vee \overline{a} bc \vee \overline{ab} c \vee \overline{abc}\\
 			\end{align*}
 			
-			0:10:03 Dualer Entwicklungssatz 
+			\subsubsection{Dualer Entwicklungssatz}
+			Das das Dualitätsprinzip gilt, siehe  \autoref{subsubsec:dualitaetsprinzip},\\
+			ist folgendes Möglich:
+			
+			\paragraph{Shannonscher Entwicklungssatz}
+			Disjunktive Form:
+			\begin{align*}
+				f(x_1 \dots x_n) = & [ x_i \wedge f(x_1 \dots 1_{x_i}  \dots x_n)]\\
+											\vee & [\overline{x_i} \wedge f(x_1 \dots 0_{x_i} \dots x_n ) ]\\
+			\end{align*}
+			
+			Konjunktive Form:
+			\begin{align*}
+				f(x_1 \dots x_n) = & [ x_i \vee f(x_1 \dots 0_{x_i}  \dots x_n)]\\
+				\wedge & [\overline{x_i} \vee f(x_1 \dots 1_{x_i} \dots x_n ) ]\\
+			\end{align*}
+			 
 			0:12:20 Deutung:Normalformen 
 			0:18:49 Beispiel:DNF und KNF 
 			0:25:04 DNF/KNF: Kurze Schreibweise 
@@ -2352,25 +2369,311 @@
 			 \paragraph{Anmerkung!}
 			 \subsection{Funktionsdarstellung im Würfelkalkül}
 			 
-			0:44:43 Würfelkalkühl(1) 
-			0:47:25 Würfelkalkül(2) 
-			0:50:13 Würfelkalkül(3) 
+			 
 			\subsubsection{NAND/NOR-Konversion}
 			0:58:02 NAND-Konvertierung 
 			1:03:08 NAND-Funktion 
 			1:05:50 NOR-Konversion 
 			1:09:37 NAND-Konversion \\
-			1:11:31 Realisierung von Schaltnetzen 
 			
-			\subsubsection{Minimalformen}
-			\subsubsection{Funktionsdarstellung im Würfelkalkül}
-
 			
 		\subsection{Realisierung von Schaltnetzen}
-		\subsection{Entwurf von Schaltnetzen}
-		\subsection{Laufzeiteffekte}
+		\subsubsection{Gatter-Grundlagen}
+		0:00:33 Halbleiter-Grundlagen 
+		0:02:01 Silizium und Germanium im Periodensystem 
+		0:03:15 Halbleiter(Silizium, Germanium) 
+		0:07:14 Pn-Übergang 
+		0:09:16 Ist der Widerstand der Sperrschicht steuerbar? 
+		0:11:10 Dioden-Kennlinie 
+		0:12:21 Wie kann man daraus ein steuerbares technisches Bauelement? 
+		0:17:48 Bipolar-Transistoren 
+		0:20:16 MOSFET: Metal Oxid Semiconductor Field Effect Transistor 
+		0:23:36 Selbstsperrende n-Kanal-MOSFETs 0:30:29 Selbstsperrende p-Kanal-MOSFETs 
+		0:32:36 Selbstleitende n-Kanal-MOSFETs 0:34:42 Schaltsymbole für MOSFETs 
+		0:37:23 Schalterebene 
+		0:38:16 Transistor als Schalter 
+		0:43:10 Schaltstärken eines pMOS-Transistors 
+		0:45:20 Transmission-Gate 
+		0:54:24 Schalter und logische Verknüpfungen 
+		0:57:48 CMOS-Technologie 
+		0:58:44 Zusammenschaltung von p- und n-Kanal-MOSFETS 
+		1:01:22 Inverter in CMOS-Technologie 
+		1:01:57 NAND-Funktion in CMOS
+		
+		\subsection{Übung 2 SS 2017}
+		0:03:33 Aufgabe 1 
+		0:07:14 Aufgabe 2 
+		0:12:34 Boolesche Funktionen 
+		0:15:02 Zweistellige Boolesche Funkionen 
+		0:20:53 Normalformen 
+		0:26:08 Zweistufige disjunktive Schaltungen 
+		0:28:09 Zweistufige Konjunktive Schaltungen 
+		0:29:22 DNF oder KNF aus beliebiger Form 
+		0:30:19 Aufgabe 3 
+		0:43:14 Aufgabe 4 
+		0:53:05 Aufgabe: Farmer's Dilemma 
+		1:11:40 Aufgabe 6 
+		1:15:32 Aufgabe 7 
+		1:20:26 Aufgabe 8 
+		
+		V11
+		0:00:14 Wiederholung: CMOS-Technologie 
+		0:01:17 Wdh. Inverter in CMOS-Technologie 
+		0:04:06 Wdh. NAND-Funktion 
+		0:06:27 Wdh. NOR-Funktion 
+		0:07:42 Prinzipieller Aufbau einer CMOS-Schaltung 
+		0:10:17 Vorteile dieser Konstruktion 
+		0:11:13 Ideales Modell 
+		0:12:47 Realeres Modell 
+		0:14:26 Spannungsverlauf des Modells 
+		0:18:06 Schlussfolgerungen 
+		0:21:13 Entwurf von Schaltnetzen 
+		0:24:54 Randbedingungen und Entwurfsziele: Technische Kriterien 
+		0:28:30 Ökonomische Kriterien (Kosten) 
+		0:29:43 Entwurfsziele 
+		0:31:47 Minimierungsverfahren 
+		0:33:41 Arten von Minimierungsverfahren 
+		0:36:16 Das KV-Diagramm (nach Karnaugh und Veitch) 
+		0:56:00 Eigenschaften der KV-Diagramme 
+		1:05:33 Implikanten im KV-Diagramm 
+		1:13:24 Definition: Primimplikant 
+		1:19:30 Minimierung einer zweistufigen Schaltfunktion 
+		1:21:51 Disjunktive Minimalform
+		
+		Ü3
+		0:00:08 3. Übung 0:00:42 CMOS 0:08:19 Schaltsymbole für MOSFETs 0:10:42 Aufgabe 1 0:19:40 Aufgabe 2 0:23:02 Schaltfähigkeiten von nMOS and pMOS 0:26:02 Transmission-Gate 0:28:31 Aufgabe 3 0:42:51 Prinzipieller Aufbau einer CMOS Schaltung für n-stellige Boolesche Funktion 0:43:53 Aufgabe 4 0:51:13 AND-OR-Inverter 0:57:26 Aufgabe 5 1:06:56 Aufgabe 6 
+		
+		\subsection{Verwechslungsgefahren und Umformungsbeispiele}
+			\subsection{Verwechslungsgefahren}
+			\begin{table}
+				\centering
+				\begin{tabular}{|c|c|c|c|c|}
+					\hline
+					a & b & \(\overline{a \wedge b} \) & \( \overline{a} \vee \overline{b} \)  & \( a \overline{\wedge} b \) \\
+					\hline
+					\( 0 \) & \( 0 \) & \( 1 \) & \( 1 \) & \( 1 \) \\
+					\( 0 \) & \( 1 \) & \( 1 \) & \( 1 \) & \( 1 \) \\
+					\( 1 \) & \( 0 \) & \( 1 \) & \( 1 \) & \( 1 \) \\
+					\( 1 \) & \( 1 \) & \( 0 \) & \( 0 \) & \( 0 \) \\
+					\hline
+				\end{tabular}
+			\end{table}
+			\subsubsection{De Morgansche Regel}
+			\[
+			\overline{a \wedge b}
+			= \overline{a} \vee \overline{b}
+			\]
+			\subsubsection{NAND-Konvertierung}
+			\begin{align*}
+				a \wedge b 
+				= \overline{\overline{a \wedge b }}
+				= \overline{(a \overline{\wedge} b )}
+			\end{align*}
+			\subsubsection{NOR-Konvertierung}
+		
+		\section{Entwurf von Schaltnetzen}
+			\subsection{Randbedingungen und Entwurfsziele}
+			\subsection{Minimierungsverfahren}
+			Realisierung der Schaltznetze ind zwei Stufiger Form (DF, KF)\\
+			\emph{Minimalformen} sind die Darstellungsformen, deren Realisierung die geringsten Kosten verursacht.\\
+			\emph{Minimierung} ist die Erzeugung von Minimalformen\\
+			\\
+			Es gibt drei Arten von Minimierungsverfahren:
+			\begin{easylist}
+				& Graphische Verfahren
+				& Tabellarische Verfahren
+				& Algebraische Verfahren
+			\end{easylist}
+		
+			\begin{easylist}
+				& Graphische Verfahren
+					&& Graphische Verfahren
+				& Tabellarische Verfahre
+				&& Quine-McCluskey-Verfahren
+				&& Consensus-VerfahrenVerfahrenn
+				& Algebraische Verfahren
+					&& Umformung Boolesche Algebra
+					&& Nelson-Verfahren
+			\end{easylist}
+		
+			\subsection{Graphische Verfahren}
+			\subsection{KV-Diagramme}
+				KV-Diagramme stellen eine boolesche Funktion dar.\\
+				Um ein KV-Diagramm zu erstellen, erweitern wir das Diagramm um sein Spiegelbild so das es quadratisch bleibt.\\
+				Das Offset beträgt dabei \(2^n\), n ist die Anzahl der Erweiterungen.\\
+				\\
+				\paragraph{Besonderheiten}
+				Symmetrisch zu einer Achse liegende Minterme unterscheiden sich lediglich in einer Variablen.\\
+				Symetrisch zu Achsen des KV-Diagramms liegende Minterme lassen sich zu einem einfacheren Term zusammenfassen.\\
+				
+				\subsubsection{Implikanten im KV Diagramm}
+				
+				\paragraph{Definition Implikant}
+				g ist implikant von f, wenn g die Funktion f impliziert, daher wenn die Menge aller Eins-Stellen von g in der Menge aller Eins-Stellen von f enthalten ist.\\
+				Implikanten sind Blöcke und Produktterme, die nur Einsen enthält.[KEINE SUMMENTERME!]\\
+				
+				\paragraph{Implikanten k.Ordnung}
+				\begin{easylist}
+						& 0. Ordnung
+							&& Minterme
+						& 1. Ordnung
+							&& Zusammenfassung von zwei Mintermen
+						& 2. Ordnung
+							&& Zusammenfassung zweier Implikanten 1. Ordnung
+				\end{easylist}
+				
+				\paragraph{Primimplikant}
+				\paragraph{Definition}
+				Ein Implikant p ist \emph{Primimplikant}, falls es keinen Implikanten \(q \neq p \), der von p impliziert wird
+				\[ \forall q \neq p: \neg (p \implies q) \]
+				daher p ist von größtmöglicher Ordnung (p umfasst einen maximalen großen Einsblock).\\
+				\emph{Jede Funktion ist als Disjunktion ihrer Primimplikanten darstellbar!}\\
+				
+				\paragraph{Primimplikanten Herauslesen}
+				Mann versucht, möglichst große Blöcke von Einsen im Diagramm zu finden, wobei jeder Einsblock \( 2^k \) Felder umfassen muss.\\
+				
+				\subsubsection{Minimierung einer zweistufigen Schaltfunktion}
+				\begin{easylist}[enumerate]
+					& Schritt
+						&& Bestimmung der Primimplikanten = Implikanten mit der geringsten möglichen Anzahl von Literalen.
+						&& \emph{Gatter mit der geringst möglichen Zahl an EIngängen}
+					& Schritt
+						&& Auswahl einer minimalen Anzahl von Primimplikanten zur Überdeckung der Funktion
+						&& \emph{Minimale Anzahl von Gattern}
+				\end{easylist}
+			
+				\paragraph{Minimale Überdeckung}
+				\paragraph{Definition Kernprimimplikant}
+				Ein Primimplikant ist ein \emph{Kernprimimplikant}, wenn er einen Minterm der Funktion überdeckt, der von keinem anderen Primimplikanten überdeckt wird.\\
+				\\
+				Kernprimimplikanten müssen in der disjunktiven Minimalform vorkommen.\\ 
+				
+				Irredundante Überdeckung \( \implies \) disjunktive Minimalform\\
+			
+			\subsection{Tabellarische Verfahren}
+				\subsubsection{Quine-McCluskey-Verfahren}
+				
+				
+				\subsubsection{Consensus-Verfahren}
+				
+			\subsection{Nelson-Verfahren}
+				
 	
+		\section{CMOS-Technologie}
+		Ein selbstsperrender nMOS-Transitor schaltet durch (Source \( \rightarrow \) Drain), wenn am Gate eine logische 1 anliegt. Pfeil nach links, zum Kondensator.\\
+		Überträgt gut eine 0 und schlecht eine 1.\\
+		Gut = niedriger Widerstand\\
+		Schlecht = hohen Widerstand\\
+		\\
+		pMOS \( \implies \) Dualitätsprinzip -- selbstsperrend, schaltet durch wenn 0 anliegt. Pfeil nach rechts, weg vom Kondensator.\\
+		Überträgt gut eine 1 und schlecht ein 0.\\
+		\\
+		\[0  = low \]
+		\[1 = high \]
+		
+		\subsection{Transmission Gate}
+		Ein Transmission Gate benutzt einen nMos und einen pMOS in parallel Schaltung.\\
+		Hat einen niedrigen Widerstand bei 0 und 1 bzw. low und high, daher 0 und 1 werden ideal übertragen. Beim Schalten hat es einen erhöhten Widerstand. \\
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{l l | l}
+				nMOS & pMOS & Zustand \\
+				\hline
+				hohe Spannung 1 & niedrige Spannung 0 & sperrend\\
+				niedrige Spannung 0 & hohe Spannung 1 & leitend\\
+			\end{tabular}
+		\caption{Interne Zustände einen Transmission-Gates}
+		\end{table}
+		
+		\subsection{Prinzipeller Aufbau einer CMOS Schaltung}
+		Die Schaltung wird in zwei Netze unterteilt, p-Netz und n-Netz. Wenn ein Teilnetz schaltet muss das andere sperren. \\
+		Dies funktioniert nicht für beliebige Boolesche Funktionen. Sondern nur bei Dis- und Konjunktionen, bei denen alle Variablen negiert vorkommen, lassen sich so realisieren.\\
+		Andere Boolesche Funktionen müssen aus einfacheren Funktionen zusammengesetzt werden.\\
+		
+		\subsection{Tri-State-Treiber}
+		Hat drei Zustände:\\
+		--Hochohmig\\
+		--0\\
+		--1\\
+		\\
+		Nützlich um zwei System voneinander zu entkoppeln, wollen beide schreiben, kann keiner Schreiben.\\
+		
+		\section{Spezielle Strukturen}
+			 \subsection{Multiplexer}
+			 n Steuerleitungen\\
+			 \( 2^n \) Eingänge\\
+			 \\
+			 n Steuerleitungen schalten \(2^n \) Eingänge auf den Ausgang\\
+			 \( 2^n \) zu 1- Multiplexer.\\
+				 \subsubsection{2:1-Multiplexer}
+			\subsection{Implementierungstabelle}
+		
+	\section{Laufzeiteffekte}
+	
+		\subsection{Totzeitmodell}
+		Realles Glied + verzögerungs Glied \( \tau \)\\
+		
+		\paragraph{Addition von Totzeiten}
+		\begin{align*}
+			\text{Vorher}:
+			d(t) -- \sum_1 -- &b(t) -- \sum_2 -- c(t)\\
+			\\
+			b(t) =& d(t - \sum_1)\\
+			c(t) =& d(t - \sum_2)\\
+			=& d(t - (\sum_1 + \sum_2))\\
+			\\
+			\text{Nachher}:
+			d(t) &-- \sum_1 + \sum_2 -- c(t)
+		\end{align*}
+		
+		\paragraph{Durchschiebbarkeit von Totzeiten}
+		\begin{align*}
+			\text{Vorher}: a_1(t)----&|\\
+											   	&| f-- b(t) --- \sum --- c(t)\\  
+									a_2(t)----&|\\
+			\\
+			b(t) =& f(a_1(t), a_2 (t))\\
+			c(t) =& b(t - \sum)\\
+			=& f(a_1 (t - \sum), c_2 (t - \sum)\\
+			\\
+			\text{Nachher}:	a_1(t) -- \sum -- a_1 ( t- \sum ) -- &|\\
+																								&| f ---- c(t)\\
+									a_1(t) -- \sum -- a_2 ( t- \sum ) -- &|\\
+		\end{align*}
+		
+		\subsection{Hasard-Fehler}
+		\emph{Hasard-Fehler:} Eingang Ausgang liegt nicht monoton an, also zwischenzeitlich wird ein anderes, durch die Funktion nicht definiert, falsches Ergebnis erzeugt. Die Schaltung kann hasardbehaftet sein, also einen Hasard haben, auch wenn das Ergebnis korrekt ist. Es werden immer nur Übergänge betrachtet. \\
+		Ein Übergang ist ein Zustandswechsel, der mit dem Variabelwechsel beginnt und mit dem Ruhezustand endet.\\
+		\\
+		Bei Übergangen wird der Anfangs und Endwert des \emph{Ausgangssignal} betrachtet:
+		\begin{easylist}[itemize]
+				&& Statischer 0-Übergang
+					&&& Anfangswert 0, \\
+					Endwert 0
+				&& Dynamischer 01-Übergang
+					&&& Anfangswert 0, \\
+					Endwert 1
+				&& Dynamischer 10-Übergang
+					&&& Anfangswert 1, \\
+					Endwert 0
+				&& Statischer 1-Übergang
+					&&& Anfangswert 1, \\
+					Endwert 0
+		\end{easylist} 
+	
+			\subsubsection{Funktionshasard}
+			Kann nicht behoben werden
+			
+			\subsubsection{Strukturhasard}
+			Kann behoben werden:\\
+			-- leicht wenn nur eine Eingangs-Variable beim Übergang geändert wird. statischer 0 oder 1 Hasard. \( \rightarrow \) \emph{Satz von Eichelberger} \\
+			-- sonst schwierig, weil eine Änderung an einer anderen Stellen einen Hasard erzeugen kann.\\
+		
+		\subsubsection{Satz von Eichelberger}
+		Alle statischen Strukturhasards können beseitigt werden, wenn das Schaltnetz als Disjunktion aller Primimplikanten der Funktion realisiert wird. Gilt also nur für den Wechsel von einer Eingangs-Variable und den Fall eines statischen Strukturhasards.
+		
 	\section{Schaltwerke}
+	
 	\section{Rechnerarithmetik}
 	
 \end{document}
