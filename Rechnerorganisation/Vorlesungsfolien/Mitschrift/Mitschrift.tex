@@ -1,0 +1,345 @@
+\documentclass[a4paper]{scrartcl}
+
+% Für mathematische Symbole
+\usepackage{mathtools}
+\usepackage{amsfonts}
+
+\usepackage{import}
+
+\usepackage{polyglossia}
+\setdefaultlanguage[ 
+	spelling = new, 
+	babelshorthands = true ]
+{german}
+
+% Für Pseudo-Code
+\usepackage[ruled,vlined]{algorithm2e}
+
+%Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks   = true, %Colours links instead of ugly boxes
+	urlcolor     = blue, %Colour for external hyperlinks
+	linkcolor    = blue, %Colour of internal links
+	citecolor   = red %Colour of citations
+}
+
+% Glossar
+% nomain - wenn importiert
+% automake - für autocompile
+%\usepackage[xindy, automake]{glossaries}
+%\subimport{../../../../KIT/LaTex/Glossary/}{MathematikGlossary}
+%\subimport{../../../../KIT/LaTex/Glossary/}{TheoretischeInformatikGlossary}
+%\subimport{../../../../KIT/LaTex/Glossary/}{TechnischeInformatikGlossary}
+
+%Aritmethikoperationen
+%\usepackage{basicarith}
+
+%Für Farben
+\usepackage[dvipsnames]{xcolor}
+\definecolor{TextMarkerGelb}{RGB}{255, 255, 120}
+\usepackage{soul}
+\sethlcolor{TextMarkerGelb}
+
+% Fonts
+\usepackage{fontspec}
+\usepackage{unicode-math}
+
+\setmainfont{Roboto}
+\setsansfont{Roboto}
+\setmonofont{Roboto}
+
+% Math-Font
+\setmathfont{Roboto} % for math symbols, can be any other OpenType math font
+
+% Aside Kommentar
+\usepackage{marginnote}
+
+% Package für bessere Liste
+\usepackage{scrextend}
+
+% Mehrere Zeilen in einer Table für einen Eintrag nutzen
+\usepackage{multirow}
+
+% Durchstreichen
+\usepackage[normalem]{ulem}
+
+% Coole Listen [Seperator-zeichen]
+\usepackage[ampersand]{easylist}
+%\ListProperties(Style**=$\diamond$)
+
+%Ermöglicht [H]
+\usepackage{float}
+
+%\DeclareMathSizes{10}{18}{12}{8}   % For size 10 text
+%\DeclareMathSizes{11}{19}{13}{9}   % For size 11 text
+%\DeclareMathSizes{12}{20}{14}{10}  % For size 12 text
+
+% Paragraph-Einstellung
+\usepackage[explicit]{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}[block]
+{\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1}}
+\titleformat{name=\paragraph,numberless}[block]
+{\normalfont\normalsize\bfseries}{}{0pt}{\uline{#1.}}
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{Roboto}
+\setsansfont{Roboto}
+\setmonofont{Roboto}
+\setmathfont{Asana Math} % for math symbols, can be any other OpenType math font
+\setmathfont[range=\mathup]  {Roboto}
+\setmathfont[range=\mathbfup]{Roboto}
+\setmathfont[range=\mathbfit]{Roboto}
+\setmathfont[range=\mathit]  {Roboto}
+
+% \emph{} - ändern
+\DeclareTextFontCommand{\emph}{\bfseries}
+
+% Neuer Befehl für not <->
+\newcommand{\nleftright}{\mathrel{\ooalign{$\Leftrightarrow$\cr\hidewidth$/$\hidewidth}}}
+
+%\makeglossaries
+
+%opening
+\title{Mitschrift Digitaltechnik und Entwurfsverfahren}
+
+\author{Paul Züchner}
+
+
+\begin{document}
+	
+	\maketitle
+	\tableofcontents
+	\newpage
+	
+	\section{Anforderungen höherer Programmiersprachen}
+		\subsection{Programmiersprache C}
+		\begin{labeling}{Maschinensprache:}
+			\item[Maschinensprache:]Anweisung die für den Prozessor ohne weiteres verständlich ist
+			\item[Assemblersprache:]  Symbolische Repräsentation der Maschinensprache, die für den Menschen verständlich und anschaulich ist z.B. add \$s2, \$s1, \$s0 \# \$s2:= \$s1 + \$s0
+		\end{labeling}
+	
+		C ist sehr effizent.\\
+		Hat die Datentypen:
+		\begin{easylist}[itemize]
+			& char 
+				&&& meist 1 Byte
+			& int
+				&& short int
+				&& long int
+				&& long long int
+					&&& kombinierbar mit un/signed
+					&&& meist 2 oder 4 Byte 
+			& float
+				&& Gleitkommazeilen
+					&&& meist 4 Byte
+			& double
+				&& Gleitkommazeilen mit doppelter Genauigkeit
+					&&& meist 8 Byte
+		\end{easylist}
+		
+		Es gilt in C : \[ sizeof(char) \leq sizeof(short int) \leq sizeof(int) \leq sizeof(long int) \leq sizeof(long long int) \]
+	
+		Parameter werden als Werte an die Funktionen übergeben, daher kann eine Funktion diese nicht ändern\\
+		Zeiger/Pointer deren Zielobjekt kann geändert werden\\
+		
+	\section{Grundlegendes Rechnermodell}
+		\subsection{Zentraleinheit (central processing unit, CPU)}
+		Besteht aus Stuerwerk und Rechenwerk\\
+		Verarbeitet Daten Gemäß eines Programms\\
+		
+			\subsubsection{Steuerwerk (Leitwerk, Control unit, CU)}
+			Holt die Befehle eines Programms aus dem Speicher \\
+			Dekodiert sie\\
+			Steuert ihre Ausführung in der verlangten Reihenfolge durch	Steuer- und Status-Signale \\
+			\\
+			Befehlsregister\\
+			Dekoder\\
+			Taktgenerator\\
+			
+			\subsubsection{Rechenwerk (Operationswerk, Ausführungseinheit, ALU)}
+			Führt die Rechenorperationen (z.B. arithmetisch/logische Operationen aus)\\
+			Auszuführende Operationen werden durch die 	Steuersignale bestimmt \\
+			Liefert seinerseits Statussignale an das Steuerwerk zurück\\
+			\\
+			\paragraph{Statusregister}
+			Flags:\\
+			-- Übertragsbit (Carry Flag CF)\\
+			-- Hilfsübertragsbit (Auxiliary Carry AF)\\
+			-- Nullbit (Zero Flag ZF)\\
+			-- Vorzeichenbit (Sign Flag SF)\\
+			-- Überlaufbit (Overflow Flag OF)\\
+			-- Even Flag EF\\
+			-- Paritätsbit (Parity Flag PF)\\
+			
+		\subsection{Speicherwerk}
+		Jede Speicher ist \emph{eindeutig} durch ihre Adresse identifizierbar\\
+		Dort werden Programme und Daten abgelegt (von-Neumann-Konzept)\\
+		Alternativ: Harvard-Architektur	mit getrenntem Programm- und Datenspeicher\\
+		
+		\subsection{Verbindungsnetzwerk}
+		Verbindet die Komponenten für den Austausch von Daten\\
+		Bus \( \iff  \) eine Leitung auf denen Daten transportiert werden\\
+		-- Adressleitungen: Adressinformationen \\
+		-- Datenleitungen: Daten und Befehle zum Prozessor \\
+		--Steuerleitungen: Steuer- oder Statusbefehle \\
+		
+		\subsection{Ein-Ausgabewerk}
+		Drucker, Bildschirm...\\
+		
+		\subsection{Maschinenbefehlszyklus}
+		Holphase \( \rightarrow \) Dekodierphase  \( \rightarrow \) Ausführungsphase\\
+		
+		\subsection{Mima}
+		Speicherzugriffe brauchen 3 Taktzyklen\\
+		\\
+		24 Bit Befehle\\
+		OpCode 4 Bits, Addresse oder Konstante 20 Bit\\
+		\begin{table}[H]
+			\begin{tabular}{|l|c|c|}
+				\hline
+				Name & Ansteuerrungsbusse & Mit Datenbus verbunden \\
+				\hline
+				Akku  & A\( _r \) \& A\(_w\) \& N & 24 Bit, bidirektional\\
+				Eins  & E & 24 unidirektional\\
+				Speicheradressregister  & S & 20, uni\\
+				SpeicherdecodeRegister & D\( _r \) \& D\(_w\) & 20, uni\\
+				Instructenadressregister & P\( _r \) \& P\(_w\) & 20, bi\\
+				Instructenregister & I\( _r \) \& I\(_w\) & 24, bi \\
+				\hline
+			\end{tabular}
+		\end{table}
+		
+		\subsection{Abkürzungen}
+		\emph{HR:} Hilfsregister\\
+		\emph{AC:} Accumulator\\
+		\emph{BR:} Befehlsregister\\
+		\emph{AP:} Adress Puffer\\
+		\emph{PC:} Program	Counter\\
+		\emph{ABT:} Adressbus Puffer\\
+		\emph{DBP:} Datenbus Puffer\\
+		\\
+		\emph{IAR:} InstruktionsAdressRegister \\
+		\emph{SAR:} SpeicherAdressRegister \\
+		\emph{SDR:} SpeicherDatenRegister\\
+		
+	\section{Instruction Set Architektur }
+		\subsection{Datentypen \& -formate}
+		halfword\\
+		word\\
+		longword\\
+		
+		\subsection{Adressierungsarten}
+		Explizite oder Implizierte Adressierung\\
+		Überdeckte Adressierung: Wenn Quelle und Ziel (Register) sich überdecken\\
+		\\
+		Explizite Adressierung: Der Operand steht in einem Register\\
+		Direkte Adressierung: immidiate \\
+		Basis-Adressierung: Adr(Opr) = Konst. + Registerinhalt\\
+		Befehlszähler-relative Adressierung: Adr = Befehlszähler + Kostante aus Befehl\\
+		
+		
+		\subsection{Befehlsformat \& -satz}
+		\[\text{CPU\_Zeit} = IC \times CPI \times \text{Taktdauer} \]
+		\[\text{CPU\_Zeit} = \frac{IC \times CPI}{\text{Taktfrequenz}} \]
+		IC: Anzahl der ausgeführten Befehle (Instruction Count)\\
+		CPI: Anzahl der Taktzyklen pro Befehl (Cycle per Instruction)\\
+		
+		
+		\subsection{RISC}
+		Ziel: Reduzierung der Zyklen je Befehl (CPI)\\ 
+		
+		\subsection{CISC}
+		Um Assembler Programmierer zu unterstützen komplexe Befehle\\
+		Ziel: Reduzierung der ausgeführten Befehle (Instruction Count)\\ 
+		Festverdrahtete Logik\\
+		
+		\subsection{Fallstudie-Mips}
+		
+	\section{Einführung in die Assemblerprogrammierung}
+		\subsection{Mips-Assembler (Microprocessor without Interlocked Pipeline Stages)}
+			\subsubsection{Datentypen}
+			.byte\\
+			.half\\
+			.word (entspricht einer Zeile im Speicher 32bit)\\ 
+			.float\\
+			.double\\
+			.asciiz (String)\\
+			
+			
+			\subsubsection{Assemblerdirektiven} 
+			z.B. .align .ascii\\
+			
+			.space n : allokiert n Bytes\\
+			.globl xy : xy ist ein globales Symbol\\
+			
+			
+			\subsubsection{Marken (Labels)} 
+			
+			\subsubsection{Maschinenbefehlen (und Pseudobefehlen, Makros)} 
+			
+			\subsubsection{Kommentaren}
+			\#Kommentar\\
+			Keine Mehrzeilige-Kommentare\\
+			
+			\subsubsection{Systemaufrufe (syscall)}
+			\begin{table}[H]
+				\begin{tabular}{|l|c|l|}
+					\hline
+					Dienst & Nummer & Eingabe \\
+					\hline
+					print\_int & 1 & Integer in \$a0\\
+					print\_float & 2 & Float in \$f12\\
+					print\_double & 3 & Double in \$f12 und \$f13\\
+					print\_string & 4 &Adresse des Strings in \$a0 \\
+					read\_int & 5 & Integer in \$v0\\
+					read\_float & 6 & Float in \$f0\\
+					read\_double & 7 & Double in \$f0 und \$f1\\
+					read\_string & 8 &Adresse der Zeichenkette in \$a0 und  maximale Länge in \$a1 übergeben.* \\
+					sbrk & 9 &	Byte-Anzahl in \$a0.  Anfangsadresse in \$v0\\
+					exit & 10&\\
+					\hline
+				\end{tabular}
+			\end{table}
+			*Bei weniger eingegebenen Zeichen wird die Zeichenkette zusätzlich mit "\\n" abgeschlossen \\
+		
+		
+	\section{Befehlsabarbeitung im grundlegenden Rechnermodells}
+		\subsection{Logische Phasen des Maschinenbefehlszyklus}
+		\subsection{Pipelininig}
+		
+	\section{Prozessorarchitektur}
+		\subsection{Steuerwerk}
+		\subsection{Rechenwerk}
+		
+	\section{Speicher}
+		\subsection{Speicherkomponenten}
+		\subsection{Systemkomponenten}
+		\subsection{Halbleiterspeicher}
+		\subsection{Cache}
+		
+	\section{Betriebssystemunterstützung}
+		\subsection{Virtuelle Speicherverwaltung}
+		\subsection{Unterbrechungsbehandlung}
+		
+	\section{Ein-Ausgabe}
+		\subsection{Schnittstellenbausteine}
+		\subsection{DMA}
+		\subsection{Interrupt-Controller}
+		
+	\section{Bussysteme}
+		\subsection{Grundlegende Eigenschaften}
+		\subsection{Zuteilung \& Protokolle}
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+\end{document}
